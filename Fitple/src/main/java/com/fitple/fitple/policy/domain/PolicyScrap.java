@@ -16,8 +16,7 @@ public class PolicyScrap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // FK는 걸지 않고, 단순 숫자로만 처리
+    
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
