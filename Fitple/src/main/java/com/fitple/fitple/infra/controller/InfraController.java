@@ -1,4 +1,4 @@
-package com.fitple.fitple.infra.controller.service.dto;
+package com.fitple.fitple.infra.controller;
 
 public class InfraController {
 }
