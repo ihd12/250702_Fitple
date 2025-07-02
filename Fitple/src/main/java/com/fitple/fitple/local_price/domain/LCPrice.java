@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-// 지역별 물가 기본 정보
+@Table(name = "lc_price")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -13,64 +13,33 @@ public class LCPrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name="localNo")
-    private String localNo;
+    @Column(nullable = false)
+    private Long priceId; // 🔑 데이터베이스가 관리하는 고유 ID (PK)
 
-    @Column (name="subwayCa")
+    @Column(name= "local_no", nullable = false)
+    private Integer localNo; // 식별용 지역 번호
+
+    @Column(name = "local_name", length = 20, nullable = false) // 식별용 지역 이름
+    private String localName;
+
+    @Column // 물가 항목(원 단위)
     private Integer subwayCa;
-
-    @Column (name="subwayMo")
     private Integer subwayMo;
-
-    @Column (name="BusCa")
     private Integer busCa;
-
-    @Column (name="BusMo")
     private Integer busMo;
-
-    @Column (name="taxy")
     private Integer taxy;
-
-    @Column (name="trashBag")
     private Integer trashBag;
-
-    @Column (name="laundry")
     private Integer laundry;
-
-    @Column (name="stay")
     private Integer stay;
-
-    @Column (name="manCut")
     private Integer manCut;
-
-    @Column (name="womanCut")
     private Integer womanCut;
-
-    @Column (name="bath")
     private Integer bath;
-
-    @Column (name="rangmyeon")
     private Integer rangmyeon;
-
-    @Column (name="bibimbab")
     private Integer bibimbab;
-
-    @Column (name="kimchistew")
     private Integer kimchistew;
-
-    @Column (name="samgyeopsal")
     private Integer samgyeopsal;
-
-    @Column (name="zazhang")
     private Integer zazhang;
-
-    @Column (name="samgye")
     private Integer samgye;
-
-    @Column (name="kimbab")
     private Integer kimbab;
-
-    @Column (name="kalnoodle")
     private Integer kalnoodle;
-
 }
