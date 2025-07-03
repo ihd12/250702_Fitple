@@ -11,48 +11,47 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class JobDetail {
 
     @Id
     @Column(name = "job_id")
-    private Long jobId;
+    private Long jobId;  // = job_post.id (외래키처럼 사용)
 
     @OneToOne
-    @JoinColumn(name = "job_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @MapsId
+    @JoinColumn(name = "job_id")
     private JobPost jobPost;
 
-    @Column(name = "org_name", length = 200, nullable = false)
-    private String orgName;
+    @Column(columnDefinition = "TEXT")
+    private String advantageDetail;
 
-    @Column(length = 500, nullable = false)
-    private String title;
+    private String category;
+    private LocalDate createdDate;
 
     @Column(name = "detail_url", length = 1000, nullable = false)
     private String detailUrl;
 
-    private String ncs;
     private String education;
     private String field;
-    private String category;
-
-    @Column(name = "job_type")
-    private String jobType;
+    private Integer headcount;
 
     @Column(name = "is_substitute")
     private String isSubstitute;
 
+    private String jobType;
     private String location;
-    private String salary;
-    private Integer headcount;
+    private String ncs;
+
+    @Column(name = "org_name", length = 200, nullable = false)
+    private String orgName;
+
+    private String period;
 
     @Column(columnDefinition = "TEXT")
     private String preferred;
 
-    private String period;
-
-    @Column(name = "created_date")
-    private LocalDate createdDate;
+    @Column(name = "procedure_detail", columnDefinition = "TEXT")
+    private String procedureDetail;
 
     @Column(columnDefinition = "TEXT")
     private String requirement;
@@ -60,9 +59,8 @@ public class JobDetail {
     @Column(columnDefinition = "TEXT")
     private String restriction;
 
-    @Column(name = "advantage_detail", columnDefinition = "TEXT")
-    private String advantageDetail;
+    private String salary;
 
-    @Column(name = "procedure_detail", columnDefinition = "TEXT")
-    private String procedureDetail;
+    @Column(length = 500, nullable = false)
+    private String title;
 }

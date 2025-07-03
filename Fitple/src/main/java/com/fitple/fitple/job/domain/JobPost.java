@@ -11,36 +11,40 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class JobPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String dday;
 
-    @Column(name = "org_name", length = 200, nullable = false)
-    private String orgName;
-
-    @Column(length = 200, nullable = false)
-    private String region;
-
-    @Column(name = "job_type", length = 100, nullable = false)
-    private String jobType;
-
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+    @Column(name = "detail_url", length = 1000, nullable = false)
+    private String detailUrl;
 
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column(length = 10, nullable = false)
-    private String dday;
+    @Column(name = "job_type", length = 100, nullable = false)
+    private String jobType;
+
+    @Column(name = "org_name", length = 200, nullable = false)
+    private String orgName;
+
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
     @Column(length = 100, nullable = false)
     private String status;
 
-    @Column(name = "detail_url", length = 1000, nullable = false)
-    private String detailUrl;
+    private String title;
+
+    @Column(length = 200, nullable = false)
+    private String location;
+
+    private String ncs;
+
+    @OneToOne(mappedBy = "jobPost", cascade = CascadeType.ALL)
+    private JobDetail jobDetail;
 }
+
