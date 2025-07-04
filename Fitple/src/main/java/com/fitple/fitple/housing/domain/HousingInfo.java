@@ -1,5 +1,4 @@
-package com.fitple.fitple.home.domain;
-
+package com.fitple.fitple.housing.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 // 광역시도 및 시군구 데이터를 바탕으로 임대주택 API와 연결 및 필요시 지역 구분 가능할 수 있도록
-public class Home {
+public class HousingInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 법정동코드를 지역 구분용 ID로 할 예정
