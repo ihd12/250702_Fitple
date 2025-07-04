@@ -12,9 +12,8 @@ import lombok.NoArgsConstructor;
 public class LCPrice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name="localNo")
-    private String localNo;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가 전략 추가
+    private Long localNo;
 
     @Column (name="subwayCa")
     private Integer subwayCa;
