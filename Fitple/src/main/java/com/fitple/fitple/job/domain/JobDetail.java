@@ -15,7 +15,7 @@ public class JobDetail {
 
     @Id
     @Column(name = "job_id")
-    private Long jobId;  // = job_post.id (외래키처럼 사용)
+    private Long jobId;
 
     @OneToOne
     @MapsId
@@ -59,7 +59,8 @@ public class JobDetail {
     @Column(columnDefinition = "TEXT")
     private String restriction;
 
-    private String salary;
+    @Column
+    private Integer salary;
 
     @Column(length = 500, nullable = false)
     private String title;

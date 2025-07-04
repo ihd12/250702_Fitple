@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>채용 상세정보</title>
+    <link rel="stylesheet" href="/css/job.css" />
+</head>
+<body>
+
+<div class="container">
+    <h2>채용 상세 정보</h2>
+
+    <div class="job-detail-box">
+        <p><strong>제목:</strong> <span th:text="${job.title}"></span></p>
+        <p><strong>기관명:</strong> <span th:text="${job.orgName}"></span></p>
+        <p><strong>근무지:</strong> <span th:text="${job.location}"></span></p>
+        <p><strong>근무 분야:</strong> <span th:text="${job.jobType}"></span></p>
+        <p><strong>표준직무(NCS):</strong> <span th:text="${job.ncs}"></span></p>
+        <p><strong>연봉:</strong> <span th:text="${job.salary}"></span></p>
+        <p><strong>시작일:</strong> <span th:text="${job.startDate}"></span></p>
+        <p><strong>마감일:</strong> <span th:text="${job.endDate}"></span></p>
+        <p><strong>상세 URL:</strong> <a th:href="${job.detailUrl}" target="_blank">공고 바로가기</a></p>
+        <p><strong>학력 정보:</strong> <span th:text="${job.education}"></span></p>
+        <p><strong>응시 자격:</strong> <span th:text="${job.requirement}"></span></p>
+        <p><strong>우대 조건:</strong> <span th:text="${job.preferred}"></span></p>
+        <p><strong>우대 내용:</strong> <span th:text="${job.advantageDetail}"></span></p>
+        <p><strong>전형 절차:</strong> <span th:text="${job.procedureDetail}"></span></p>
+    </div>
+
+    <div class="back-button">
+                <<a th:href="@{/job/test(
+                  page=${requestDTO.page},
+                  size=${requestDTO.size},
+                  keyword=${requestDTO.keyword},
+                  salary=${requestDTO.salary},
+                  location=${requestDTO.location},
+                  ncs=${requestDTO.ncs},
+                  types=${requestDTO.types}
+                )}">← 목록으로 돌아가기</a>
+    </div>
+
+</div>
+
+</body>
+</html>
