@@ -23,9 +23,9 @@ public class PageRequestDTO {
     // 지역 필터링용 법정시군구코드
     private String[] zipCds;
 
-    public String[] getZipCds() {
-        return zipCds;
-    }
+//    public String[] getZipCds() {
+//        return zipCds;
+//    }
 
     public int getPage() {
         return (page == null) ? 1 : page;

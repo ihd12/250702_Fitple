@@ -26,7 +26,10 @@ public class PolicyService {
                         .queryParam("display", size)
                         .queryParam("apiKeyNm", "13464484-9c91-4cf0-bb2a-812087e0c6df")
                         .queryParam("rtnType", "json")
-                        .queryParamIfPresent("zipCd", (zipCd == null || zipCd.isBlank()) ? Optional.empty() : Optional.of(zipCd))
+                        .queryParamIfPresent("zipCd",
+                                (zipCd == null || zipCd.isBlank())
+                                        ? Optional.empty()
+                                        : Optional.of(zipCd))
                         .build())
                 .retrieve()
                 .bodyToMono(YouthPolicyResponse.class)

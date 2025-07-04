@@ -102,18 +102,23 @@
 <div class="pagination">
   <ul>
     <li th:if="${responseDTO.prev}">
-      <a th:href="@{/policy/list(page=${responseDTO.start - 1}, zipCd=${zipCd})}">&laquo;</a>
+      <a th:href="@{/policy/list(page=${responseDTO.start - 1})}"
+         th:hrefappend="${zipCds != null} ? ${#strings.arrayJoin(zipCds, '&zipCds=')} : ''">&laquo;</a>
     </li>
     <li th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-      <a th:href="@{/policy/list(page=${i}, zipCd=${zipCd})}"
+      <a th:href="@{/policy/list(page=${i})}"
+         th:hrefappend="${zipCds != null} ? ${#strings.arrayJoin(zipCds, '&zipCds=')} : ''"
          th:text="${i}"
          th:classappend="${responseDTO.page == i} ? 'active' : ''">1</a>
     </li>
     <li th:if="${responseDTO.next}">
-      <a th:href="@{/policy/list(page=${responseDTO.end + 1}, zipCd=${zipCd})}">&raquo;</a>
+      <a th:href="@{/policy/list(page=${responseDTO.end + 1})}"
+         th:hrefappend="${zipCds != null} ? ${#strings.arrayJoin(zipCds, '&zipCds=')} : ''">&raquo;</a>
     </li>
   </ul>
 </div>
+
+
 
 </body>
 </html>
