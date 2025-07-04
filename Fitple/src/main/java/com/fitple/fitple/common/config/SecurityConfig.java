@@ -10,13 +10,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // CSRF 보호 기능 비활성화
+                .csrf(csrf -> csrf.disable())
+                // 모든 요청에 대해 접근을 허용
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 모든 요청 허용 (테스트용)
-                )
-                .csrf(csrf -> csrf.disable()); // CSRF 끔 (POST 테스트 시 편리함)
+                        .anyRequest().permitAll()
+                );
 
         return http.build();
     }

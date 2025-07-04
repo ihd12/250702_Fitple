@@ -20,6 +20,13 @@ public class PageRequestDTO {
     private String location;
     private String ncs;
 
+    // 지역 필터링용 법정시군구코드
+    private String[] zipCds;
+
+//    public String[] getZipCds() {
+//        return zipCds;
+//    }
+
     public int getPage() {
         return (page == null) ? 1 : page;
     }
