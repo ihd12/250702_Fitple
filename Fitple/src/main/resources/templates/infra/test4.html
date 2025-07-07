@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>읍면동 경계 표시</title>
+    <style>
+        #map { width: 100%; height: 500px; margin-top: 10px; }
+    </style>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d"></script>
+</head>
+<body>
+<h2>시/도 → 시군구 → 읍면동 선택 후 경계 표시</h2>
+
+<select id="sidoSelect"><option value="">시/도 선택</option></select>
+<select id="sigunguSelect"><option value="">시/군/구 선택</option></select>
+<select id="emdSelect"><option value="">읍면동 선택</option></select>
+
+<div id="map"></div>
+
+<script>
+    const map = new kakao.maps.Map(document.getElementById('map'), {
+        center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 중심
+        level: 7
+    });
+
+    let polygon = null;
+
+    // 시도 가져오기
+    fetch('/api/sido')
+        .then(res => res.json())
+        .then(data => {
+            const sidoSelect = document.getElementById('sidoSelect');
+            const features = data.response.result.featureCollection.features;
+            console.log("시도 개수: ", features.length); //
+
+            features.forEach(f => {
+                const option = document.createElement('option');
+                option.value = f.properties.ctprvn_cd;
+                option.textContent = f.properties.ctp_kor_nm;
+                sidoSelect.appendChild(option);
+            });
+        });
+
+    // 시도 → 시군구
+    document.getElementById('sidoSelect').addEventListener('change', function () {
+        const sidoCd = this.value;
+        const sigunguSelect = document.getElementById('sigunguSelect');
+        const emdSelect = document.getElementById('emdSelect');
+
+        sigunguSelect.innerHTML = "<option value=''>시/군/구 선택</option>";
+        emdSelect.innerHTML = "<option value=''>읍면동 선택</option>";
+
+        if (!sidoCd) return;
+
+        fetch(`/api/sigungu?sidoCd=${sidoCd}`)
+            .then(res => res.json())
+            .then(data => {
+                const features = data.response.result.featureCollection.features;
+
+                features.forEach(f => {
+                    const option = document.createElement('option');
+                    option.value = f.properties.sig_cd;
+                    option.textContent = f.properties.sig_kor_nm;
+                    sigunguSelect.appendChild(option);
+                });
+            });
+    });
+
+    // 시군구 → 읍면동
+    document.getElementById('sigunguSelect').addEventListener('change', function () {
+        const sigunguCd = this.value;
+        const emdSelect = document.getElementById('emdSelect');
+        emdSelect.innerHTML = "<option value=''>읍면동 선택</option>";
+
+        if (!sigunguCd) return;
+
+        fetch(`/api/emdList?sigunguCd=${sigunguCd}`)
+            .then(res => res.json())
+            .then(data => {
+                const features = data.response.result.featureCollection.features;
+
+                features.forEach(f => {
+                    const option = document.createElement('option');
+                    option.value = f.properties.emd_cd;
+                    option.textContent = f.properties.emd_kor_nm;
+                    emdSelect.appendChild(option);
+                });
+            });
+    });
+
+    // 읍면동 → 폴리곤 표시
+    document.getElementById('emdSelect').addEventListener('change', function () {
+        const emdCode = this.value;
+        if (!emdCode) return;
+
+        if (polygon) {
+            polygon.setMap(null);
+            polygon = null;
+        }
+
+        fetch(`/api/emdPolygon?emdCode=${emdCode}`)
+            .then(res => res.json())
+            .then(data => {
+                const features = data.response.result.featureCollection.features;
+                if (!features || features.length === 0) {
+                    alert("해당 지역 데이터가 없습니다.");
+                    return;
+                }
+
+                const coords = features[0].geometry.coordinates;
+                let paths = [];
+
+                if (features[0].geometry.type === "MultiPolygon") {
+                    coords.forEach(polygonCoords => {
+                        polygonCoords.forEach(ring => {
+                            const path = ring.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
+                            paths.push(path);
+                        });
+                    });
+                } else if (features[0].geometry.type === "Polygon") {
+                    coords.forEach(ring => {
+                        const path = ring.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
+                        paths.push(path);
+                    });
+                }
+
+                map.setCenter(paths[0][0]);
+                map.setLevel(8);
+
+                polygon = new kakao.maps.Polygon({
+                    map: map,
+                    path: paths,
+                    strokeWeight: 3,
+                    strokeColor: '#FF00FF',
+                    strokeOpacity: 0.8,
+                    fillColor: '#FFB6C1',
+                    fillOpacity: 0.4
+                });
+            });
+    });
+</script>
+</body>
+</html>
