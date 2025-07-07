@@ -8,6 +8,7 @@ import com.fitple.fitple.common.dto.PageResponseDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -42,6 +43,28 @@ public class PolicyController {
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("responseDTO", pageResponse);
         model.addAttribute("zipCds", zipCds); // 체크박스 선택 유지용
+        model.addAttribute("zipCdsParam", zipCds != null ?
+                java.util.Arrays.stream(zipCds).map(cd -> "&zipCds=" + cd).collect(java.util.stream.Collectors.joining()) : "");
+        model.addAttribute("keyword", requestDTO.getKeyword());
+
         return "/policy/list";
     }
+
+    @GetMapping("/policy/detail")
+    public String policyDetail(String plcyNo,
+                               @RequestParam(required = false) Integer page,
+                               @RequestParam(required = false) String keyword,
+                               @RequestParam(required = false) String[] zipCds,
+                               Model model) {
+        var response = policyService.getPolicyDetail(plcyNo);
+        var policy = response.getResult().getYouthPolicyList().get(0);
+
+        model.addAttribute("policy", policy);
+        model.addAttribute("page", page);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("zipCds", zipCds);
+
+        return "/policy/detail";
+    }
+
 }
