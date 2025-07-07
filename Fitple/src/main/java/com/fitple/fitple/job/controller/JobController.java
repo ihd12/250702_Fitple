@@ -85,8 +85,7 @@ public class JobController {
                             Model model) {
         JobDetailDTO dto = jobService.getDetail(id);
         model.addAttribute("job", dto);
-        return "job/job_detail";
+        model.addAttribute("requestDTO", pageRequestDTO); // ✅ 목록 복귀용 데이터 전달
+        return "job/job_detail_test";
     }
-
-
 }
