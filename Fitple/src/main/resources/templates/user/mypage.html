@@ -40,6 +40,18 @@
   </ul>
 </div>
 
+<div class="section">
+  <h2>찜한 주거정보</h2>
+  <ul>
+    <li th:if="${housingScraps.isEmpty()}">찜한 주거정보가 없습니다.</li>
+    <li th:each="house : ${housingScraps}">
+      <span th:text="${house.hsmpNm}"></span> -
+      <span th:text="${house.rnAdres}"></span>
+      <span style="color: gray;" th:text="' (' + ${house.houseTyNm} + ')'"></span>
+    </li>
+  </ul>
+</div>
+
 
 
 </body>

@@ -50,9 +50,9 @@ public class RentalApiTest {
 
             String json = sb.toString();
 
-            System.out.println("==== API 응답 원문(JSON) ====");
-            System.out.println(json);
-            System.out.println("=================================");
+//            System.out.println("==== API 응답 원문(JSON) ====");
+//            System.out.println(json);
+//            System.out.println("=================================");
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(json);

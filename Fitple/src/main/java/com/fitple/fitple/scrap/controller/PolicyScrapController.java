@@ -18,10 +18,10 @@ public class PolicyScrapController {
     public ResponseEntity<Void> scrap(@PathVariable String plcyNo,
                                       @RequestParam String plcyNm,
                                       @AuthenticationPrincipal CustomUserDetails user) {
-        System.out.println("==== [정책 찜 요청] ====");
-        System.out.println("User ID: " + user.getUser().getId());
-        System.out.println("Policy ID: " + plcyNo);
-        System.out.println("Policy Name: " + plcyNm);
+//        System.out.println("==== [정책 찜 요청] ====");
+//        System.out.println("User ID: " + user.getUser().getId());
+//        System.out.println("Policy ID: " + plcyNo);
+//        System.out.println("Policy Name: " + plcyNm);
 
         scrapService.scrap(user.getUser().getId(), plcyNo, plcyNm);
         return ResponseEntity.ok().build();

@@ -11,10 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "policy_scrap",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "policy_id"})
-)
+@Table(name = "policy_scrap")
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @EqualsAndHashCode(of = "id")

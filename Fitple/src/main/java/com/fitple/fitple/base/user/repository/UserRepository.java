@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);  // 로그인용
+    // findByUsername을 제거하거나 수정
 }

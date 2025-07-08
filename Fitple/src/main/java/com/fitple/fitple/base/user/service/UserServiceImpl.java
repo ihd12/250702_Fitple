@@ -14,14 +14,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 회원가입 처리
     @Override
     public UserDTO register(UserDTO dto) {
-        User user = User.builder()
-                .email(dto.getEmail())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .nickname(dto.getNickname())
-                .build();
-
+        User user = new User(dto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saved = userRepository.save(user);
 
         return UserDTO.builder()

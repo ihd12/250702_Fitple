@@ -36,23 +36,26 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll()  // 모든 요청에 대해 접근 허용 (추후 수정 가능)
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/user/login")                // 수정: 로그인 페이지 경로
+                        .loginPage("/user/login")                // 로그인 페이지 경로
                         .usernameParameter("email")              // 이메일로 로그인
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/mypage", true)
-                        .permitAll()
+                        .defaultSuccessUrl("/mypage", true)      // 로그인 성공 후 이동할 페이지
+                        .permitAll()                             // 로그인 페이지는 누구나 접근 가능
                 )
 
                 .logout(logout -> logout
-                        .logoutUrl("/user/logout")              // 수정: 로그아웃 경로
-                        .logoutSuccessUrl("/")
+                        .logoutUrl("/user/logout")              // 로그아웃 경로
+                        .logoutSuccessUrl("/")                  // 로그아웃 성공 후 리디렉션할 경로
                         .permitAll()
-                );
+                )
+
+                .userDetailsService(customUserDetailsService);  // CustomUserDetailsService 등록
 
         return http.build();
     }
 }
+

@@ -1,7 +1,8 @@
 package com.fitple.fitple.base.user.domain;
 
-import jakarta.persistence.*;
+import com.fitple.fitple.base.user.dto.UserDTO;
 import lombok.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
 public class User {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,5 +38,14 @@ public class User {
     @PreUpdate
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // UserDTO로부터 값을 받아서 User 객체 생성
+    public User(UserDTO dto) {
+        this.email = dto.getEmail();
+        this.password = dto.getPassword();  // 비밀번호는 암호화 없이 저장하기 전에 설정할 수 있습니다
+        this.nickname = dto.getNickname();
+        this.createdAt = LocalDateTime.now();  // 기본 생성일자
+        this.updatedAt = LocalDateTime.now();  // 기본 수정일자
     }
 }
