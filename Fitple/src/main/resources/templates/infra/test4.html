@@ -1,143 +1,212 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="utf-8">
-    <title>읍면동 경계 표시</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장소 검색 및 폴리곤 표시</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d&libraries=services"></script>
     <style>
-        #map { width: 100%; height: 500px; margin-top: 10px; }
+        body { font-family: Arial, sans-serif; }
+        .map_wrap { position: relative; width: 100%; height: 500px; }
+        #category { margin: 20px 0; }
+        #category li { display: inline-block; margin: 10px; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; }
+        #category li.on { background-color: #004c80; color: #fff; }
+        #resultWrapper { margin-top: 20px; }
     </style>
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d"></script>
 </head>
 <body>
-<h2>시/도 → 시군구 → 읍면동 선택 후 경계 표시</h2>
+<h1>주변 생활권 정보</h1>
+<select id="sidoSelect">
+    <option value="">시/도 선택</option>
+</select>
+<select id="sigunguSelect">
+    <option value="">시/군/구 선택</option>
+</select>
+<input type="text" id="Pkeyword" placeholder="지역명을 입력하세요">
+<button onclick="searchAddress()">검색</button>
 
-<select id="sidoSelect"><option value="">시/도 선택</option></select>
-<select id="sigunguSelect"><option value="">시/군/구 선택</option></select>
-<select id="emdSelect"><option value="">읍면동 선택</option></select>
+<div class="map_wrap">
+    <div id="map"></div>
+</div>
 
-<div id="map"></div>
+<div id="resultWrapper">
+    <ul id="category">
+        <li id="SW8">지하철</li>
+        <li id="MT1">마트</li>
+        <li id="HP8">병원</li>
+        <li id="PM9">약국</li>
+        <li id="CE7">카페</li>
+        <li id="CS2">편의점</li>
+    </ul>
+    <ul id="placesList"></ul>
+    <div id="pagination"></div>
+</div>
 
 <script>
-    const map = new kakao.maps.Map(document.getElementById('map'), {
-        center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 중심
+    var mapContainer = document.getElementById('map');
+    var map = new kakao.maps.Map(mapContainer, {
+        center: new kakao.maps.LatLng(37.566826, 126.9786567),
         level: 7
     });
 
-    let polygon = null;
+    var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
+    var contentNode = document.createElement('div');
+    var markers = [];
+    var currCategory = '';
+    var currKeyword = '';
+    var polygon = null;
 
-    // 시도 가져오기
-    fetch('/api/sido')
-        .then(res => res.json())
-        .then(data => {
-            const sidoSelect = document.getElementById('sidoSelect');
-            const features = data.response.result.featureCollection.features;
-            console.log("시도 개수: ", features.length); //
-
-            features.forEach(f => {
-                const option = document.createElement('option');
-                option.value = f.properties.ctprvn_cd;
-                option.textContent = f.properties.ctp_kor_nm;
-                sidoSelect.appendChild(option);
-            });
-        });
-
-    // 시도 → 시군구
-    document.getElementById('sidoSelect').addEventListener('change', function () {
-        const sidoCd = this.value;
-        const sigunguSelect = document.getElementById('sigunguSelect');
-        const emdSelect = document.getElementById('emdSelect');
-
-        sigunguSelect.innerHTML = "<option value=''>시/군/구 선택</option>";
-        emdSelect.innerHTML = "<option value=''>읍면동 선택</option>";
-
-        if (!sidoCd) return;
-
-        fetch(`/api/sigungu?sidoCd=${sidoCd}`)
-            .then(res => res.json())
-            .then(data => {
-                const features = data.response.result.featureCollection.features;
-
-                features.forEach(f => {
-                    const option = document.createElement('option');
-                    option.value = f.properties.sig_cd;
-                    option.textContent = f.properties.sig_kor_nm;
-                    sigunguSelect.appendChild(option);
-                });
-            });
+    // 카테고리 버튼 클릭 이벤트 처리
+    $('#category li').click(function() {
+        var id = this.id;
+        if (currCategory === id) {
+            currCategory = '';
+            $(this).removeClass('on');
+        } else {
+            currCategory = id;
+            currKeyword = '';
+            $('#keyword').val('');
+            $(this).addClass('on').siblings().removeClass('on');
+            searchPlaces();
+        }
     });
 
-    // 시군구 → 읍면동
-    document.getElementById('sigunguSelect').addEventListener('change', function () {
-        const sigunguCd = this.value;
-        const emdSelect = document.getElementById('emdSelect');
-        emdSelect.innerHTML = "<option value=''>읍면동 선택</option>";
-
-        if (!sigunguCd) return;
-
-        fetch(`/api/emdList?sigunguCd=${sigunguCd}`)
-            .then(res => res.json())
-            .then(data => {
-                const features = data.response.result.featureCollection.features;
-
-                features.forEach(f => {
-                    const option = document.createElement('option');
-                    option.value = f.properties.emd_cd;
-                    option.textContent = f.properties.emd_kor_nm;
-                    emdSelect.appendChild(option);
-                });
-            });
-    });
-
-    // 읍면동 → 폴리곤 표시
-    document.getElementById('emdSelect').addEventListener('change', function () {
-        const emdCode = this.value;
-        if (!emdCode) return;
-
-        if (polygon) {
-            polygon.setMap(null);
-            polygon = null;
+    function searchAddress() {
+        const Pkeyword = document.getElementById('Pkeyword').value.trim();
+        if (!Pkeyword) {
+            alert("지역명을 입력하세요.");
+            return;
         }
 
-        fetch(`/api/emdPolygon?emdCode=${emdCode}`)
+        var geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(Pkeyword, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                map.setCenter(coords);
+                map.setLevel(3);
+                updatePolygonByAddress(Pkeyword);
+            } else {
+                alert("해당 지역을 찾을 수 없습니다.");
+            }
+        });
+    }
+
+    function updatePolygonByAddress(address) {
+        fetch(`/api/sigCdByAddress?address=${encodeURIComponent(address)}`)
             .then(res => res.json())
             .then(data => {
-                const features = data.response.result.featureCollection.features;
-                if (!features || features.length === 0) {
-                    alert("해당 지역 데이터가 없습니다.");
+                const sigCd = data.sigCd;
+                if (!sigCd) {
+                    alert("해당 지역의 행정구역 코드를 찾을 수 없습니다.");
                     return;
                 }
+                fetch(`/api/polygon?sigCd=${sigCd}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const features = data.response?.result?.featureCollection?.features;
+                        if (!features || features.length === 0) {
+                            alert("폴리곤 데이터를 찾을 수 없습니다.");
+                            return;
+                        }
+                        const coords = features[0].geometry.coordinates;
+                        let paths = [];
+                        if (features[0].geometry.type === "MultiPolygon") {
+                            coords.forEach(polygonCoords => {
+                                polygonCoords.forEach(ring => {
+                                    const path = ring.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
+                                    paths.push(path);
+                                });
+                            });
+                        } else if (features[0].geometry.type === "Polygon") {
+                            coords.forEach(ring => {
+                                const path = ring.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
+                                paths.push(path);
+                            });
+                        }
 
-                const coords = features[0].geometry.coordinates;
-                let paths = [];
+                        if (polygon) {
+                            polygon.setMap(null);
+                        }
 
-                if (features[0].geometry.type === "MultiPolygon") {
-                    coords.forEach(polygonCoords => {
-                        polygonCoords.forEach(ring => {
-                            const path = ring.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
-                            paths.push(path);
+                        polygon = new kakao.maps.Polygon({
+                            map: map,
+                            path: paths,
+                            strokeWeight: 3,
+                            strokeColor: '#004c80',
+                            strokeOpacity: 0.5,
+                            fillColor: '#00a0e9',
+                            fillOpacity: 0.3
                         });
-                    });
-                } else if (features[0].geometry.type === "Polygon") {
-                    coords.forEach(ring => {
-                        const path = ring.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
-                        paths.push(path);
-                    });
-                }
 
-                map.setCenter(paths[0][0]);
-                map.setLevel(8);
+                        const center = getPolygonCenter(paths);
+                        map.setCenter(center);
+                        map.setLevel(5);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("폴리곤 데이터를 불러오는 중 오류가 발생했습니다.");
+                    });
+            })
+            .catch(err => {
+                console.error(err);
+                alert("주소로부터 행정구역 코드를 찾는 데 실패했습니다.");
+            });
+    }
 
-                polygon = new kakao.maps.Polygon({
-                    map: map,
-                    path: paths,
-                    strokeWeight: 3,
-                    strokeColor: '#FF00FF',
-                    strokeOpacity: 0.8,
-                    fillColor: '#FFB6C1',
-                    fillOpacity: 0.4
+    function getPolygonCenter(paths) {
+        let sumLat = 0, sumLng = 0, count = 0;
+        paths.forEach(path => {
+            path.forEach(latlng => {
+                sumLat += latlng.getLat();
+                sumLng += latlng.getLng();
+                count++;
+            });
+        });
+        return new kakao.maps.LatLng(sumLat / count, sumLng / count);
+    }
+
+    // 시/도, 시/군/구 데이터 로딩
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch("/api/sido")
+            .then(res => res.json())
+            .then(data => {
+                const sidoSelect = document.getElementById('sidoSelect');
+                const features = data.response.result.featureCollection.features;
+                features.forEach(sido => {
+                    const option = document.createElement('option');
+                    option.value = sido.properties.ctprvn_cd;
+                    option.textContent = sido.properties.ctp_kor_nm;
+                    sidoSelect.appendChild(option);
                 });
             });
+
+        // 시도 선택 시 시군구 데이터 로딩
+        document.getElementById('sidoSelect').addEventListener('change', function() {
+            const sidoCd = this.value;
+            const sigunguSelect = document.getElementById('sigunguSelect');
+            sigunguSelect.innerHTML = "<option value=''>시/군/구 선택</option>";
+
+            if (sidoCd) {
+                fetch(`/api/sigungu?sidoCd=${sidoCd}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const features = data.response.result.featureCollection.features;
+                        features.forEach(sig => {
+                            const option = document.createElement('option');
+                            option.value = sig.properties.sig_cd;
+                            option.textContent = sig.properties.sig_kor_nm;
+                            sigunguSelect.appendChild(option);
+                        });
+                    });
+            }
+        });
     });
+
+    function searchPlaces() {
+        if (!currCategory && !currKeyword) return;
+        // 여기에 장소 검색 로직 추가 (카카오 Places API 활용)
+    }
 </script>
 </body>
 </html>

@@ -1,9 +1,12 @@
 package com.fitple.fitple.infra.controller;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitple.fitple.infra.dto.InfraDTO;
 import com.fitple.fitple.infra.service.InfraService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +19,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -109,24 +115,6 @@ public class InfraAPIContoller {
         String response = restTemplate.getForObject(url, String.class);
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/emdPolygon")
-    public ResponseEntity<String> getEmdPolygon(@RequestParam String emdCode) {
-        String url = "https://api.vworld.kr/req/data" +
-                "?service=data" +
-                "&request=GetFeature" +
-                "&data=LT_C_ADEMD_INFO" +
-                "&key=" + API_KEY +
-                "&type=json" +
-                "&numOfRows=100" +
-                "&attrFilter=emd_cd:EQ:" + emdCode +
-                "&domain=localhost:8080";
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(url, String.class);
-        return ResponseEntity.ok(response);
-    }
-
-
     @GetMapping("/polygon")
     public ResponseEntity<String> getPolygonData(@RequestParam String sigCd) {
         String baseUrl = "https://api.vworld.kr/req/data";
@@ -146,19 +134,37 @@ public class InfraAPIContoller {
 
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/polygonAll")
-    public ResponseEntity<String> getAllPolygonData() {
-        String baseUrl = "https://api.vworld.kr/req/data";
-        String url = baseUrl + "?service=data" +
-                "&request=GetFeature" +
-                "&data=LT_C_ADSIGG_INFO" +
-                "&key=" + API_KEY +
-                "&type=json";
 
+
+    @GetMapping("/emdPolygon")
+    public ResponseEntity<String> getEmdPolygon(@RequestParam String emdCode) {
+        String url = "https://api.vworld.kr/req/data" +
+                "?service=data" +
+                "&request=GetFeature" +
+                "&data=LT_C_ADEMD_INFO" +
+                "&key=" + API_KEY +
+                "&type=json" +
+                "&numOfRows=100" +
+                "&attrFilter=emd_cd:EQ:" + emdCode +
+                "&domain=localhost:8080";
         RestTemplate restTemplate = new RestTemplate();
         String response = restTemplate.getForObject(url, String.class);
         return ResponseEntity.ok(response);
     }
+    @Autowired
+    private InfraService addressService;
 
+    @GetMapping("/api/sigCdByAddress")
+    public ResponseEntity<Map<String, String>> getSigCdByAddress(@RequestParam String address) {
+        String sigCd = addressService.getSigCdFromAddress(address); // 주소로 sigCd 찾기
 
+        if (sigCd == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("message", "해당 주소의 sigCd를 찾을 수 없습니다."));
+        }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("sigCd", sigCd);
+        return ResponseEntity.ok(response);
+    }
 }
