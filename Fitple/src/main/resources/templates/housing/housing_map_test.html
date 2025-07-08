@@ -14,9 +14,6 @@
         #property-list { list-style-type: none; padding: 0; margin: 0; }
         #info-panel, #search-panel { padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; background-color: #f8f9fa; font-size: 14px; }
         #search-panel { display: flex; align-items: center; gap: 10px; }
-        .property-item { padding: 12px 5px; border-bottom: 1px solid #eee; cursor: pointer; transition: background-color 0.2s ease-in-out; }
-        .property-item:hover { background-color: #f5f5f5; }
-        .property-item.active-item { background-color: #e6f7ff; }
         .property-item strong { font-size: 1.1em; color: #333; }
         .property-item p { margin: 5px 0; font-size: 0.9em; color: #666; }
         .property-item .price { font-weight: bold; color: #0056b3; }
@@ -42,10 +39,7 @@
         #modal-body th { background-color: #f8f9fa; width: 120px; }
         .reply-form textarea { width: calc(100% - 70px); height: 50px; vertical-align: middle; }
         .reply-form button { width: 60px; height: 56px; vertical-align: middle; }
-        .reply-item { border-bottom: 1px solid #eee; padding: 10px 0; }
-        .reply-author { font-weight: bold; }
         .reply-content { margin: 5px 0; }
-        .reply-date { font-size: 0.8em; color: gray; }
         .reply-actions button { font-size:0.8em; color: #007bff; background:none; border:none; cursor:pointer; padding:0 5px; }
         /* --- 댓글 섹션 스타일 --- */
         #reply-section {
@@ -117,6 +111,95 @@
             cursor: pointer;
             flex-shrink: 0;
         }
+
+        /* --- 팝업 매물 이미지 --- */
+        .image-gallery-container {
+            position: relative;
+            margin-top: 20px;
+            border: 1px solid #eee;
+            background-color: #fdfdfd;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .gallery-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+        }
+        .header-left .image-title { font-weight: bold; margin-right: 10px; }
+        .main-image-viewer {
+            position: relative;
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0; /* 이미지 로딩 전 배경색 */
+        }
+        .main-image-viewer img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: opacity 0.3s; /* 이미지 전환 시 부드러운 효과 */
+        }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 1.8em;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+        }
+        .nav-arrow:hover { background: rgba(0, 0, 0, 0.6); }
+        .prev-arrow { left: 10px; }
+        .next-arrow { right: 10px; }
+        .image-counter {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        .thumbnail-gallery {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .thumbnail-scroll-wrapper {
+            display: flex;
+            gap: 10px;
+            padding: 5px 0;
+        }
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 3px solid transparent;
+            border-radius: 4px;
+            transition: border 0.2s;
+        }
+        .thumbnail.active {
+            border-color: #007bff;
+        }
+        .thumbnail-gallery::-webkit-scrollbar { height: 8px; }
+        .thumbnail-gallery::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        .thumbnail-gallery::-webkit-scrollbar-track { background: #f1f1f1; }
     </style>
 </head>
 <body>
@@ -204,7 +287,6 @@
         </div>
         <div id="modal-body">
         </div>
-
         <div id="reply-section">
             <h4>댓글</h4>
             <ul id="reply-list"></ul>
@@ -240,8 +322,8 @@
     window.onload = function() {
         setupRegionSearch();
         initializeMapAndLocation();
-        // 페이지 로드 시 댓글 제출 버튼 이벤트 리스너 한 번만 추가
         setupReplySubmitListener();
+        // 페이지 로드 시 갤러리 초기화는 모달이 열릴 때 하도록 변경
     };
 
     function initializeMapAndLocation() {
@@ -486,7 +568,6 @@
 
                 const listItem = document.createElement('li');
                 listItem.className = 'property-item';
-                // ID나 dataset 속성이 더 이상 필요 없으므로 삭제합니다.
 
                 const formattedDeposit = Number(itemData.bassRentGtn).toLocaleString('ko-KR');
                 const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
@@ -508,13 +589,12 @@
                     activeInfoWindow = infowindow;
                 };
 
-                // ▼▼▼ 클릭 시, itemData 객체를 직접 전달하도록 수정 ▼▼▼
                 listItem.addEventListener('click', () => {
                     openInfoWindow();
                     map.panTo(coords);
                     document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
                     listItem.classList.add('active-item');
-                    populateAndShowModal(itemData); // itemData 객체 자체를 전달
+                    populateAndShowModal(itemData);
                 });
 
                 kakao.maps.event.addListener(marker, 'click', () => {
@@ -522,7 +602,7 @@
                     listItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
                     listItem.classList.add('active-item');
-                    populateAndShowModal(itemData); // itemData 객체 자체를 전달
+                    populateAndShowModal(itemData);
                 });
             }
             await new Promise(resolve => setTimeout(resolve, 50));
@@ -540,22 +620,12 @@
     });
 
     function populateAndShowModal(itemData) {
-
-        const checkValue = (value) => {
-            if (!value || typeof value === 'object') return '정보없음';
-            return value;
-        };
-        const formatNumber = (value) => {
-            const num = Number(value);
-            if (isNaN(num)) return '정보없음'; // 숫자가 아닌 경우도 처리
-            return num.toLocaleString('ko-KR');
-        };
+        const checkValue = (value) => !value || typeof value === 'object' ? '정보없음' : value;
+        const formatNumber = (value) => isNaN(Number(value)) ? '정보없음' : Number(value).toLocaleString('ko-KR');
         const findPhoneNumber = (insttNm) => {
             if (!insttNm) return '1600-1004 (통합 콜센터)';
             for (const region in lhPhoneNumbers) {
-                if (insttNm.includes(region)) {
-                    return lhPhoneNumbers[region];
-                }
+                if (insttNm.includes(region)) return lhPhoneNumbers[region];
             }
             return '1600-1004 (통합 콜센터)';
         };
@@ -572,28 +642,47 @@
             <tr><th>전용면적</th><td>${checkValue(itemData.suplyPrvuseAr)} ㎡</td></tr>
             <tr><th>공용면적</th><td>${checkValue(itemData.suplyCmnuseAr)} ㎡</td></tr>
             <tr><th>주택유형</th><td>${checkValue(itemData.houseTyNm)}</td></tr>
-            <tr><th>난방방식</th><td>${checkValue(itemData.heatMthdDetailNm)}</td></tr>
-            <tr><th>건물형태</th><td>${checkValue(itemData.buldStleNm)}</td></tr>
-            <tr><th>승강기</th><td>${checkValue(itemData.elvtrInstlAtNm)}</td></tr>
-            <tr><th>주차수</th><td>${checkValue(itemData.parkngCo)}</td></tr>
             <tr><th>보증금</th><td>${formatNumber(itemData.bassRentGtn)} 원</td></tr>
             <tr><th>월임대료</th><td>${formatNumber(itemData.bassMtRntchrg)} 원</td></tr>
             <tr><th>전환보증금</th><td>${formatNumber(itemData.bassCnvrsGtnLmt)} 원</td></tr>
             <tr><th>관리 기관</th><td>${checkValue(itemData.insttNm)}</td></tr>
             <tr><th>연락처</th><td>${entrpsTel}</td></tr>
         </table>
+
+        <div class="image-gallery-container">
+            <div class="gallery-header">
+                <div class="header-left">
+                    <span class="image-title">매물 이미지</span>
+                </div>
+            </div>
+            <div class="main-image-viewer">
+                <button class="nav-arrow prev-arrow">‹</button>
+                <img id="current-image" src="" alt="Current Image">
+                <button class="nav-arrow next-arrow">›</button>
+                <div class="image-counter">
+                    <span id="current-image-index"></span> / <span id="total-images"></span>
+                </div>
+            </div>
+            <div class="thumbnail-gallery">
+                <div class="thumbnail-scroll-wrapper">
+                </div>
+            </div>
+        </div>
     `;
+
+        initGallery();
+
         const propertyId = `${itemData.hsmpSn}-${itemData.styleNm}-${itemData.suplyCmnuseAr}`;
         fetchAndDisplayReplies(propertyId);
-        document.getElementById('reply-textarea').value = ''; // 모달 열릴 때 댓글 입력창 초기화
+        document.getElementById('reply-textarea').value = '';
 
         modalWrapper.style.display = 'flex';
     }
 
-    // --- 댓글 목록 조회 및 표시 함수 ---
+
     function fetchAndDisplayReplies(propertyId) {
         const replyList = document.getElementById('reply-list');
-        replyList.dataset.propertyId = propertyId; // 댓글 작성을 위해 propertyId를 dataset에 저장
+        replyList.dataset.propertyId = propertyId;
 
         fetch(`/api/replies?propertyId=${propertyId}`)
             .then(response => {
@@ -629,7 +718,6 @@
             });
     }
 
-    // 댓글 제출 버튼에 대한 이벤트 리스너를 한 번만 설정
     function setupReplySubmitListener() {
         const submitBtn = document.getElementById('reply-submit-btn');
         const textarea = document.getElementById('reply-textarea');
@@ -641,7 +729,6 @@
                 return;
             }
 
-            // 현재 모달에 표시된 propertyId를 reply-list의 dataset에서 가져옴
             const replyList = document.getElementById('reply-list');
             const propertyId = replyList.dataset.propertyId;
 
@@ -659,12 +746,11 @@
                 .then(response => {
                     if (!response.ok) throw new Error('댓글 작성에 실패했습니다.');
                     textarea.value = '';
-                    fetchAndDisplayReplies(propertyId); // 성공 시 목록 새로고침
+                    fetchAndDisplayReplies(propertyId);
                 })
                 .catch(error => alert(error.message));
         });
     }
-
 
     document.getElementById('reply-list').addEventListener('click', function(e) {
         const propertyId = e.currentTarget.dataset.propertyId;
@@ -703,6 +789,129 @@
         }
     });
 
+    // --- ▼▼▼ 상세 매물 이미지 갤러리 스크립트 (수정됨) ▼▼▼ ---
+    const images = [
+        { src: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737569_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737569_1280.jpg' },
+        { src: 'https://cdn.pixabay.com/photo/2015/04/24/10/19/studio-737575_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2015/04/24/10/19/studio-737575_1280.jpg' },
+        { src: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737572_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737572_1280.jpg' },
+        { src: 'https://cdn.pixabay.com/photo/2014/03/06/11/26/officetel-280748_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2014/03/06/11/26/officetel-280748_1280.jpg' },
+    ];
+
+    let currentIndex = 0;
+    const totalImages = images.length;
+    let fixedImageWidth = null;  // 1번 이미지 기준 고정 너비
+    let fixedImageHeight = null; // 1번 이미지 기준 고정 높이
+
+    function createThumbnails() {
+        const thumbnailGallery = document.querySelector('.thumbnail-scroll-wrapper');
+        if (!thumbnailGallery) return;
+        thumbnailGallery.innerHTML = '';
+        images.forEach((imgData, index) => {
+            const thumb = document.createElement('img');
+            thumb.className = 'thumbnail';
+            thumb.src = imgData.thumb;
+            thumb.alt = `Thumbnail ${index + 1}`;
+            thumb.dataset.index = index;
+            thumbnailGallery.appendChild(thumb);
+
+            thumb.addEventListener('click', () => {
+                showImage(index);
+            });
+        });
+    }
+
+    function showImage(index) {
+        if (totalImages === 0) return;
+
+        const currentImageElement = document.getElementById('current-image');
+        const currentImageIndexSpan = document.getElementById('current-image-index');
+
+        if (!currentImageElement || !currentImageIndexSpan) return;
+
+        if (index < 0) {
+            currentIndex = totalImages - 1;
+        } else if (index >= totalImages) {
+            currentIndex = 0;
+        } else {
+            currentIndex = index;
+        }
+
+        // ▼▼▼ 고정된 크기 적용 ▼▼▼
+        if (fixedImageWidth && fixedImageHeight) {
+            currentImageElement.style.width = `${fixedImageWidth}px`;
+            currentImageElement.style.height = `${fixedImageHeight}px`;
+        }
+
+        currentImageElement.style.opacity = '0'; // 부드러운 전환을 위해 잠시 투명하게
+        setTimeout(() => { // 이미지 소스 변경 후 다시 보이게
+            currentImageElement.src = images[currentIndex].src;
+            currentImageElement.style.opacity = '1';
+        }, 150);
+
+
+        currentImageIndexSpan.textContent = currentIndex + 1;
+
+        document.querySelectorAll('.thumbnail').forEach((thumb, idx) => {
+            if (idx === currentIndex) {
+                thumb.classList.add('active');
+                thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+    }
+
+    // ▼▼▼ 1번 이미지 크기 계산 로직을 포함하여 수정된 initGallery ▼▼▼
+    function initGallery() {
+        const galleryContainer = document.querySelector('.image-gallery-container');
+        if (images.length === 0) {
+            if (galleryContainer) galleryContainer.style.display = 'none';
+            return;
+        }
+        if (galleryContainer) galleryContainer.style.display = 'flex';
+
+        const prevArrow = document.querySelector('.prev-arrow');
+        const nextArrow = document.querySelector('.next-arrow');
+        const totalImagesSpan = document.getElementById('total-images');
+        const mainImageViewer = document.querySelector('.main-image-viewer');
+
+        if (!prevArrow || !nextArrow || !totalImagesSpan || !mainImageViewer) return;
+
+        createThumbnails();
+        totalImagesSpan.textContent = totalImages;
+
+        const newPrevArrow = prevArrow.cloneNode(true);
+        prevArrow.parentNode.replaceChild(newPrevArrow, prevArrow);
+        newPrevArrow.addEventListener('click', () => showImage(currentIndex - 1));
+
+        const newNextArrow = nextArrow.cloneNode(true);
+        nextArrow.parentNode.replaceChild(newNextArrow, nextArrow);
+        newNextArrow.addEventListener('click', () => showImage(currentIndex + 1));
+
+        // 1번 이미지의 표시 크기를 계산하여 변수에 저장
+        const firstImage = new Image();
+        firstImage.onload = function() {
+            const viewerWidth = mainImageViewer.clientWidth;
+            const viewerMaxHeight = 400; // CSS의 max-height와 동일
+
+            const ratio = this.naturalWidth / this.naturalHeight;
+
+            let newHeight = viewerWidth / ratio;
+            let newWidth = viewerWidth;
+
+            if (newHeight > viewerMaxHeight) {
+                newHeight = viewerMaxHeight;
+                newWidth = viewerMaxHeight * ratio;
+            }
+
+            fixedImageWidth = newWidth;
+            fixedImageHeight = newHeight;
+
+            // 크기 계산이 완료된 후 첫 이미지 표시
+            showImage(0);
+        };
+        firstImage.src = images[0].src;
+    }
 </script>
 </body>
 </html>

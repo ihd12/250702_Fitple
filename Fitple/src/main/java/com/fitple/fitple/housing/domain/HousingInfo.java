@@ -56,8 +56,6 @@ public class HousingInfo {
     private String entrpsTel; // 사무소 or 부동산 연락처
     private String competDe; // 준공일자
     private String buldStleNm; // 건물 형태
-    private String elvtrInstlAtNm; // 승강기 설치 여부
-    private String parkngCo; // 주차 가능 수
 
     // 추후 기능 대비
     @Column(name = "score", nullable = false)
