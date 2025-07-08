@@ -7,7 +7,7 @@ import com.fitple.fitple.common.dto.PageResponseDTO;
 public interface UserService {
     UserDTO register(UserDTO dto);
     PageResponseDTO<UserDTO> getUserList(PageRequestDTO pageRequestDTO);
-    UserDTO getUser(Long id);
+    UserDTO getUser(String email);
     void modify(UserDTO dto);
-    void delete(Long id);
+    void delete(String email);
 }

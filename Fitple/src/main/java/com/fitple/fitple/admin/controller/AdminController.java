@@ -1,5 +1,6 @@
 package com.fitple.fitple.admin.controller;
 
+import com.fitple.fitple.base.user.dto.UserDTO;
 import com.fitple.fitple.base.user.service.UserService;
 import com.fitple.fitple.common.dto.PageRequestDTO;
 import com.fitple.fitple.notice.dto.NoticeDTO;
@@ -23,9 +24,9 @@ public class AdminController {
         model.addAttribute("responseDTO",userService.getUserList(pageRequestDTO));
         return "admin/list";
     }
-    @DeleteMapping("/member/{id}")
-    public String deleteUser(@PathVariable Long id){
-        userService.delete(id);
+    @DeleteMapping("/member")
+    public String deleteUser(UserDTO userDTO) {
+        userService.delete(userDTO.getEmail());
         return "redirect:/admin/member/";
     }
 

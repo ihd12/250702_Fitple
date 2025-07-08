@@ -2,7 +2,6 @@ package com.fitple.fitple.base.user.controller;
 
 import com.fitple.fitple.base.user.dto.UserDTO;
 import com.fitple.fitple.base.user.service.UserService;
-import com.fitple.fitple.common.dto.PageRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,17 +38,30 @@ public class UserController {
 //        model.addAttribute("user", userService.getUser(id));
 //        return "user/mypage";
 //    }
+    @GetMapping("/modify")
+    public String getModifyUser(@AuthenticationPrincipal UserDetails userDetails, Model model) throws AccessDeniedException {
+        String email = userDetails.getUsername();
+        UserDTO user = userService.getUser(email);
+        if(!email.equals(user.getEmail())) {
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+        model.addAttribute("user", user);
+        return "user/edit";
+    }
     @PostMapping("/modify")
     public String modifyUser(UserDTO dto, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException {
         if(!userDetails.getUsername().equals(dto.getEmail())){
             throw new AccessDeniedException("권한이 없습니다.");
         }
         userService.modify(dto);
-        return "redirect:/user/edit";
+        return "redirect:/user/modify";
     }
     @PostMapping("/remove")
-    public String deleteUser(@PathVariable Long id){
-        userService.delete(id);
+    public String deleteUser(UserDTO userDTO, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException{
+        if(!userDetails.getUsername().equals(userDTO.getEmail())){
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+        userService.delete(userDetails.getUsername());
         return "redirect:/";
     }
 }

@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("not found"+id));
+    public UserDTO getUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new IllegalArgumentException("not found : "+email));
         return UserDTO.toDTO(user);
     }
 
@@ -60,12 +60,12 @@ public class UserServiceImpl implements UserService {
             user.changeNickname(dto.getNickname());
         }
         if(dto.getPassword()!=null && !dto.getPassword().isBlank()){
-            user.changePassword(dto.getPassword());
+            user.changePassword(passwordEncoder.encode(dto.getPassword()));
         }
     }
 
     @Override
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public void delete(String email) {
+        userRepository.deleteByEmail(email);
     }
 }
