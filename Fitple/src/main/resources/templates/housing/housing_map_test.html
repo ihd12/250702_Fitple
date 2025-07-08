@@ -30,888 +30,150 @@
         .type-filter-btn.active { border-color: #3498db; background-color: #eaf4fc; font-weight: bold; }
         #modal-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
         #modal-content { background-color: white; width: 90%; max-width: 600px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
-        #modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #dee2e6; }
+        #modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #dee2e6; flex-shrink: 0; }
         #modal-header h2 { margin: 0; font-size: 1.25em; }
         #close-modal-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: #555; }
-        #modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+        #modal-body { padding: 20px; max-height: 80vh; overflow-y: auto; }
         #modal-body table { width: 100%; border-collapse: collapse; margin-bottom:20px; }
         #modal-body th, #modal-body td { border: 1px solid #ddd; padding: 8px; font-size: 0.9em; }
         #modal-body th { background-color: #f8f9fa; width: 120px; }
-        .reply-form textarea { width: calc(100% - 70px); height: 50px; vertical-align: middle; }
-        .reply-form button { width: 60px; height: 56px; vertical-align: middle; }
         .reply-content { margin: 5px 0; }
         .reply-actions button { font-size:0.8em; color: #007bff; background:none; border:none; cursor:pointer; padding:0 5px; }
-        /* --- 댓글 섹션 스타일 --- */
-        #reply-section {
-            padding: 10px 20px 20px;
-            border-top: 1px solid #eee;
-            background-color: #fdfdfd;
-        }
-        #reply-section h4 {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        #reply-list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        .reply-item {
-            padding: 10px 5px;
-            border-bottom: 1px dashed #ddd;
-        }
-        .reply-item:last-child {
-            border-bottom: none;
-        }
-        .reply-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .reply-header .user-id {
-            font-weight: bold;
-        }
-        .reply-header .timestamp {
-            color: #999;
-        }
-        .reply-content {
-            margin: 0 0 8px 0;
-            padding-left: 2px;
-            color: #333;
-        }
-        .reply-actions button {
-            background: none;
-            border: none;
-            color: #007bff;
-            cursor: pointer;
-            font-size: 0.8em;
-            padding: 2px 4px;
-        }
-        #reply-form {
-            display: flex;
-            margin-top: 15px;
-            gap: 10px;
-        }
-        #reply-textarea {
-            flex-grow: 1;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 8px;
-            resize: vertical;
-        }
-        #reply-submit-btn {
-            padding: 0 15px;
-            border: 1px solid #007bff;
-            background-color: #007bff;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        /* --- 팝업 매물 이미지 --- */
-        .image-gallery-container {
-            position: relative;
-            margin-top: 20px;
-            border: 1px solid #eee;
-            background-color: #fdfdfd;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .gallery-header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0;
-        }
+        #reply-section { padding: 20px 0 0 0; margin-top: 20px; border-top: 1px solid #eee; }
+        #reply-section h4 { margin-top: 0; margin-bottom: 10px; padding: 0 5px; }
+        #reply-list { list-style-type: none; padding: 0; margin: 0; }
+        .reply-item { padding: 10px 5px; border-bottom: 1px dashed #ddd; }
+        .reply-item:last-child { border-bottom: none; }
+        .reply-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; color: #555; margin-bottom: 5px; }
+        .reply-header .user-id { font-weight: bold; }
+        .reply-header .timestamp { color: #999; }
+        .reply-content { margin: 0 0 8px 0; padding-left: 2px; color: #333; }
+        .reply-actions button { background: none; border: none; color: #007bff; cursor: pointer; font-size: 0.8em; padding: 2px 4px; }
+        #reply-form { display: flex; margin-top: 15px; gap: 10px; padding: 0 5px; }
+        #reply-textarea { flex-grow: 1; border: 1px solid #ccc; border-radius: 4px; padding: 8px; resize: vertical; }
+        #reply-submit-btn { padding: 0 15px; border: 1px solid #007bff; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; flex-shrink: 0; }
+        .image-gallery-container { position: relative; margin-top: 20px; border: 1px solid #eee; background-color: #fdfdfd; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .gallery-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0; }
         .header-left .image-title { font-weight: bold; margin-right: 10px; }
-        .main-image-viewer {
-            position: relative;
-            width: 100%;
-            height: auto;
-            max-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f0f0f0; /* 이미지 로딩 전 배경색 */
-        }
-        .main-image-viewer img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: opacity 0.3s; /* 이미지 전환 시 부드러운 효과 */
-        }
-        .nav-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            font-size: 1.8em;
-            cursor: pointer;
-            z-index: 10;
-            border-radius: 50%;
-        }
+        .main-image-viewer { position: relative; width: 100%; height: 350px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; }
+        .main-image-viewer img { max-width: 100%; max-height: 100%; object-fit: contain; transition: opacity 0.3s; }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0, 0, 0, 0.4); color: white; border: none; padding: 8px 12px; font-size: 1.8em; cursor: pointer; z-index: 10; border-radius: 50%; }
         .nav-arrow:hover { background: rgba(0, 0, 0, 0.6); }
         .prev-arrow { left: 10px; }
         .next-arrow { right: 10px; }
-        .image-counter {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.6);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
-        }
-        .thumbnail-gallery {
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-        .thumbnail-scroll-wrapper {
-            display: flex;
-            gap: 10px;
-            padding: 5px 0;
-        }
-        .thumbnail {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            cursor: pointer;
-            border: 3px solid transparent;
-            border-radius: 4px;
-            transition: border 0.2s;
-        }
-        .thumbnail.active {
-            border-color: #007bff;
-        }
+        .image-counter { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.6); color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.9em; }
+        .thumbnail-gallery { width: 100%; overflow-x: auto; padding-bottom: 5px; }
+        .thumbnail-scroll-wrapper { display: flex; gap: 10px; padding: 5px 0; }
+        .thumbnail { width: 70px; height: 70px; object-fit: cover; cursor: pointer; border: 3px solid transparent; border-radius: 4px; transition: border 0.2s; }
+        .thumbnail.active { border-color: #007bff; }
         .thumbnail-gallery::-webkit-scrollbar { height: 8px; }
         .thumbnail-gallery::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
         .thumbnail-gallery::-webkit-scrollbar-track { background: #f1f1f1; }
+        #reply-pagination { display: flex; justify-content: center; align-items: center; padding: 15px 0 5px 0; }
+        .page-btn { border: 1px solid #ddd; padding: 5px 10px; margin: 0 3px; cursor: pointer; background-color: #fff; border-radius: 4px; font-size: 0.9em; }
+        .page-btn:hover { background-color: #f0f0f0; }
+        .page-btn.active { background-color: #007bff; color: white; border-color: #007bff; font-weight: bold; }
+        .page-btn:disabled { color: #ccc; cursor: not-allowed; }
+        .rating-display { color: #666; font-size: 0.9em; }
+        .rating-display .star-filled { color: #f8b400; }
+        .rating-display .star-empty { color: #ccc; }
+        .rating-display strong { color: #333; margin-left: 5px; }
+        .star-rating-section { margin-bottom: 20px; padding: 20px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; text-align: center; }
+        .star-rating-section h4 { margin: 0 0 10px 0; font-size: 1.1em; color: #333; }
+        .stars { cursor: pointer; display: inline-block; }
+        .stars .star { font-size: 2.2em; color: #ddd; transition: color 0.2s; letter-spacing: 3px;}
+        .stars:hover .star { color: #f8b400 !important; }
+        .stars .star:hover ~ .star { color: #ddd !important; }
+        .stars .star.filled { color: #f8b400; }
+        .rating-feedback { margin-top: 10px; font-size: 0.9em; color: #007bff; height: 1.2em; transition: opacity 0.3s; }
     </style>
 </head>
 <body>
 <h2>임대 주택 정보</h2>
+<div id="search-panel"><strong>지역 검색:</strong><select id="sido-select"></select><select id="sigungu-select"></select><button id="search-btn">검색</button><button id="toggle-advanced-search-btn">상세 검색</button></div>
+<div id="advanced-filter-panel"><div class="filter-group"><label>보증금(만원)</label><input type="number" id="min-deposit" placeholder="최소"><span>~</span><input type="number" id="max-deposit" placeholder="최대"></div><div class="filter-group"><label>월세(만원)</label><input type="number" id="min-rent" placeholder="최소"><span>~</span><input type="number" id="max-rent" placeholder="최대"></div><div class="filter-group"><label>전용면적(㎡)</label><input type="number" id="min-area" placeholder="최소"><span>~</span><input type="number" id="max-area" placeholder="최대"></div><div class="filter-group preset-buttons"><label></label><button class="area-preset-btn" data-min="" data-max="33">~33㎡</button><button class="area-preset-btn" data-min="33" data-max="66">33~66㎡</button><button class="area-preset-btn" data-min="66" data-max="99">66~99㎡</button><button class="area-preset-btn" data-min="99" data-max="132">99~132㎡</button></div><div class="filter-group"><label>주택유형</label><div class="preset-buttons"><button class="type-filter-btn active" data-type="">전체</button><button class="type-filter-btn" data-type="다가구주택">다가구</button><button class="type-filter-btn" data-type="다세대주택">다세대</button><button class="type-filter-btn" data-type="아파트">아파트</button><button class="type-filter-btn" data-type="오피스텔">오피스텔</button><button class="type-filter-btn" data-type="etc">기타</button></div></div><div class="filter-group"><label></label><button id="apply-filter-btn">필터 적용</button><button id="reset-filter-btn">초기화</button></div></div>
+<div id="info-panel"><strong>현재 위치 정보:</strong><span>위도: <span id="info-lat"></span></span><span>경도: <span id="info-lng"></span></span><span>주소: <span id="info-addr"></span></span><span><strong>법정동 코드:</strong> <span id="info-code"></span></span></div>
+<div id="main-container"><div id="map"></div><div id="list-panel"><h3>매물 리스트</h3><div id="loading-animation" style="display:none; text-align:center; padding:20px;"><div class="loader"></div><p>검색 중입니다...</p></div><div id="list-content"><ul id="property-list"></ul></div></div></div>
+<div id="modal-wrapper"><div id="modal-content"><div id="modal-header"><h2>매물 상세 정보</h2><button id="close-modal-btn">✖</button></div><div id="modal-body"></div></div></div>
 
-<div id="search-panel">
-    <strong>지역 검색:</strong>
-    <select id="sido-select"></select>
-    <select id="sigungu-select"></select>
-    <button id="search-btn">검색</button>
-    <button id="toggle-advanced-search-btn">상세 검색</button>
-</div>
-
-<div id="advanced-filter-panel">
-    <div class="filter-group">
-        <label>보증금(만원)</label>
-        <input type="number" id="min-deposit" placeholder="최소">
-        <span>~</span>
-        <input type="number" id="max-deposit" placeholder="최대">
-    </div>
-    <div class="filter-group">
-        <label>월세(만원)</label>
-        <input type="number" id="min-rent" placeholder="최소">
-        <span>~</span>
-        <input type="number" id="max-rent" placeholder="최대">
-    </div>
-    <div class="filter-group">
-        <label>전용면적(㎡)</label>
-        <input type="number" id="min-area" placeholder="최소">
-        <span>~</span>
-        <input type="number" id="max-area" placeholder="최대">
-    </div>
-    <div class="filter-group preset-buttons">
-        <label></label>
-        <button class="area-preset-btn" data-min="" data-max="33">~33㎡</button>
-        <button class="area-preset-btn" data-min="33" data-max="66">33~66㎡</button>
-        <button class="area-preset-btn" data-min="66" data-max="99">66~99㎡</button>
-        <button class="area-preset-btn" data-min="99" data-max="132">99~132㎡</button>
-    </div>
-    <div class="filter-group">
-        <label>주택유형</label>
-        <div class="preset-buttons">
-            <button class="type-filter-btn active" data-type="">전체</button>
-            <button class="type-filter-btn" data-type="다가구주택">다가구</button>
-            <button class="type-filter-btn" data-type="다세대주택">다세대</button>
-            <button class="type-filter-btn" data-type="아파트">아파트</button>
-            <button class="type-filter-btn" data-type="오피스텔">오피스텔</button>
-            <button class="type-filter-btn" data-type="etc">기타</button>
-        </div>
-    </div>
-    <div class="filter-group">
-        <label></label>
-        <button id="apply-filter-btn">필터 적용</button>
-        <button id="reset-filter-btn">초기화</button>
-    </div>
-</div>
-
-<div id="info-panel">
-    <strong>현재 위치 정보:</strong>
-    <span>위도: <span id="info-lat"></span></span>
-    <span>경도: <span id="info-lng"></span></span>
-    <span>주소: <span id="info-addr"></span></span>
-    <span><strong>법정동 코드:</strong> <span id="info-code"></span></span>
-</div>
-
-<div id="main-container">
-    <div id="map"></div>
-    <div id="list-panel">
-        <h3>매물 리스트</h3>
-        <div id="loading-animation" style="display:none; text-align:center; padding:20px;">
-            <div class="loader"></div>
-            <p>검색 중입니다...</p>
-        </div>
-        <div id="list-content">
-            <ul id="property-list"></ul>
-        </div>
-    </div>
-</div>
-
-<div id="modal-wrapper">
-    <div id="modal-content">
-        <div id="modal-header">
-            <h2>매물 상세 정보</h2>
-            <button id="close-modal-btn">✖</button>
-        </div>
-        <div id="modal-body">
-        </div>
-        <div id="reply-section">
-            <h4>댓글</h4>
-            <ul id="reply-list"></ul>
-            <div id="reply-form">
-                <textarea id="reply-textarea" placeholder="댓글을 입력하세요..." rows="3"></textarea>
-                <button id="reply-submit-btn">등록</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a0e30d98f6dfa0bc355f0bdba19e03da&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a0e30d98f6dfa0bc355f0bdba19e03da&libraries=services&autoload=false"></script>
 <script>
-    // 전역 변수
-    var latitude = 37.566826;
-    var longitude = 126.9786567;
-    var geocoder = new kakao.maps.services.Geocoder();
-    var map;
-    var markers = [];
-    let activeInfoWindow = null;
-    let currentHousingList = [];
-    let selectedHouseType = '';
-
-    // 전역 요소
-    const sidoSelect = document.getElementById('sido-select');
-    const sigunguSelect = document.getElementById('sigungu-select');
-    const modalWrapper = document.getElementById('modal-wrapper');
-    const modalBody = document.getElementById('modal-body');
-    const closeModalBtn = document.getElementById('close-modal-btn');
+    var latitude = 37.566826, longitude = 126.9786567, geocoder, map, markers = [], activeInfoWindow = null, currentHousingList = [], selectedHouseType = "", currentReplyPage = 1, repliesPerPage = 5, allReplies = [];
+    const currentUserId = "testUser123";
+    const sidoSelect = document.getElementById('sido-select'), sigunguSelect = document.getElementById('sigungu-select'), modalWrapper = document.getElementById('modal-wrapper'), modalBody = document.getElementById('modal-body'), closeModalBtn = document.getElementById('close-modal-btn');
     const regionData = { "11": { name: "서울특별시", sigungu: { "110": "종로구", "140": "중구", "170": "용산구", "200": "성동구", "215": "광진구", "230": "동대문구", "260": "중랑구", "290": "성북구", "305": "강북구", "320": "도봉구", "350": "노원구", "380": "은평구", "410": "서대문구", "440": "마포구", "470": "양천구", "500": "강서구", "530": "구로구", "545": "금천구", "560": "영등포구", "590": "동작구", "620": "관악구", "650": "서초구", "680": "강남구", "710": "송파구", "740": "강동구" } }, "26": { name: "부산광역시", sigungu: { "110": "중구", "140": "서구", "170": "동구", "200": "영도구", "230": "부산진구", "260": "동래구", "290": "남구", "320": "북구", "350": "해운대구", "380": "사하구", "410": "금정구", "440": "강서구", "470": "연제구", "500": "수영구", "530": "사상구", "710": "기장군" } }, "27": { name: "대구광역시", sigungu: { "110": "중구", "140": "동구", "170": "서구", "200": "남구", "230": "북구", "260": "수성구", "290": "달서구", "710": "달성군" } }, "28": { name: "인천광역시", sigungu: { "110": "중구", "140": "동구", "177": "미추홀구", "185": "연수구", "200": "남동구", "237": "부평구", "245": "계양구", "260": "서구", "710": "강화군", "720": "옹진군" } }, "29": { name: "광주광역시", sigungu: { "110": "동구", "140": "서구", "155": "남구", "170": "북구", "200": "광산구" } }, "30": { name: "대전광역시", sigungu: { "110": "동구", "140": "중구", "170": "서구", "200": "유성구", "230": "대덕구" } }, "31": { name: "울산광역시", sigungu: { "110": "중구", "140": "남구", "170": "동구", "200": "북구", "710": "울주군" } }, "36": { name: "세종특별자치시", sigungu: { "110": "세종특별자치시" } }, "41": { name: "경기", sigungu: { "111": "수원시 장안구", "113": "수원시 권선구", "115": "수원시 팔달구", "117": "수원시 영통구", "131": "성남시 수정구", "133": "성남시 중원구", "135": "성남시 분당구", "150": "의정부시", "171": "안양시 만안구", "173": "안양시 동안구", "190": "부천시", "210": "광명시", "220": "평택시", "250": "동두천시", "271": "안산시 상록구", "273": "안산시 단원구", "281": "고양시 덕양구", "285": "고양시 일산동구", "287": "고양시 일산서구", "290": "과천시", "310": "구리시", "360": "남양주시", "370": "오산시", "390": "시흥시", "410": "군포시", "430": "의왕시", "450": "하남시", "461": "용인시 처인구", "463": "용인시 기흥구", "465": "용인시 수지구", "480": "파주시", "500": "이천시", "550": "안성시", "570": "김포시", "590": "화성시", "610": "광주시", "630": "양주시", "650": "포천시", "670": "여주시", "800": "연천군", "820": "가평군", "830": "양평군" } }, "51": { name: "강원특별자치도", sigungu: { "110": "춘천시", "130": "원주시", "150": "강릉시", "170": "동해시", "190": "태백시", "210": "속초시", "230": "삼척시", "720": "홍천군", "730": "횡성군", "750": "영월군", "760": "평창군", "770": "정선군", "780": "철원군", "790": "화천군", "800": "양구군", "810": "인제군", "820": "고성군", "830": "양양군" } }, "43": { name: "충북", sigungu: { "111": "청주시 상당구", "112": "청주시 서원구", "113": "청주시 흥덕구", "114": "청주시 청원구", "130": "충주시", "150": "제천시", "720": "보은군", "730": "옥천군", "740": "영동군", "745": "증평군", "750": "진천군", "760": "괴산군", "770": "음성군", "800": "단양군" } }, "44": { name: "충남", sigungu: { "131": "천안시 동남구", "133": "천안시 서북구", "150": "공주시", "180": "보령시", "200": "아산시", "210": "서산시", "230": "논산시", "250": "계룡시", "270": "당진시", "710": "금산군", "760": "부여군", "770": "서천군", "790": "청양군", "800": "홍성군", "810": "예산군", "825": "태안군" } }, "52": { name: "전북특별자치도", sigungu: { "111": "전주시 완산구", "113": "전주시 덕진구", "130": "군산시", "140": "익산시", "180": "정읍시", "190": "남원시", "210": "김제시", "710": "완주군", "720": "진안군", "730": "무주군", "740": "장수군", "750": "임실군", "770": "순창군", "790": "고창군", "800": "부안군" } }, "46": { name: "전남", sigungu: { "110": "목포시", "130": "여수시", "150": "순천시", "170": "나주시", "230": "광양시", "710": "담양군", "720": "곡성군", "730": "구례군", "770": "고흥군", "780": "보성군", "800": "화순군", "810": "장흥군", "820": "강진군", "830": "해남군", "840": "영암군", "860": "무안군", "870": "함평군", "880": "영광군", "890": "장성군", "900": "완도군", "910": "진도군" } }, "47": { name: "경북", sigungu: { "111": "포항시 남구", "113": "포항시 북구", "130": "경주시", "150": "김천시", "170": "안동시", "190": "구미시", "210": "영주시", "230": "영천시", "250": "상주시", "280": "문경시", "290": "경산시", "720": "군위군", "730": "의성군", "750": "청송군", "760": "영양군", "770": "영덕군", "820": "청도군", "830": "고령군", "840": "성주군", "850": "칠곡군", "900": "예천군", "920": "봉화군", "930": "울진군", "940": "울릉군" } }, "48": { name: "경남", sigungu: { "121": "창원시 의창구", "123": "창원시 성산구", "125": "창원시 마산합포구", "127": "창원시 마산회원구", "129": "창원시 진해구", "170": "진주시", "220": "통영시", "240": "사천시", "250": "김해시", "270": "밀양시", "310": "거제시", "330": "양산시", "720": "의령군", "730": "함안군", "740": "창녕군", "820": "고성군", "840": "남해군", "850": "하동군", "860": "산청군", "870": "함양군", "880": "거창군", "890": "합천군" } }, "50": { name: "제주특별자치도", sigungu: { "110": "제주시", "130": "서귀포시" } } };
     const lhPhoneNumbers = { "서울": "02-3416-3600", "경기남부": "031-250-8380", "부산울산": "051-460-5401", "대구경북": "053-603-2640", "광주전남": "062-360-3114", "대전충남": "042-470-0117", "강원": "033-258-4400", "경남": "055-210-8680", "전북": "063-230-6100", "제주": "064-720-1000", "충북": "1600-1004 (통합 콜센터)" };
 
-    window.onload = function() {
+    // ▼▼▼ kakao.maps.load를 사용하여 SDK 로드 후 앱 시작 ▼▼▼
+    kakao.maps.load(() => {
+        geocoder = new kakao.maps.services.Geocoder();
         setupRegionSearch();
         initializeMapAndLocation();
         setupReplySubmitListener();
-        // 페이지 로드 시 갤러리 초기화는 모달이 열릴 때 하도록 변경
-    };
-
-    function initializeMapAndLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                pos => {
-                    latitude = pos.coords.latitude;
-                    longitude = pos.coords.longitude;
-                    drawMap();
-                },
-                error => {
-                    console.error("Geolocation 에러:", error.message);
-                    alert("현재 위치를 가져올 수 없습니다. 기본 위치로 지도를 표시합니다.");
-                    drawMap();
-                }
-            );
-        } else {
-            alert("이 브라우저에서는 위치 정보 기능을 지원하지 않습니다.");
-            drawMap();
-        }
-    }
-
-    function drawMap() {
-        const mapContainer = document.getElementById('map');
-        const mapOption = { center: new kakao.maps.LatLng(latitude, longitude), level: 8 };
-        map = new kakao.maps.Map(mapContainer, mapOption);
-
-        kakao.maps.event.addListener(map, 'tilesloaded', function(){
-            displayLocationInfo(latitude, longitude);
-        });
-
-        kakao.maps.event.addListener(map, 'idle', function() {
-            const newCenter = map.getCenter();
-            if(newCenter.getLat() !== latitude || newCenter.getLng() !== longitude){
-                latitude = newCenter.getLat();
-                longitude = newCenter.getLng();
-                displayLocationInfo(latitude, longitude);
-            }
-        });
-    }
-
-    function displayLocationInfo(lat, lng) {
-        document.getElementById('info-lat').innerText = lat.toFixed(6);
-        document.getElementById('info-lng').innerText = lng.toFixed(6);
-        document.getElementById('info-addr').innerText = "확인 중...";
-        document.getElementById('info-code').innerText = "확인 중...";
-        geocoder.coord2RegionCode(lng, lat, (result, status) => {
-            if (status === kakao.maps.services.Status.OK) {
-                const bjdInfo = result.find(r => r.region_type === 'B');
-                if (bjdInfo) {
-                    document.getElementById('info-addr').innerText = bjdInfo.address_name;
-                    const sidoCode = bjdInfo.code.substring(0, 2);
-                    const sigunguCode = bjdInfo.code.substring(2, 5);
-                    sidoSelect.value = sidoCode;
-                    updateSigunguSelect(sidoCode);
-                    sigunguSelect.value = sigunguCode;
-                    updateBjdCode();
-                } else {
-                    document.getElementById('info-addr').innerText = "법정동 정보 없음";
-                    document.getElementById('info-code').innerText = "확인 불가";
-                }
-            } else {
-                document.getElementById('info-addr').innerText = "위치 정보 확인 실패";
-                document.getElementById('info-code').innerText = "확인 불가";
-            }
-        });
-    }
-
-    function updateBjdCode() {
-        const sidoCode = sidoSelect.value;
-        const sigunguCode = sigunguSelect.value;
-        document.getElementById('info-code').innerText = sidoCode && sigunguCode ? `${sidoCode}${sigunguCode}` : "코드 없음";
-    }
-
-    function setupRegionSearch() {
-        const searchBtn = document.getElementById('search-btn');
-        const toggleAdvancedBtn = document.getElementById('toggle-advanced-search-btn');
-        const advancedFilterPanel = document.getElementById('advanced-filter-panel');
-        const applyFilterBtn = document.getElementById('apply-filter-btn');
-        const resetFilterBtn = document.getElementById('reset-filter-btn');
-        const loadingAnimation = document.getElementById('loading-animation');
-        const listContent = document.getElementById('list-content');
-        const areaPresetButtons = document.querySelectorAll('.area-preset-btn');
-        const minAreaInput = document.getElementById('min-area');
-        const maxAreaInput = document.getElementById('max-area');
-        const typeFilterButtons = document.querySelectorAll('.type-filter-btn');
-
-        for (const code in regionData) {
-            const option = document.createElement('option');
-            option.value = code;
-            option.innerText = regionData[code].name;
-            sidoSelect.appendChild(option);
-        }
-        sidoSelect.addEventListener('change', () => { updateSigunguSelect(sidoSelect.value); updateBjdCode(); });
-        sigunguSelect.addEventListener('change', updateBjdCode);
-
-        toggleAdvancedBtn.addEventListener('click', () => {
-            const isVisible = advancedFilterPanel.style.display === 'flex';
-            advancedFilterPanel.style.display = isVisible ? 'none' : 'flex';
-        });
-
-        searchBtn.addEventListener('click', () => {
-            updateBjdCode();
-            loadingAnimation.style.display = 'block';
-            listContent.style.display = 'none';
-            fetch(`/api/housing?brtcCode=${sidoSelect.value}&signguCode=${sigunguSelect.value}`)
-                .then(response => response.json())
-                .then(data => {
-                    currentHousingList = data.hsmpList || [];
-                    clearMarkers();
-                    displayHousingOnMap(currentHousingList);
-                })
-                .catch(error => console.error('API 호출 중 오류:', error))
-                .finally(() => {
-                    loadingAnimation.style.display = 'none';
-                    listContent.style.display = 'block';
-                });
-        });
-
-        areaPresetButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                minAreaInput.value = this.dataset.min;
-                maxAreaInput.value = this.dataset.max;
-                applyFilterBtn.click();
-            });
-        });
-
-        typeFilterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                typeFilterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                selectedHouseType = this.dataset.type;
-                applyFilterBtn.click();
-            });
-        });
-
-        applyFilterBtn.addEventListener('click', () => {
-            const minDeposit = document.getElementById('min-deposit').value;
-            const maxDeposit = document.getElementById('max-deposit').value;
-            const minRent = document.getElementById('min-rent').value;
-            const maxRent = document.getElementById('max-rent').value;
-            const minArea = document.getElementById('min-area').value;
-            const maxArea = document.getElementById('max-area').value;
-
-            const minDepositValue = minDeposit ? parseInt(minDeposit) * 10000 : 0;
-            const maxDepositValue = maxDeposit ? parseInt(maxDeposit) * 10000 : Infinity;
-            const minRentValue = minRent ? parseInt(minRent) * 10000 : 0;
-            const maxRentValue = maxRent ? parseInt(maxRent) * 10000 : Infinity;
-            const minAreaValue = minArea ? parseFloat(minArea) : 0;
-            const maxAreaValue = maxArea ? parseFloat(maxArea) : Infinity;
-
-            const filteredList = currentHousingList.filter(item => {
-                const deposit = Number(item.bassRentGtn);
-                const rent = Number(item.bassMtRntchrg);
-                const area = parseFloat(item.suplyPrvuseAr);
-                const houseType = typeof item.houseTyNm === 'string' ? item.houseTyNm : '';
-
-                const isDepositInRange = deposit >= minDepositValue && deposit <= maxDepositValue;
-                const isRentInRange = rent >= minRentValue && rent <= maxRentValue;
-                const isAreaInRange = area >= minAreaValue && area <= maxAreaValue;
-
-                let isTypeMatch = true;
-                if (selectedHouseType) {
-                    const mainTypes = ['다가구주택', '다세대주택', '아파트', '오피스텔'];
-                    if (selectedHouseType === 'etc') {
-                        isTypeMatch = houseType && !mainTypes.includes(houseType);
-                    } else {
-                        isTypeMatch = houseType === selectedHouseType;
-                    }
-                }
-                return isDepositInRange && isRentInRange && isAreaInRange && isTypeMatch;
-            });
-            clearMarkers();
-            displayHousingOnMap(filteredList);
-        });
-
-        resetFilterBtn.addEventListener('click', () => {
-            document.getElementById('min-deposit').value = '';
-            document.getElementById('max-deposit').value = '';
-            document.getElementById('min-rent').value = '';
-            document.getElementById('max-rent').value = '';
-            document.getElementById('min-area').value = '';
-            document.getElementById('max-area').value = '';
-
-            selectedHouseType = '';
-            typeFilterButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.type-filter-btn[data-type=""]').classList.add('active');
-
-            clearMarkers();
-            displayHousingOnMap(currentHousingList);
-        });
-
-        updateSigunguSelect(sidoSelect.value);
-    }
-
-    function updateSigunguSelect(sidoCode) {
-        sigunguSelect.innerHTML = '';
-        const sigunguList = regionData[sidoCode]?.sigungu || {};
-        for (const code in sigunguList) {
-            const option = document.createElement('option');
-            option.value = code;
-            option.innerText = sigunguList[code];
-            sigunguSelect.appendChild(option);
-        }
-    }
-
-    function clearMarkers() {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
-        }
-        markers = [];
-        if (activeInfoWindow) {
-            activeInfoWindow.close();
-            activeInfoWindow = null;
-        }
-    }
-
-    async function displayHousingOnMap(housingList) {
-        const propertyList = document.getElementById('property-list');
-        propertyList.innerHTML = '';
-
-        if (!housingList || housingList.length === 0) {
-            propertyList.innerHTML = '<li>검색 결과가 없습니다.</li>';
-            return;
-        }
-
-        for (const item of housingList) {
-            const geocodeResult = await new Promise((resolve) => {
-                geocoder.addressSearch(item.rnAdres, (result, status) => {
-                    if (status === kakao.maps.services.Status.OK) {
-                        resolve({ ...item, coords: new kakao.maps.LatLng(result[0].y, result[0].x) });
-                    } else {
-                        resolve(null);
-                    }
-                });
-            });
-
-            if (geocodeResult) {
-                const { coords, ...itemData } = geocodeResult;
-                const marker = new kakao.maps.Marker({ map: map, position: coords, title: itemData.hsmpNm });
-                markers.push(marker);
-
-                const listItem = document.createElement('li');
-                listItem.className = 'property-item';
-
-                const formattedDeposit = Number(itemData.bassRentGtn).toLocaleString('ko-KR');
-                const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
-                listItem.innerHTML = `
-                <strong>${itemData.hsmpNm}</strong>
-                <p>주소: ${itemData.rnAdres}</p>
-                <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
-                <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
-                <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
-                <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
-            `;
-                propertyList.appendChild(listItem);
-
-                const openInfoWindow = () => {
-                    if (activeInfoWindow) { activeInfoWindow.close(); }
-                    const iwContent = `<div style="padding:5px;width:260px;"><strong>${itemData.hsmpNm}</strong><br><small>${itemData.rnAdres}</small></div>`;
-                    const infowindow = new kakao.maps.InfoWindow({ content: iwContent, removable: true });
-                    infowindow.open(map, marker);
-                    activeInfoWindow = infowindow;
-                };
-
-                listItem.addEventListener('click', () => {
-                    openInfoWindow();
-                    map.panTo(coords);
-                    document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
-                    listItem.classList.add('active-item');
-                    populateAndShowModal(itemData);
-                });
-
-                kakao.maps.event.addListener(marker, 'click', () => {
-                    openInfoWindow();
-                    listItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
-                    listItem.classList.add('active-item');
-                    populateAndShowModal(itemData);
-                });
-            }
-            await new Promise(resolve => setTimeout(resolve, 50));
-        }
-        console.log("매물 정보 표시 완료.");
-    }
-
-    closeModalBtn.addEventListener('click', () => {
-        modalWrapper.style.display = 'none';
-    });
-    modalWrapper.addEventListener('click', (e) => {
-        if (e.target === modalWrapper) {
-            modalWrapper.style.display = 'none';
-        }
     });
 
-    function populateAndShowModal(itemData) {
-        const checkValue = (value) => !value || typeof value === 'object' ? '정보없음' : value;
-        const formatNumber = (value) => isNaN(Number(value)) ? '정보없음' : Number(value).toLocaleString('ko-KR');
-        const findPhoneNumber = (insttNm) => {
-            if (!insttNm) return '1600-1004 (통합 콜센터)';
-            for (const region in lhPhoneNumbers) {
-                if (insttNm.includes(region)) return lhPhoneNumbers[region];
-            }
-            return '1600-1004 (통합 콜센터)';
-        };
-
-        const entrpsTel = findPhoneNumber(itemData.insttNm);
-
-        modalBody.innerHTML = `
-        <table>
-            <tr><th>단지명</th><td>${checkValue(itemData.hsmpNm)}</td></tr>
-            <tr><th>주소</th><td>${checkValue(itemData.rnAdres)}</td></tr>
-            <tr><th>준공일자</th><td>${checkValue(itemData.competDe)}</td></tr>
-            <tr><th>세대수</th><td>${checkValue(itemData.hshldCo)}</td></tr>
-            <tr><th>공급유형</th><td>${checkValue(itemData.suplyTyNm)}</td></tr>
-            <tr><th>전용면적</th><td>${checkValue(itemData.suplyPrvuseAr)} ㎡</td></tr>
-            <tr><th>공용면적</th><td>${checkValue(itemData.suplyCmnuseAr)} ㎡</td></tr>
-            <tr><th>주택유형</th><td>${checkValue(itemData.houseTyNm)}</td></tr>
-            <tr><th>보증금</th><td>${formatNumber(itemData.bassRentGtn)} 원</td></tr>
-            <tr><th>월임대료</th><td>${formatNumber(itemData.bassMtRntchrg)} 원</td></tr>
-            <tr><th>전환보증금</th><td>${formatNumber(itemData.bassCnvrsGtnLmt)} 원</td></tr>
-            <tr><th>관리 기관</th><td>${checkValue(itemData.insttNm)}</td></tr>
-            <tr><th>연락처</th><td>${entrpsTel}</td></tr>
-        </table>
-
-        <div class="image-gallery-container">
-            <div class="gallery-header">
-                <div class="header-left">
-                    <span class="image-title">매물 이미지</span>
+    function initializeMapAndLocation() { if (navigator.geolocation) { navigator.geolocation.getCurrentPosition( pos => { latitude = pos.coords.latitude; longitude = pos.coords.longitude; drawMap(); }, error => { console.error("Geolocation 에러:", error.message); alert("현재 위치를 가져올 수 없습니다. 기본 위치로 지도를 표시합니다."); drawMap(); } ); } else { alert("이 브라우저에서는 위치 정보 기능을 지원하지 않습니다."); drawMap(); } }
+    function drawMap() { const mapContainer = document.getElementById('map'); const mapOption = { center: new kakao.maps.LatLng(latitude, longitude), level: 8 }; map = new kakao.maps.Map(mapContainer, mapOption); kakao.maps.event.addListener(map, 'tilesloaded', function(){ displayLocationInfo(latitude, longitude); }); kakao.maps.event.addListener(map, 'idle', function() { const newCenter = map.getCenter(); if(newCenter.getLat() !== latitude || newCenter.getLng() !== longitude){ latitude = newCenter.getLat(); longitude = newCenter.getLng(); displayLocationInfo(latitude, longitude); } }); }
+    function displayLocationInfo(lat, lng) { document.getElementById('info-lat').innerText = lat.toFixed(6); document.getElementById('info-lng').innerText = lng.toFixed(6); document.getElementById('info-addr').innerText = "확인 중..."; document.getElementById('info-code').innerText = "확인 중..."; geocoder.coord2RegionCode(lng, lat, (result, status) => { if (status === kakao.maps.services.Status.OK) { const bjdInfo = result.find(r => r.region_type === 'B'); if (bjdInfo) { document.getElementById('info-addr').innerText = bjdInfo.address_name; const sidoCode = bjdInfo.code.substring(0, 2); const sigunguCode = bjdInfo.code.substring(2, 5); sidoSelect.value = sidoCode; updateSigunguSelect(sidoCode); sigunguSelect.value = sigunguCode; updateBjdCode(); } else { document.getElementById('info-addr').innerText = "법정동 정보 없음"; document.getElementById('info-code').innerText = "확인 불가"; } } else { document.getElementById('info-addr').innerText = "위치 정보 확인 실패"; document.getElementById('info-code').innerText = "확인 불가"; } }); }
+    function updateBjdCode() { const sidoCode = sidoSelect.value; const sigunguCode = sigunguSelect.value; document.getElementById('info-code').innerText = sidoCode && sigunguCode ? `${sidoCode}${sigunguCode}` : "코드 없음"; }
+    function setupRegionSearch() { const searchBtn = document.getElementById('search-btn'); const toggleAdvancedBtn = document.getElementById('toggle-advanced-search-btn'); const advancedFilterPanel = document.getElementById('advanced-filter-panel'); const applyFilterBtn = document.getElementById('apply-filter-btn'); const resetFilterBtn = document.getElementById('reset-filter-btn'); const loadingAnimation = document.getElementById('loading-animation'); const listContent = document.getElementById('list-content'); const areaPresetButtons = document.querySelectorAll('.area-preset-btn'); const minAreaInput = document.getElementById('min-area'); const maxAreaInput = document.getElementById('max-area'); const typeFilterButtons = document.querySelectorAll('.type-filter-btn'); for (const code in regionData) { const option = document.createElement('option'); option.value = code; option.innerText = regionData[code].name; sidoSelect.appendChild(option); } sidoSelect.addEventListener('change', () => { updateSigunguSelect(sidoSelect.value); updateBjdCode(); }); sigunguSelect.addEventListener('change', updateBjdCode); toggleAdvancedBtn.addEventListener('click', () => { const isVisible = advancedFilterPanel.style.display === 'flex'; advancedFilterPanel.style.display = isVisible ? 'none' : 'flex'; }); searchBtn.addEventListener('click', () => { updateBjdCode(); loadingAnimation.style.display = 'block'; listContent.style.display = 'none'; fetch(`/api/housing?brtcCode=${sidoSelect.value}&signguCode=${sigunguSelect.value}`).then(response => response.json()).then(data => { currentHousingList = data.hsmpList || []; clearMarkers(); displayHousingOnMap(currentHousingList); }).catch(error => console.error('API 호출 중 오류:', error)).finally(() => { loadingAnimation.style.display = 'none'; listContent.style.display = 'block'; }); }); areaPresetButtons.forEach(button => { button.addEventListener('click', function() { minAreaInput.value = this.dataset.min; maxAreaInput.value = this.dataset.max; applyFilterBtn.click(); }); }); typeFilterButtons.forEach(button => { button.addEventListener('click', function() { typeFilterButtons.forEach(btn => btn.classList.remove('active')); this.classList.add('active'); selectedHouseType = this.dataset.type; applyFilterBtn.click(); }); }); applyFilterBtn.addEventListener('click', () => { const minDeposit = document.getElementById('min-deposit').value, maxDeposit = document.getElementById('max-deposit').value, minRent = document.getElementById('min-rent').value, maxRent = document.getElementById('max-rent').value, minArea = document.getElementById('min-area').value, maxArea = document.getElementById('max-area').value; const minDepositValue = minDeposit ? parseInt(minDeposit) * 10000 : 0, maxDepositValue = maxDeposit ? parseInt(maxDeposit) * 10000 : Infinity, minRentValue = minRent ? parseInt(minRent) * 10000 : 0, maxRentValue = maxRent ? parseInt(maxRent) * 10000 : Infinity, minAreaValue = minArea ? parseFloat(minArea) : 0, maxAreaValue = maxArea ? parseFloat(maxArea) : Infinity; const filteredList = currentHousingList.filter(item => { const deposit = Number(item.bassRentGtn), rent = Number(item.bassMtRntchrg), area = parseFloat(item.suplyPrvuseAr), houseType = typeof item.houseTyNm === 'string' ? item.houseTyNm : ''; const isDepositInRange = deposit >= minDepositValue && deposit <= maxDepositValue, isRentInRange = rent >= minRentValue && rent <= maxRentValue, isAreaInRange = area >= minAreaValue && area <= maxAreaValue; let isTypeMatch = true; if (selectedHouseType) { const mainTypes = ['다가구주택', '다세대주택', '아파트', '오피스텔']; if (selectedHouseType === 'etc') { isTypeMatch = houseType && !mainTypes.includes(houseType); } else { isTypeMatch = houseType === selectedHouseType; } } return isDepositInRange && isRentInRange && isAreaInRange && isTypeMatch; }); clearMarkers(); displayHousingOnMap(filteredList); }); resetFilterBtn.addEventListener('click', () => { document.getElementById('min-deposit').value = ''; document.getElementById('max-deposit').value = ''; document.getElementById('min-rent').value = ''; document.getElementById('max-rent').value = ''; document.getElementById('min-area').value = ''; document.getElementById('max-area').value = ''; selectedHouseType = ''; typeFilterButtons.forEach(btn => btn.classList.remove('active')); document.querySelector('.type-filter-btn[data-type=""]').classList.add('active'); clearMarkers(); displayHousingOnMap(currentHousingList); }); updateSigunguSelect(sidoSelect.value); }
+    function updateSigunguSelect(sidoCode){sigunguSelect.innerHTML='';const sigunguList=regionData[sidoCode]?.sigungu||{};for(const code in sigunguList){const option=document.createElement('option');option.value=code;option.innerText=sigunguList[code];sigunguSelect.appendChild(option)}}
+    function clearMarkers(){for(var i=0;i<markers.length;i++){markers[i].setMap(null)}markers=[];if(activeInfoWindow){activeInfoWindow.close();activeInfoWindow=null}}
+    async function displayHousingOnMap(housingList){const propertyList=document.getElementById('property-list');propertyList.innerHTML='';if(!housingList||housingList.length===0){propertyList.innerHTML='<li>검색 결과가 없습니다.</li>';return}for(const item of housingList){const geocodeResult=await new Promise(resolve=>{geocoder.addressSearch(item.rnAdres,(result,status)=>{if(status===kakao.maps.services.Status.OK){resolve({...item,coords:new kakao.maps.LatLng(result[0].y,result[0].x)})}else{resolve(null)}})});if(geocodeResult){const{coords,...itemData}=geocodeResult,marker=new kakao.maps.Marker({map:map,position:coords,title:itemData.hsmpNm});markers.push(marker);const listItem=document.createElement('li');listItem.className='property-item';const propertyId=`${itemData.hsmpSn}-${itemData.styleNm}-${itemData.suplyCmnuseAr}`;listItem.dataset.propertyId=propertyId;const formattedDeposit=Number(itemData.bassRentGtn).toLocaleString('ko-KR'),formattedRent=Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');let ratingHtml=`<p class="rating-display">평점 없음</p>`;if(itemData.ratingCount>0){const avgRating=itemData.avgRating||0;ratingHtml=`<p class="rating-display" title="평균 ${avgRating.toFixed(1)}점">
+                                        <span class="star-filled">${'★'.repeat(Math.round(avgRating))}</span><span class="star-empty">${'☆'.repeat(5-Math.round(avgRating))}</span>
+                                        <strong>${avgRating.toFixed(1)}</strong> (${itemData.ratingCount}명)
+                                     </p>`}listItem.innerHTML=`<strong>${itemData.hsmpNm}</strong>${ratingHtml}<p>주소: ${itemData.rnAdres}</p><p>유형: ${itemData.suplyTyNm||"정보없음"} / ${typeof itemData.houseTyNm==='object'?"정보없음":itemData.houseTyNm}</p><p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p><p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p><p>기관: <span class="instt-button">${itemData.insttNm}</span></p>`;propertyList.appendChild(listItem);const openInfoWindow=()=> {if(activeInfoWindow){activeInfoWindow.close()}const iwContent=`<div style="padding:5px;width:260px;"><strong>${itemData.hsmpNm}</strong><br><small>${itemData.rnAdres}</small></div>`,infowindow=new kakao.maps.InfoWindow({content:iwContent,removable:!0});infowindow.open(map,marker);activeInfoWindow=infowindow};listItem.addEventListener('click',()=> {openInfoWindow();map.panTo(coords);document.querySelectorAll('.property-item').forEach(li=>li.classList.remove('active-item'));listItem.classList.add('active-item');populateAndShowModal(itemData)});kakao.maps.event.addListener(marker,'click',()=> {openInfoWindow();listItem.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.property-item').forEach(li=>li.classList.remove('active-item'));listItem.classList.add('active-item');populateAndShowModal(itemData)})}await new Promise(resolve=>setTimeout(resolve,50))}}
+    closeModalBtn.addEventListener('click',()=> {modalWrapper.style.display='none'});modalWrapper.addEventListener('click',e=>{if(e.target===modalWrapper){modalWrapper.style.display='none'}});
+    async function populateAndShowModal(itemData){const checkValue=value=>!value||typeof value==='object'?'정보없음':value,formatNumber=value=>isNaN(Number(value))?'정보없음':Number(value).toLocaleString('ko-KR'),findPhoneNumber=insttNm=>{if(!insttNm)return'1600-1004 (통합 콜센터)';for(const region in lhPhoneNumbers){if(insttNm.includes(region))return lhPhoneNumbers[region]}return'1600-1004 (통합 콜센터)'},entrpsTel=findPhoneNumber(itemData.insttNm),propertyId=`${itemData.hsmpSn}-${itemData.styleNm}-${itemData.suplyCmnuseAr}`;modalBody.innerHTML=`
+            <table>
+                <tr><th>단지명</th><td>${checkValue(itemData.hsmpNm)}</td></tr>
+                <tr><th>주소</th><td>${checkValue(itemData.rnAdres)}</td></tr>
+                <tr><th>준공일자</th><td>${checkValue(itemData.competDe)}</td></tr>
+                <tr><th>세대수</th><td>${checkValue(itemData.hshldCo)}</td></tr>
+                <tr><th>공급유형</th><td>${checkValue(itemData.suplyTyNm)}</td></tr>
+                <tr><th>전용면적</th><td>${checkValue(itemData.suplyPrvuseAr)} ㎡</td></tr>
+                <tr><th>공용면적</th><td>${checkValue(itemData.suplyCmnuseAr)} ㎡</td></tr>
+                <tr><th>주택유형</th><td>${checkValue(itemData.houseTyNm)}</td></tr>
+                <tr><th>보증금</th><td>${formatNumber(itemData.bassRentGtn)} 원</td></tr>
+                <tr><th>월임대료</th><td>${formatNumber(itemData.bassMtRntchrg)} 원</td></tr>
+                <tr><th>전환보증금</th><td>${formatNumber(itemData.bassCnvrsGtnLmt)} 원</td></tr>
+                <tr><th>관리 기관</th><td>${checkValue(itemData.insttNm)}</td></tr>
+                <tr><th>연락처</th><td>${entrpsTel}</td></tr>
+            </table>
+            <div class="star-rating-section">
+                <h4>매물 별점 주기</h4>
+                <div class="stars" data-rating="0" data-property-id="${propertyId}">
+                    <span class="star" data-value="1">☆</span><span class="star" data-value="2">☆</span><span class="star" data-value="3">☆</span><span class="star" data-value="4">☆</span><span class="star" data-value="5">☆</span>
                 </div>
+                <p class="rating-feedback"></p>
             </div>
-            <div class="main-image-viewer">
-                <button class="nav-arrow prev-arrow">‹</button>
-                <img id="current-image" src="" alt="Current Image">
-                <button class="nav-arrow next-arrow">›</button>
-                <div class="image-counter">
-                    <span id="current-image-index"></span> / <span id="total-images"></span>
-                </div>
+            <div class="image-gallery-container">
+                <div class="gallery-header"><div class="header-left"><span class="image-title">매물 이미지</span></div></div>
+                <div class="main-image-viewer"><button class="nav-arrow prev-arrow">‹</button><img id="current-image" src="" alt="Current Image"><button class="nav-arrow next-arrow">›</button><div class="image-counter"><span id="current-image-index"></span> / <span id="total-images"></span></div></div>
+                <div class="thumbnail-gallery"><div class="thumbnail-scroll-wrapper"></div></div>
             </div>
-            <div class="thumbnail-gallery">
-                <div class="thumbnail-scroll-wrapper">
-                </div>
+            <div id="reply-section">
+                <h4>댓글</h4><ul id="reply-list"></ul><div id="reply-pagination"></div>
+                <form id="reply-form" onsubmit="return false;">
+                    <textarea id="reply-textarea" placeholder="댓글을 입력하세요..." rows="2"></textarea>
+                    <button id="reply-submit-btn" type="submit">등록</button>
+                </form>
             </div>
-        </div>
-    `;
-
-        initGallery();
-
-        const propertyId = `${itemData.hsmpSn}-${itemData.styleNm}-${itemData.suplyCmnuseAr}`;
-        fetchAndDisplayReplies(propertyId);
-        document.getElementById('reply-textarea').value = '';
-
-        modalWrapper.style.display = 'flex';
-    }
-
-
-    function fetchAndDisplayReplies(propertyId) {
-        const replyList = document.getElementById('reply-list');
-        replyList.dataset.propertyId = propertyId;
-
-        fetch(`/api/replies?propertyId=${propertyId}`)
-            .then(response => {
-                if (!response.ok) throw new Error('댓글 로딩 실패');
-                return response.json();
-            })
-            .then(replies => {
-                replyList.innerHTML = '';
-                if (replies.length === 0) {
-                    replyList.innerHTML = '<li>작성된 댓글이 없습니다.</li>';
-                    return;
-                }
-                replies.forEach(reply => {
-                    const li = document.createElement('li');
-                    li.className = 'reply-item';
-                    li.innerHTML = `
-                    <div class="reply-header">
-                        <span class="user-id">${reply.userId}</span>
-                        <span class="timestamp">${new Date(reply.createdAt).toLocaleString()}</span>
-                    </div>
-                    <p class="reply-content">${reply.replyContent}</p>
-                    <div class="reply-actions">
-                        <button class="edit-reply-btn" data-reply-id="${reply.id}">수정</button>
-                        <button class="delete-reply-btn" data-reply-id="${reply.id}">삭제</button>
-                    </div>
-                `;
-                    replyList.appendChild(li);
-                });
-            })
-            .catch(error => {
-                console.error(error);
-                replyList.innerHTML = '<li>댓글을 불러오는 데 실패했습니다.</li>';
-            });
-    }
-
-    function setupReplySubmitListener() {
-        const submitBtn = document.getElementById('reply-submit-btn');
-        const textarea = document.getElementById('reply-textarea');
-
-        submitBtn.addEventListener('click', () => {
-            const content = textarea.value;
-            if (!content.trim()) {
-                alert('댓글 내용을 입력하세요.');
-                return;
-            }
-
-            const replyList = document.getElementById('reply-list');
-            const propertyId = replyList.dataset.propertyId;
-
-            if (!propertyId) {
-                console.error('댓글을 작성할 매물 ID를 찾을 수 없습니다.');
-                alert('댓글을 등록할 수 없습니다. 다시 시도해 주세요.');
-                return;
-            }
-
-            fetch('/api/replies', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ replyContent: content, propertyId: propertyId })
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('댓글 작성에 실패했습니다.');
-                    textarea.value = '';
-                    fetchAndDisplayReplies(propertyId);
-                })
-                .catch(error => alert(error.message));
-        });
-    }
-
-    document.getElementById('reply-list').addEventListener('click', function(e) {
-        const propertyId = e.currentTarget.dataset.propertyId;
-        if (!propertyId) return;
-
-        if (e.target.classList.contains('delete-reply-btn')) {
-            if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) return;
-            const replyId = e.target.dataset.replyId;
-
-            fetch(`/api/replies/${replyId}`, { method: 'DELETE' })
-                .then(response => {
-                    if (!response.ok) throw new Error('삭제 권한이 없거나, 서버 오류입니다.');
-                    fetchAndDisplayReplies(propertyId);
-                })
-                .catch(error => alert(error.message));
-        }
-
-        if (e.target.classList.contains('edit-reply-btn')) {
-            const replyItem = e.target.closest('.reply-item');
-            const originalContent = replyItem.querySelector('.reply-content').textContent;
-            const newContent = prompt('수정할 내용을 입력하세요:', originalContent);
-
-            if (!newContent || newContent.trim() === originalContent) return;
-            const replyId = e.target.dataset.replyId;
-
-            fetch(`/api/replies/${replyId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ replyContent: newContent })
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('수정 권한이 없거나, 서버 오류입니다.');
-                    fetchAndDisplayReplies(propertyId);
-                })
-                .catch(error => alert(error.message));
-        }
-    });
-
-    // --- ▼▼▼ 상세 매물 이미지 갤러리 스크립트 (수정됨) ▼▼▼ ---
-    const images = [
-        { src: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737569_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737569_1280.jpg' },
-        { src: 'https://cdn.pixabay.com/photo/2015/04/24/10/19/studio-737575_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2015/04/24/10/19/studio-737575_1280.jpg' },
-        { src: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737572_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737572_1280.jpg' },
-        { src: 'https://cdn.pixabay.com/photo/2014/03/06/11/26/officetel-280748_1280.jpg', thumb: 'https://cdn.pixabay.com/photo/2014/03/06/11/26/officetel-280748_1280.jpg' },
-    ];
-
-    let currentIndex = 0;
-    const totalImages = images.length;
-    let fixedImageWidth = null;  // 1번 이미지 기준 고정 너비
-    let fixedImageHeight = null; // 1번 이미지 기준 고정 높이
-
-    function createThumbnails() {
-        const thumbnailGallery = document.querySelector('.thumbnail-scroll-wrapper');
-        if (!thumbnailGallery) return;
-        thumbnailGallery.innerHTML = '';
-        images.forEach((imgData, index) => {
-            const thumb = document.createElement('img');
-            thumb.className = 'thumbnail';
-            thumb.src = imgData.thumb;
-            thumb.alt = `Thumbnail ${index + 1}`;
-            thumb.dataset.index = index;
-            thumbnailGallery.appendChild(thumb);
-
-            thumb.addEventListener('click', () => {
-                showImage(index);
-            });
-        });
-    }
-
-    function showImage(index) {
-        if (totalImages === 0) return;
-
-        const currentImageElement = document.getElementById('current-image');
-        const currentImageIndexSpan = document.getElementById('current-image-index');
-
-        if (!currentImageElement || !currentImageIndexSpan) return;
-
-        if (index < 0) {
-            currentIndex = totalImages - 1;
-        } else if (index >= totalImages) {
-            currentIndex = 0;
-        } else {
-            currentIndex = index;
-        }
-
-        // ▼▼▼ 고정된 크기 적용 ▼▼▼
-        if (fixedImageWidth && fixedImageHeight) {
-            currentImageElement.style.width = `${fixedImageWidth}px`;
-            currentImageElement.style.height = `${fixedImageHeight}px`;
-        }
-
-        currentImageElement.style.opacity = '0'; // 부드러운 전환을 위해 잠시 투명하게
-        setTimeout(() => { // 이미지 소스 변경 후 다시 보이게
-            currentImageElement.src = images[currentIndex].src;
-            currentImageElement.style.opacity = '1';
-        }, 150);
-
-
-        currentImageIndexSpan.textContent = currentIndex + 1;
-
-        document.querySelectorAll('.thumbnail').forEach((thumb, idx) => {
-            if (idx === currentIndex) {
-                thumb.classList.add('active');
-                thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            } else {
-                thumb.classList.remove('active');
-            }
-        });
-    }
-
-    // ▼▼▼ 1번 이미지 크기 계산 로직을 포함하여 수정된 initGallery ▼▼▼
-    function initGallery() {
-        const galleryContainer = document.querySelector('.image-gallery-container');
-        if (images.length === 0) {
-            if (galleryContainer) galleryContainer.style.display = 'none';
-            return;
-        }
-        if (galleryContainer) galleryContainer.style.display = 'flex';
-
-        const prevArrow = document.querySelector('.prev-arrow');
-        const nextArrow = document.querySelector('.next-arrow');
-        const totalImagesSpan = document.getElementById('total-images');
-        const mainImageViewer = document.querySelector('.main-image-viewer');
-
-        if (!prevArrow || !nextArrow || !totalImagesSpan || !mainImageViewer) return;
-
-        createThumbnails();
-        totalImagesSpan.textContent = totalImages;
-
-        const newPrevArrow = prevArrow.cloneNode(true);
-        prevArrow.parentNode.replaceChild(newPrevArrow, prevArrow);
-        newPrevArrow.addEventListener('click', () => showImage(currentIndex - 1));
-
-        const newNextArrow = nextArrow.cloneNode(true);
-        nextArrow.parentNode.replaceChild(newNextArrow, nextArrow);
-        newNextArrow.addEventListener('click', () => showImage(currentIndex + 1));
-
-        // 1번 이미지의 표시 크기를 계산하여 변수에 저장
-        const firstImage = new Image();
-        firstImage.onload = function() {
-            const viewerWidth = mainImageViewer.clientWidth;
-            const viewerMaxHeight = 400; // CSS의 max-height와 동일
-
-            const ratio = this.naturalWidth / this.naturalHeight;
-
-            let newHeight = viewerWidth / ratio;
-            let newWidth = viewerWidth;
-
-            if (newHeight > viewerMaxHeight) {
-                newHeight = viewerMaxHeight;
-                newWidth = viewerMaxHeight * ratio;
-            }
-
-            fixedImageWidth = newWidth;
-            fixedImageHeight = newHeight;
-
-            // 크기 계산이 완료된 후 첫 이미지 표시
-            showImage(0);
-        };
-        firstImage.src = images[0].src;
-    }
+            `;initGallery();document.getElementById('reply-list').dataset.propertyId=propertyId;fetchReplies(propertyId);try{const response=await fetch(`/api/ratings?propertyId=${propertyId}&userId=${currentUserId}`);let userRating=0;if(response.status===200){const data=await response.json();userRating=data.ratingScore}setupStarRating(propertyId,userRating)}catch(error){console.error("사용자 평점 조회 실패:",error);setupStarRating(propertyId,0)}modalWrapper.style.display='flex'}
+    function updateListItemRating(propertyId,ratingInfo){const listItem=document.querySelector(`.property-item[data-property-id="${propertyId}"]`);if(!listItem)return;const ratingDisplay=listItem.querySelector('.rating-display');let ratingHtml=`<p class="rating-display">평점 없음</p>`;if(ratingInfo&&ratingInfo.ratingCount>0){const avgRating=ratingInfo.avgRating||0;ratingHtml=`<p class="rating-display" title="평균 ${avgRating.toFixed(1)}점">
+                        <span class="star-filled">${'★'.repeat(Math.round(avgRating))}</span><span class="star-empty">${'☆'.repeat(5-Math.round(avgRating))}</span>
+                        <strong>${avgRating.toFixed(1)}</strong> (${ratingInfo.ratingCount}명)
+                     </p>`}ratingDisplay.outerHTML=ratingHtml}
+    function setupStarRating(propertyId,initialRating){const starContainer=document.querySelector('.stars'),stars=starContainer.querySelectorAll('.star'),feedback=document.querySelector('.rating-feedback');starContainer.dataset.rating=initialRating;updateStarsUI(initialRating);starContainer.addEventListener('mouseover',e=>{if(e.target.classList.contains('star')){const hoverValue=e.target.dataset.value;stars.forEach(s=>s.classList.toggle('hover',s.dataset.value<=hoverValue))}});starContainer.addEventListener('mouseout',()=> {stars.forEach(s=>s.classList.remove('hover'))});starContainer.addEventListener('click',e=>{if(e.target.classList.contains('star')){const newRating=parseInt(e.target.dataset.value);feedback.textContent='저장 중...';fetch('/api/ratings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:currentUserId,propertyId:propertyId,ratingScore:newRating})}).then(response=>{if(!response.ok)throw new Error(`서버 응답 오류: ${response.status}`);return response.json()}).then(newRatingInfo=>{console.log("서버로부터 새로운 평점 정보 수신:",newRatingInfo);starContainer.dataset.rating=newRating;updateStarsUI(newRating);feedback.textContent=`✓ ${newRating}점이 등록되었습니다.`;setTimeout(()=> {feedback.textContent=''},2000);updateListItemRating(propertyId,newRatingInfo)}).catch(error=>{console.error("평점 등록 실패:",error);alert('평점 등록에 실패했습니다.');feedback.textContent='';updateStarsUI(parseInt(starContainer.dataset.rating))})}});function updateStarsUI(rating){stars.forEach(star=>{star.classList.remove('hover');star.classList.toggle('filled',star.dataset.value<=rating)})}}
+    function displayRepliesForPage(page){currentReplyPage=page;const replyList=document.getElementById('reply-list');if(!replyList)return;replyList.innerHTML='';if(allReplies.length===0){replyList.innerHTML='<li>작성된 댓글이 없습니다.</li>';renderReplyPagination();return}const startIndex=(page-1)*repliesPerPage,endIndex=startIndex+repliesPerPage,repliesToShow=allReplies.slice(startIndex,endIndex);repliesToShow.forEach(reply=>{const li=document.createElement('li');li.className='reply-item';li.dataset.replyId=reply.id;li.innerHTML=` <div class="reply-header"> <span class="user-id">${reply.userId}</span> <span class="timestamp">${new Date(reply.createdAt).toLocaleString()}</span> </div> <p class="reply-content">${reply.replyContent}</p> <div class="reply-actions"> <button class="edit-reply-btn">수정</button> <button class="delete-reply-btn">삭제</button> </div> `;replyList.appendChild(li)});renderReplyPagination()}
+    function renderReplyPagination(){const paginationContainer=document.getElementById('reply-pagination');if(!paginationContainer)return;paginationContainer.innerHTML='';const totalPages=Math.ceil(allReplies.length/repliesPerPage);if(totalPages<=1)return;const prevBtn=document.createElement('button');prevBtn.className='page-btn';prevBtn.textContent='이전';prevBtn.disabled=currentReplyPage===1;prevBtn.addEventListener('click',()=>displayRepliesForPage(currentReplyPage-1));paginationContainer.appendChild(prevBtn);for(let i=1;i<=totalPages;i++){const pageBtn=document.createElement('button');pageBtn.className='page-btn';pageBtn.textContent=i;if(i===currentReplyPage){pageBtn.classList.add('active')}pageBtn.addEventListener('click',()=>displayRepliesForPage(i));paginationContainer.appendChild(pageBtn)}const nextBtn=document.createElement('button');nextBtn.className='page-btn';nextBtn.textContent='다음';nextBtn.disabled=currentReplyPage===totalPages;nextBtn.addEventListener('click',()=>displayRepliesForPage(currentReplyPage+1));paginationContainer.appendChild(nextBtn)}
+    function fetchReplies(propertyId,goToLastPage=!1){allReplies=[];fetch(`/api/replies?propertyId=${propertyId}`).then(response=>{if(!response.ok)throw new Error('댓글 로딩 실패');return response.json()}).then(replies=>{allReplies=replies;if(goToLastPage){const totalPages=Math.ceil(allReplies.length/repliesPerPage);displayRepliesForPage(totalPages||1)}else{displayRepliesForPage(1)}}).catch(error=>{console.error(error);const replyList=document.getElementById('reply-list');if(replyList)replyList.innerHTML='<li>댓글을 불러오는 데 실패했습니다.</li>'})}
+    function setupReplySubmitListener(){modalBody.addEventListener('submit',e=>{if(e.target.id==='reply-form'){const textarea=document.getElementById('reply-textarea'),content=textarea.value;if(!content.trim()){alert('댓글 내용을 입력하세요.');return}const replyList=document.getElementById('reply-list'),propertyId=replyList.dataset.propertyId;if(!propertyId){alert('댓글을 등록할 수 없습니다. 다시 시도해 주세요.');return}fetch('/api/replies',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({replyContent:content,propertyId:propertyId})}).then(response=>{if(!response.ok)throw new Error('댓글 작성에 실패했습니다.');textarea.value='';fetchReplies(propertyId,!0)}).catch(error=>alert(error.message))}});modalBody.addEventListener('click',e=>{const replyItem=e.target.closest('.reply-item');if(!replyItem)return;const propertyId=document.getElementById('reply-list').dataset.propertyId,replyId=replyItem.dataset.replyId;if(e.target.classList.contains('delete-reply-btn')){if(!confirm('정말 이 댓글을 삭제하시겠습니까?'))return;fetch(`/api/replies/${replyId}`,{method:'DELETE'}).then(response=>{if(!response.ok)throw new Error('삭제 권한이 없거나, 서버 오류입니다.');fetchReplies(propertyId)}).catch(error=>alert(error.message))}if(e.target.classList.contains('edit-reply-btn')){const originalContent=replyItem.querySelector('.reply-content').textContent,newContent=prompt('수정할 내용을 입력하세요:',originalContent);if(!newContent||newContent.trim()===originalContent)return;fetch(`/api/replies/${replyId}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({replyContent:newContent})}).then(response=>{if(!response.ok)throw new Error('수정 권한이 없거나, 서버 오류입니다.');fetchReplies(propertyId)}).catch(error=>alert(error.message))}})}
+    const images=[{src:'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737569_1280.jpg',thumb:'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737569_1280.jpg'},{src:'https://cdn.pixabay.com/photo/2015/04/24/10/19/studio-737575_1280.jpg',thumb:'https://cdn.pixabay.com/photo/2015/04/24/10/19/studio-737575_1280.jpg'},{src:'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737572_1280.jpg',thumb:'https://cdn.pixabay.com/photo/2015/04/24/10/18/studio-737572_1280.jpg'},{src:'https://cdn.pixabay.com/photo/2014/03/06/11/26/officetel-280748_1280.jpg',thumb:'https://cdn.pixabay.com/photo/2014/03/06/11/26/officetel-280748_1280.jpg'}];
+    let currentIndex = 0; const totalImages = images.length; let fixedImageWidth = null; let fixedImageHeight = null;
+    function createThumbnails(){const thumbnailGallery=document.querySelector('.thumbnail-scroll-wrapper');if(!thumbnailGallery)return;thumbnailGallery.innerHTML='';images.forEach((imgData,index)=>{const thumb=document.createElement('img');thumb.className='thumbnail';thumb.src=imgData.thumb;thumb.alt=`Thumbnail ${index+1}`;thumb.dataset.index=index;thumbnailGallery.appendChild(thumb);thumb.addEventListener('click',()=> {showImage(index)})})}
+    function showImage(index){if(totalImages===0)return;const currentImageElement=document.getElementById('current-image'),currentImageIndexSpan=document.getElementById('current-image-index');if(!currentImageElement||!currentImageIndexSpan)return;currentIndex=index<0?totalImages-1:index>=totalImages?0:index;if(fixedImageWidth&&fixedImageHeight){currentImageElement.style.width=`${fixedImageWidth}px`;currentImageElement.style.height=`${fixedImageHeight}px`}currentImageElement.style.opacity='0';setTimeout(()=> {currentImageElement.src=images[currentIndex].src;currentImageElement.style.opacity='1'},150);currentImageIndexSpan.textContent=currentIndex+1;document.querySelectorAll('.thumbnail').forEach((thumb,idx)=>{if(idx===currentIndex){thumb.classList.add('active');thumb.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})}else{thumb.classList.remove('active')}})}
+    function initGallery(){const galleryContainer=document.querySelector('.image-gallery-container');if(images.length===0){if(galleryContainer)galleryContainer.style.display='none';return}if(galleryContainer)galleryContainer.style.display='flex';const prevArrow=document.querySelector('.prev-arrow'),nextArrow=document.querySelector('.next-arrow'),totalImagesSpan=document.getElementById('total-images'),mainImageViewer=document.querySelector('.main-image-viewer');if(!prevArrow||!nextArrow||!totalImagesSpan||!mainImageViewer)return;createThumbnails();totalImagesSpan.textContent=totalImages;const newPrevArrow=prevArrow.cloneNode(!0);prevArrow.parentNode.replaceChild(newPrevArrow,prevArrow);newPrevArrow.addEventListener('click',()=>showImage(currentIndex-1));const newNextArrow=nextArrow.cloneNode(!0);nextArrow.parentNode.replaceChild(newNextArrow,nextArrow);newNextArrow.addEventListener('click',()=>showImage(currentIndex+1));const firstImage=new Image();firstImage.onload=function(){const viewerWidth=mainImageViewer.clientWidth,viewerMaxHeight=400,ratio=this.naturalWidth/this.naturalHeight;let newHeight=viewerWidth/ratio,newWidth=viewerWidth;if(newHeight>viewerMaxHeight){newHeight=viewerMaxHeight;newWidth=viewerMaxHeight*ratio}fixedImageWidth=newWidth;fixedImageHeight=newHeight;showImage(0)};firstImage.src=images[0].src}
 </script>
 </body>
 </html>
