@@ -37,9 +37,86 @@
         #modal-header h2 { margin: 0; font-size: 1.25em; }
         #close-modal-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: #555; }
         #modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
-        #modal-body table { width: 100%; border-collapse: collapse; }
+        #modal-body table { width: 100%; border-collapse: collapse; margin-bottom:20px; }
         #modal-body th, #modal-body td { border: 1px solid #ddd; padding: 8px; font-size: 0.9em; }
         #modal-body th { background-color: #f8f9fa; width: 120px; }
+        .reply-form textarea { width: calc(100% - 70px); height: 50px; vertical-align: middle; }
+        .reply-form button { width: 60px; height: 56px; vertical-align: middle; }
+        .reply-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .reply-author { font-weight: bold; }
+        .reply-content { margin: 5px 0; }
+        .reply-date { font-size: 0.8em; color: gray; }
+        .reply-actions button { font-size:0.8em; color: #007bff; background:none; border:none; cursor:pointer; padding:0 5px; }
+        /* --- 댓글 섹션 스타일 --- */
+        #reply-section {
+            padding: 10px 20px 20px;
+            border-top: 1px solid #eee;
+            background-color: #fdfdfd;
+        }
+        #reply-section h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        #reply-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .reply-item {
+            padding: 10px 5px;
+            border-bottom: 1px dashed #ddd;
+        }
+        .reply-item:last-child {
+            border-bottom: none;
+        }
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .reply-header .user-id {
+            font-weight: bold;
+        }
+        .reply-header .timestamp {
+            color: #999;
+        }
+        .reply-content {
+            margin: 0 0 8px 0;
+            padding-left: 2px;
+            color: #333;
+        }
+        .reply-actions button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 0.8em;
+            padding: 2px 4px;
+        }
+        #reply-form {
+            display: flex;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        #reply-textarea {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            resize: vertical;
+        }
+        #reply-submit-btn {
+            padding: 0 15px;
+            border: 1px solid #007bff;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +202,17 @@
             <h2>매물 상세 정보</h2>
             <button id="close-modal-btn">✖</button>
         </div>
-        <div id="modal-body"></div>
+        <div id="modal-body">
+        </div>
+
+        <div id="reply-section">
+            <h4>댓글</h4>
+            <ul id="reply-list"></ul>
+            <div id="reply-form">
+                <textarea id="reply-textarea" placeholder="댓글을 입력하세요..." rows="3"></textarea>
+                <button id="reply-submit-btn">등록</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -153,6 +240,8 @@
     window.onload = function() {
         setupRegionSearch();
         initializeMapAndLocation();
+        // 페이지 로드 시 댓글 제출 버튼 이벤트 리스너 한 번만 추가
+        setupReplySubmitListener();
     };
 
     function initializeMapAndLocation() {
@@ -393,39 +482,39 @@
             if (geocodeResult) {
                 const { coords, ...itemData } = geocodeResult;
                 const marker = new kakao.maps.Marker({ map: map, position: coords, title: itemData.hsmpNm });
-                const iwContent = `<div style="padding:5px;width:260px;"><strong>${itemData.hsmpNm}</strong><br><small>${itemData.rnAdres}</small></div>`;
-                const infowindow = new kakao.maps.InfoWindow({ content: iwContent, removable: true });
                 markers.push(marker);
 
                 const listItem = document.createElement('li');
                 listItem.className = 'property-item';
-                listItem.id = `property-${itemData.hsmpSn}`;
-                listItem.dataset.pnu = itemData.pnu;
+                // ID나 dataset 속성이 더 이상 필요 없으므로 삭제합니다.
 
                 const formattedDeposit = Number(itemData.bassRentGtn).toLocaleString('ko-KR');
                 const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
                 listItem.innerHTML = `
-                        <strong>${itemData.hsmpNm}</strong>
-                        <p>주소: ${itemData.rnAdres}</p>
-                        <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
-                        <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
-                        <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
-                        <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
-                    `;
+                <strong>${itemData.hsmpNm}</strong>
+                <p>주소: ${itemData.rnAdres}</p>
+                <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
+                <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
+                <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
+                <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
+            `;
                 propertyList.appendChild(listItem);
 
                 const openInfoWindow = () => {
                     if (activeInfoWindow) { activeInfoWindow.close(); }
+                    const iwContent = `<div style="padding:5px;width:260px;"><strong>${itemData.hsmpNm}</strong><br><small>${itemData.rnAdres}</small></div>`;
+                    const infowindow = new kakao.maps.InfoWindow({ content: iwContent, removable: true });
                     infowindow.open(map, marker);
                     activeInfoWindow = infowindow;
                 };
 
+                // ▼▼▼ 클릭 시, itemData 객체를 직접 전달하도록 수정 ▼▼▼
                 listItem.addEventListener('click', () => {
                     openInfoWindow();
                     map.panTo(coords);
                     document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
                     listItem.classList.add('active-item');
-                    populateAndShowModal(itemData.pnu);
+                    populateAndShowModal(itemData); // itemData 객체 자체를 전달
                 });
 
                 kakao.maps.event.addListener(marker, 'click', () => {
@@ -433,7 +522,7 @@
                     listItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
                     listItem.classList.add('active-item');
-                    populateAndShowModal(itemData.pnu);
+                    populateAndShowModal(itemData); // itemData 객체 자체를 전달
                 });
             }
             await new Promise(resolve => setTimeout(resolve, 50));
@@ -450,12 +539,7 @@
         }
     });
 
-    function populateAndShowModal(pnu) {
-        const data = currentHousingList.find(item => item.pnu === pnu);
-        if (!data) {
-            alert("상세 정보를 찾는 데 실패했습니다.");
-            return;
-        }
+    function populateAndShowModal(itemData) {
 
         const checkValue = (value) => {
             if (!value || typeof value === 'object') return '정보없음';
@@ -463,7 +547,7 @@
         };
         const formatNumber = (value) => {
             const num = Number(value);
-            if (!num) return '정보없음';
+            if (isNaN(num)) return '정보없음'; // 숫자가 아닌 경우도 처리
             return num.toLocaleString('ko-KR');
         };
         const findPhoneNumber = (insttNm) => {
@@ -476,31 +560,148 @@
             return '1600-1004 (통합 콜센터)';
         };
 
-        const entrpsTel = findPhoneNumber(data.insttNm);
+        const entrpsTel = findPhoneNumber(itemData.insttNm);
 
         modalBody.innerHTML = `
-                <table>
-                    <tr><th>단지명</th><td>${data.hsmpNm}</td></tr>
-                    <tr><th>주소</th><td>${data.rnAdres}</td></tr>
-                    <tr><th>준공일자</th><td>${checkValue(data.competDe)}</td></tr>
-                    <tr><th>세대수</th><td>${checkValue(data.hshldCo)}</td></tr>
-                    <tr><th>공급유형</th><td>${checkValue(data.suplyTyNm)}</td></tr>
-                    <tr><th>전용면적</th><td>${checkValue(data.suplyPrvuseAr)} ㎡</td></tr>
-                    <tr><th>공용면적</th><td>${checkValue(data.suplyCmnuseAr)} ㎡</td></tr>
-                    <tr><th>주택유형</th><td>${checkValue(data.houseTyNm)}</td></tr>
-                    <tr><th>난방방식</th><td>${checkValue(data.heatMthdDetailNm)}</td></tr>
-                    <tr><th>건물형태</th><td>${checkValue(data.buldStleNm)}</td></tr>
-                    <tr><th>승강기</th><td>${checkValue(data.elvtrInstlAtNm)}</td></tr>
-                    <tr><th>주차수</th><td>${checkValue(data.parkngCo)}</td></tr>
-                    <tr><th>보증금</th><td>${formatNumber(data.bassRentGtn)} 원</td></tr>
-                    <tr><th>월임대료</th><td>${formatNumber(data.bassMtRntchrg)} 원</td></tr>
-                    <tr><th>전환보증금</th><td>${formatNumber(data.bassCnvrsGtnLmt)} 원</td></tr>
-                    <tr><th>관리 기관</th><td>${checkValue(data.insttNm)}</td></tr>
-                    <tr><th>연락처</th><td>${entrpsTel}</td></tr>
-                </table>
-            `;
+        <table>
+            <tr><th>단지명</th><td>${checkValue(itemData.hsmpNm)}</td></tr>
+            <tr><th>주소</th><td>${checkValue(itemData.rnAdres)}</td></tr>
+            <tr><th>준공일자</th><td>${checkValue(itemData.competDe)}</td></tr>
+            <tr><th>세대수</th><td>${checkValue(itemData.hshldCo)}</td></tr>
+            <tr><th>공급유형</th><td>${checkValue(itemData.suplyTyNm)}</td></tr>
+            <tr><th>전용면적</th><td>${checkValue(itemData.suplyPrvuseAr)} ㎡</td></tr>
+            <tr><th>공용면적</th><td>${checkValue(itemData.suplyCmnuseAr)} ㎡</td></tr>
+            <tr><th>주택유형</th><td>${checkValue(itemData.houseTyNm)}</td></tr>
+            <tr><th>난방방식</th><td>${checkValue(itemData.heatMthdDetailNm)}</td></tr>
+            <tr><th>건물형태</th><td>${checkValue(itemData.buldStleNm)}</td></tr>
+            <tr><th>승강기</th><td>${checkValue(itemData.elvtrInstlAtNm)}</td></tr>
+            <tr><th>주차수</th><td>${checkValue(itemData.parkngCo)}</td></tr>
+            <tr><th>보증금</th><td>${formatNumber(itemData.bassRentGtn)} 원</td></tr>
+            <tr><th>월임대료</th><td>${formatNumber(itemData.bassMtRntchrg)} 원</td></tr>
+            <tr><th>전환보증금</th><td>${formatNumber(itemData.bassCnvrsGtnLmt)} 원</td></tr>
+            <tr><th>관리 기관</th><td>${checkValue(itemData.insttNm)}</td></tr>
+            <tr><th>연락처</th><td>${entrpsTel}</td></tr>
+        </table>
+    `;
+        const propertyId = `${itemData.hsmpSn}-${itemData.styleNm}-${itemData.suplyCmnuseAr}`;
+        fetchAndDisplayReplies(propertyId);
+        document.getElementById('reply-textarea').value = ''; // 모달 열릴 때 댓글 입력창 초기화
+
         modalWrapper.style.display = 'flex';
     }
+
+    // --- 댓글 목록 조회 및 표시 함수 ---
+    function fetchAndDisplayReplies(propertyId) {
+        const replyList = document.getElementById('reply-list');
+        replyList.dataset.propertyId = propertyId; // 댓글 작성을 위해 propertyId를 dataset에 저장
+
+        fetch(`/api/replies?propertyId=${propertyId}`)
+            .then(response => {
+                if (!response.ok) throw new Error('댓글 로딩 실패');
+                return response.json();
+            })
+            .then(replies => {
+                replyList.innerHTML = '';
+                if (replies.length === 0) {
+                    replyList.innerHTML = '<li>작성된 댓글이 없습니다.</li>';
+                    return;
+                }
+                replies.forEach(reply => {
+                    const li = document.createElement('li');
+                    li.className = 'reply-item';
+                    li.innerHTML = `
+                    <div class="reply-header">
+                        <span class="user-id">${reply.userId}</span>
+                        <span class="timestamp">${new Date(reply.createdAt).toLocaleString()}</span>
+                    </div>
+                    <p class="reply-content">${reply.replyContent}</p>
+                    <div class="reply-actions">
+                        <button class="edit-reply-btn" data-reply-id="${reply.id}">수정</button>
+                        <button class="delete-reply-btn" data-reply-id="${reply.id}">삭제</button>
+                    </div>
+                `;
+                    replyList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                replyList.innerHTML = '<li>댓글을 불러오는 데 실패했습니다.</li>';
+            });
+    }
+
+    // 댓글 제출 버튼에 대한 이벤트 리스너를 한 번만 설정
+    function setupReplySubmitListener() {
+        const submitBtn = document.getElementById('reply-submit-btn');
+        const textarea = document.getElementById('reply-textarea');
+
+        submitBtn.addEventListener('click', () => {
+            const content = textarea.value;
+            if (!content.trim()) {
+                alert('댓글 내용을 입력하세요.');
+                return;
+            }
+
+            // 현재 모달에 표시된 propertyId를 reply-list의 dataset에서 가져옴
+            const replyList = document.getElementById('reply-list');
+            const propertyId = replyList.dataset.propertyId;
+
+            if (!propertyId) {
+                console.error('댓글을 작성할 매물 ID를 찾을 수 없습니다.');
+                alert('댓글을 등록할 수 없습니다. 다시 시도해 주세요.');
+                return;
+            }
+
+            fetch('/api/replies', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ replyContent: content, propertyId: propertyId })
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('댓글 작성에 실패했습니다.');
+                    textarea.value = '';
+                    fetchAndDisplayReplies(propertyId); // 성공 시 목록 새로고침
+                })
+                .catch(error => alert(error.message));
+        });
+    }
+
+
+    document.getElementById('reply-list').addEventListener('click', function(e) {
+        const propertyId = e.currentTarget.dataset.propertyId;
+        if (!propertyId) return;
+
+        if (e.target.classList.contains('delete-reply-btn')) {
+            if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) return;
+            const replyId = e.target.dataset.replyId;
+
+            fetch(`/api/replies/${replyId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (!response.ok) throw new Error('삭제 권한이 없거나, 서버 오류입니다.');
+                    fetchAndDisplayReplies(propertyId);
+                })
+                .catch(error => alert(error.message));
+        }
+
+        if (e.target.classList.contains('edit-reply-btn')) {
+            const replyItem = e.target.closest('.reply-item');
+            const originalContent = replyItem.querySelector('.reply-content').textContent;
+            const newContent = prompt('수정할 내용을 입력하세요:', originalContent);
+
+            if (!newContent || newContent.trim() === originalContent) return;
+            const replyId = e.target.dataset.replyId;
+
+            fetch(`/api/replies/${replyId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ replyContent: newContent })
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('수정 권한이 없거나, 서버 오류입니다.');
+                    fetchAndDisplayReplies(propertyId);
+                })
+                .catch(error => alert(error.message));
+        }
+    });
 
 </script>
 </body>

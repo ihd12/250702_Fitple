@@ -2,9 +2,7 @@ package com.fitple.fitple.housing.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,22 +10,24 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Table(name = "home_reply")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Builder
 public class HousingReply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column (name = "user_id", nullable = false)
-    private String UserId;
+    private String userId;
 
     @Column (name = "reply_content", nullable = false)
-    private String ReplyContent;
+    private String replyContent;
 
-    @Column (name = "pnu", nullable = false, updatable = false)
-    private Long pnu;
+    @Column(name = "property_id", nullable = false, updatable = false)
+    private String propertyId;
 
     // 관리 기능: 논리적 삭제 (Soft Delete)
     @Column(name = "is_deleted", nullable = false)
@@ -48,6 +48,12 @@ public class HousingReply {
     private LocalDateTime updatedAt;
 
     //== 편의 메서드 ==//
+
+    // 서비스에서 사용하는 updateContent 메소드
+    public void updateContent(String newContent) {
+        this.replyContent = newContent;
+    }
+
     // 논리적 삭제 - 데이터 자체가 아닌 삭제된 것처럼 보이게 해줌
     public void markAsDeleted() {
         this.isDeleted = true;
