@@ -2,9 +2,11 @@ package com.fitple.fitple.base.user.security;
 
 import com.fitple.fitple.base.user.domain.User;
 import lombok.Getter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -26,13 +28,17 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        Collection<GrantedAuthority> auths = new ArrayList<>();
+        auths.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if(user.getAuth().equals("ADMIN")){
+            auths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        return auths;
     }
 
     @Override public String getPassword() {
         return user.getPassword();
     }
-
     @Override public String getUsername() {
         return user.getEmail();
     }

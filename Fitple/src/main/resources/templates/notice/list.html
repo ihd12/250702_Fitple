@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<h2>📢 공지사항</h2>
+<a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/notice/register}">글쓰기</a>
+<a sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+<a sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+<table>
+  <thead>
+  <tr>
+    <th>No</th>
+    <th>제목</th>
+    <th>작성자</th>
+    <th>등록일</th>
+    <th>조회수</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${responseDTO == null or #lists.isEmpty(responseDTO.dtoList)}">
+    <td colspan="5" style="text-align: center;">
+      공지사항이 없습니다.
+    </td>
+  </tr>
+  <tr th:if="${responseDTO != null}" th:each="notice, stat : ${responseDTO.dtoList}">
+    <td th:text="${stat.count}">1</td>
+    <td>
+      <a th:href="@{/notice/{id}/read(id=${notice.id})}" th:text="${notice.title}">공지 제목</a>
+    </td>
+    <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">2025-07-08</td>
+    <td th:text="${notice.viewCount}">0</td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
