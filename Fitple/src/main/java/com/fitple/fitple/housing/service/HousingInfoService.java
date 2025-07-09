@@ -30,9 +30,9 @@ public class HousingInfoService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public Map<String, Object> getIntegratedHousingList(String brtcCode, String signguCode) throws IOException {
+    public Map<String, Object> getIntegratedHousingList(String brtcCode, String signguCode, String numOfRows) throws IOException {
 
-        String housingDataJson = getHousingDataFromGovApi(brtcCode, signguCode);
+        String housingDataJson = getHousingDataFromGovApi(brtcCode, signguCode, numOfRows);
         Map<String, Object> responseMap = objectMapper.readValue(housingDataJson, new TypeReference<>() {});
         List<Map<String, Object>> externalApiDataList = (List<Map<String, Object>>) responseMap.get("hsmpList");
 
@@ -109,13 +109,13 @@ public class HousingInfoService {
         return String.valueOf(value);
     }
 
-    private String getHousingDataFromGovApi(String brtcCode, String signguCode) throws IOException {
+    private String getHousingDataFromGovApi(String brtcCode, String signguCode, String numOfRows) throws IOException {
         String serviceKey = "/muR9hnQHPp2eCu/lLRpq2/XeHUS3uAZ4kAX1qQDBd+jyVHF9JMyDVdo2M6CUAArUU1eKIpLJACxJr4Qc/Pb9w==";
         StringBuilder urlBuilder = new StringBuilder("https://data.myhome.go.kr:443/rentalHouseList");
         urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + URLEncoder.encode(serviceKey, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("brtcCode", "UTF-8") + "=" + URLEncoder.encode(brtcCode, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("signguCode", "UTF-8") + "=" + URLEncoder.encode(signguCode, "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("100", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

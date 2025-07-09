@@ -23,9 +23,10 @@ public class HousingApiController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> getIntegratedHousingList(
             @RequestParam String brtcCode,
-            @RequestParam String signguCode) throws IOException {
+            @RequestParam String signguCode,
+            @RequestParam String numOfRows) throws IOException {
 
-        Map<String, Object> result = housingInfoService.getIntegratedHousingList(brtcCode, signguCode);
+        Map<String, Object> result = housingInfoService.getIntegratedHousingList(brtcCode, signguCode, numOfRows); // 서비스에 전달
         return ResponseEntity.ok(result);
     }
 }
