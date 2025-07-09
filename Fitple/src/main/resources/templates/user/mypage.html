@@ -45,12 +45,13 @@
   <ul>
     <li th:if="${housingScraps.isEmpty()}">찜한 주거정보가 없습니다.</li>
     <li th:each="house : ${housingScraps}">
-      <span th:text="${house.hsmpNm}"></span> -
-      <span th:text="${house.rnAdres}"></span>
-      <span style="color: gray;" th:text="' (' + ${house.houseTyNm} + ')'"></span>
+      <span th:text="${house.hsmpNm != null ? house.hsmpNm : '정보 없음'}"></span> -
+      <span th:text="${house.rnAdres != null ? house.rnAdres : '정보 없음'}"></span>
+      <span class="house-type" th:text="' (' + ${house.houseTyNm != null ? house.houseTyNm : '정보 없음'} + ')'"></span>
     </li>
   </ul>
 </div>
+
 
 
 

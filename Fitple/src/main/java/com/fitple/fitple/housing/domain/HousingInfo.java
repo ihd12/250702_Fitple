@@ -1,18 +1,17 @@
 package com.fitple.fitple.housing.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "home_sigungu")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor // 기본 생성자 자동 생성
 @Entity
-@Getter
+@Getter // 모든 필드에 대해 getter 메소드 자동 생성
 public class HousingInfo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "house_id")  // DB 컬럼명 그대로 유지
+    @Column(name = "house_id")
     private Long houseId;  // 자바 필드명은 houseId로 변경
 
     @Column(name = "hsmpNm", nullable = false)

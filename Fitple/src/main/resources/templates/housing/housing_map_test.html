@@ -135,8 +135,16 @@
 
     // 로그인 여부 Thymeleaf 변수로 받아오기
     let isLoggedIn = `[[${#authorization.expression('isAuthenticated()')}]]` === 'true';
-    console.log(isLoggedIn);
+    console.log('로그인 상태:', isLoggedIn);  // 로그인 상태 확인
 
+    // userId를 서버에서 전달받아 자바스크립트 변수로 설정
+    let userId = '[[${userId}]]';
+
+    // getUserId 함수 정의
+    function getUserId() {
+        // userId가 'null'인 경우 null 반환, 그렇지 않으면 userId 반환
+        return userId === 'null' || userId === null ? null : userId;
+    }
 
     // 찜하기 버튼 상태 갱신 함수
     async function checkLoginStatus() {
@@ -152,13 +160,14 @@
             const scrappedIds = await res.json();
 
             buttons.forEach(button => {
-                const propertyId = parseInt(button.id.split('-')[2]);
+                const propertyId = button.closest('li.property-item').getAttribute('data-pnu');
+
                 button.disabled = false;
 
                 if (scrappedIds.includes(propertyId)) {
                     button.innerText = '찜 완료';
                     button.classList.add('scrapped');
-                    button.disabled = true;
+                    button.disabled = true; // 이미 찜한 주거지 버튼은 비활성화
                 } else {
                     button.innerText = '찜하기';
                     button.classList.remove('scrapped');
@@ -171,21 +180,45 @@
 
     // 찜하기 버튼 클릭 이벤트 처리
     function addToFavorites(propertyId, event) {
-        event.stopPropagation();  // ★ 클릭 이벤트 전파 방지
+        event.stopPropagation();  // 클릭 이벤트 전파 방지
         const button = document.getElementById(`favorite-btn-${propertyId}`);
+
         if (!isLoggedIn) {
             alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
             window.location.href = '/user/login';
             return;
         }
+
         if (button.disabled) return;
 
         button.disabled = true;
         button.innerText = '처리중...';
 
+        const listItem = button.closest('li.property-item');
+
+        // dataset에서 추가 데이터 가져오기
+        const hsmpSn = listItem.dataset.hsmpSn;
+        const brtcCode = listItem.dataset.brtcCode;
+        const signguCode = listItem.dataset.signguCode;
+        const brtcNm = listItem.dataset.brtcNm;
+        const signguNm = listItem.dataset.signguNm;
+
+        // 로그인한 사용자 ID
+        const userId = getUserId();
+
         fetch(`/scrap/add/${propertyId}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                hsmpSn,
+                brtcCode,
+                signguCode,
+                brtcNm,
+                signguNm,
+                housingInfoId: propertyId,
+                userId,
+                isScrapped: true,
+            })
         })
             .then(response => {
                 if (!response.ok) throw new Error('Server error');
@@ -207,9 +240,6 @@
                 button.innerText = '찜하기';
             });
     }
-
-
-
 
     // 전역 변수
     var latitude = 37.566826;
@@ -469,7 +499,7 @@
     // 기존의 displayHousingOnMap 함수 내부 중 찜하기 버튼 관련 부분 (수정 포함)
     async function displayHousingOnMap(housingList) {
         const propertyList = document.getElementById('property-list');
-        propertyList.innerHTML = '';
+        propertyList.innerHTML = '';  // 기존 내용 삭제
 
         if (!housingList || housingList.length === 0) {
             propertyList.innerHTML = '<li>검색 결과가 없습니다.</li>';
@@ -499,18 +529,26 @@
                 listItem.id = `property-${itemData.hsmpSn}`;
                 listItem.dataset.pnu = itemData.pnu;
 
+                // 여기서 추가 데이터를 dataset으로 저장
+                listItem.dataset.hsmpSn = itemData.hsmpSn;
+                listItem.dataset.brtcCode = itemData.brtcCode;
+                listItem.dataset.signguCode = itemData.signguCode;
+                listItem.dataset.brtcNm = itemData.brtcNm;
+                listItem.dataset.signguNm = itemData.signguNm;
+
                 const formattedDeposit = Number(itemData.bassRentGtn).toLocaleString('ko-KR');
                 const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
 
                 listItem.innerHTML = `
-                    <strong>${itemData.hsmpNm}</strong>
-                    <p>주소: ${itemData.rnAdres}</p>
-                    <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
-                    <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
-                    <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
-                    <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
-                    <button id="favorite-btn-${itemData.hsmpSn}" onclick="addToFavorites(${itemData.hsmpSn}, event)" disabled>찜하기</button>
-                `;
+                <strong>${itemData.hsmpNm}</strong>
+                <p>단지식별자: ${itemData.hsmpSn}</p>
+                <p>주소: ${itemData.rnAdres}</p>
+                <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
+                <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
+                <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
+                <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
+                <button id="favorite-btn-${itemData.hsmpSn}" onclick="addToFavorites(${itemData.hsmpSn}, event)" disabled>찜하기</button>
+            `;
 
                 propertyList.appendChild(listItem);
 
@@ -546,6 +584,7 @@
     }
 
 
+
     closeModalBtn.addEventListener('click', () => {
         modalWrapper.style.display = 'none';
     });
@@ -557,6 +596,7 @@
 
     function populateAndShowModal(pnu) {
         const data = currentHousingList.find(item => item.pnu === pnu);
+        data.hsmpNm = undefined;
         if (!data) {
             alert("상세 정보를 찾는 데 실패했습니다.");
             return;
@@ -585,6 +625,7 @@
 
         modalBody.innerHTML = `
                 <table>
+                    <tr><th>단지식별자</th><td>${data.hsmpSn}</td></tr>
                     <tr><th>단지명</th><td>${data.hsmpNm}</td></tr>
                     <tr><th>주소</th><td>${data.rnAdres}</td></tr>
                     <tr><th>준공일자</th><td>${checkValue(data.competDe)}</td></tr>
