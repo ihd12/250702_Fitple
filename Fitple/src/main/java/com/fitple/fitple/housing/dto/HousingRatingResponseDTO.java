@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class HousingRatingResponseDTO {
-    private double avgRating;
+
+    private double averageRating;
     private long ratingCount;
+
 }
