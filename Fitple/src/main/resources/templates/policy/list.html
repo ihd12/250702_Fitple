@@ -88,7 +88,7 @@
   <tr th:each="policy : ${policies}">
     <td th:text="${policy.plcyNo}">정책번호</td>
     <td>
-      <a th:href="@{/policy/detail(plcyNo=${policy.plcyNo}, page=${responseDTO.page}, keyword=${keyword}, zipCds=${zipCds})}"
+      <a th:href="@{/policy/detail(plcyNo=${policy.plcyNo}, page=${responseDTO.page}, keyword=${keyword}, zipCds=${zipCds == null ? [] : zipCds})}"
          th:text="${policy.plcyNm}">정책명</a>
     </td>
     <td th:text="${policy.plcyKywdNm}">키워드</td>
@@ -116,9 +116,6 @@
     </li>
   </ul>
 </div>
-
-
-
 
 </body>
 </html>
