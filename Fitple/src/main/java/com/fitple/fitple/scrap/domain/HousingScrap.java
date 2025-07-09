@@ -36,4 +36,59 @@ public class HousingScrap {
 
     @Column(name = "signgu_nm", nullable = false)
     private String signguNm; // 시군구 명
+
+    // 추가된 필드들
+    @Column(name = "instt_nm")
+    private String insttNm; // 기관 명
+
+    @Column(name = "hsmp_nm")
+    private String hsmpNm; // 단지 명
+
+    @Column(name = "rn_adres")
+    private String rnAdres; // 도로명 주소
+
+    @Column(name = "compet_de")
+    private String competDe; // 준공 일자
+
+    @Column(name = "hshld_co")
+    private Integer hshldCo; // 세대 수
+
+    @Column(name = "suply_ty_nm")
+    private String suplyTyNm; // 공급 유형 명
+
+    @Column(name = "style_nm")
+    private String styleNm; // 형 명
+
+    @Column(name = "suply_prvuse_ar")
+    private Double suplyPrvuseAr; // 공급 전용 면적
+
+    @Column(name = "suply_cmnuse_ar")
+    private Double suplyCmnuseAr; // 공급 공용 면적
+
+    @Column(name = "house_ty_nm")
+    private String houseTyNm; // 주택 유형 명
+
+    @Column(name = "heat_mthd_detail_nm")
+    private String heatMthdDetailNm; // 난방 방식
+
+    @Column(name = "buld_stle_nm")
+    private String buldStleNm; // 건물 형태
+
+    @Column(name = "elvtr_instl_at_nm")
+    private String elvtrInstlAtNm; // 승강기 설치여부
+
+    @Column(name = "parkng_co")
+    private Integer parkngCo; // 주차수
+
+    @Column(name = "bass_rent_gtn")
+    private Long bassRentGtn; // 기본 임대보증금
+
+    @Column(name = "bass_mt_rntchrg")
+    private Long bassMtRntchrg; // 기본 월임대료
+
+    @Column(name = "bass_cnvrs_gtn_lmt")
+    private Long bassCnvrsGtnLmt; // 기본 전환보증금
+
+    @Column(name = "msg")
+    private String msg; // 메시지
 }

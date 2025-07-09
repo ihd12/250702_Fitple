@@ -202,6 +202,24 @@
         const signguCode = listItem.dataset.signguCode;
         const brtcNm = listItem.dataset.brtcNm;
         const signguNm = listItem.dataset.signguNm;
+        const insttNm = listItem.dataset.insttNm; // 기관명
+        const hsmpNm = listItem.dataset.hsmpNm; // 단지명
+        const rnAdres = listItem.dataset.rnAdres; // 도로명 주소
+        const competDe = listItem.dataset.competDe; // 준공 일자
+        const hshldCo = listItem.dataset.hshldCo; // 세대수
+        const suplyTyNm = listItem.dataset.suplyTyNm; // 공급 유형 명
+        const styleNm = listItem.dataset.styleNm; // 형 명
+        const suplyPrvuseAr = listItem.dataset.suplyPrvuseAr; // 공급 전용 면적
+        const suplyCmnuseAr = listItem.dataset.suplyCmnuseAr; // 공급 공용 면적
+        const houseTyNm = listItem.dataset.houseTyNm; // 주택 유형 명
+        const heatMthdDetailNm = listItem.dataset.heatMthdDetailNm; // 난방 방식
+        const buldStleNm = listItem.dataset.buldStleNm; // 건물 형태
+        const elvtrInstlAtNm = listItem.dataset.elvtrInstlAtNm; // 승강기 설치여부
+        const parkngCo = listItem.dataset.parkngCo; // 주차수
+        const bassRentGtn = listItem.dataset.bassRentGtn; // 기본 임대보증금
+        const bassMtRntchrg = listItem.dataset.bassMtRntchrg; // 기본 월임대료
+        const bassCnvrsGtnLmt = listItem.dataset.bassCnvrsGtnLmt; // 기본 전환보증금
+        const msg = listItem.dataset.msg; // 메시지
 
         // 로그인한 사용자 ID
         const userId = getUserId();
@@ -215,6 +233,24 @@
                 signguCode,
                 brtcNm,
                 signguNm,
+                insttNm,
+                hsmpNm,
+                rnAdres,
+                competDe,
+                hshldCo,
+                suplyTyNm,
+                styleNm,
+                suplyPrvuseAr,
+                suplyCmnuseAr,
+                houseTyNm,
+                heatMthdDetailNm,
+                buldStleNm,
+                elvtrInstlAtNm,
+                parkngCo,
+                bassRentGtn,
+                bassMtRntchrg,
+                bassCnvrsGtnLmt,
+                msg,
                 housingInfoId: propertyId,
                 userId,
                 isScrapped: true,
@@ -240,6 +276,7 @@
                 button.innerText = '찜하기';
             });
     }
+
 
     // 전역 변수
     var latitude = 37.566826;
@@ -535,6 +572,23 @@
                 listItem.dataset.signguCode = itemData.signguCode;
                 listItem.dataset.brtcNm = itemData.brtcNm;
                 listItem.dataset.signguNm = itemData.signguNm;
+                listItem.dataset.insttNm = itemData.insttNm;  // 기관명 추가
+                listItem.dataset.hsmpNm = itemData.hsmpNm;    // 단지명 추가
+                listItem.dataset.rnAdres = itemData.rnAdres;  // 도로명 주소 추가
+                listItem.dataset.competDe = itemData.competDe; // 준공일자 추가
+                listItem.dataset.hshldCo = itemData.hshldCo;    // 세대수 추가
+                listItem.dataset.suplyTyNm = itemData.suplyTyNm; // 공급유형명 추가
+                listItem.dataset.styleNm = itemData.styleNm;    // 형명 추가
+                listItem.dataset.suplyPrvuseAr = itemData.suplyPrvuseAr; // 공급전용면적 추가
+                listItem.dataset.suplyCmnuseAr = itemData.suplyCmnuseAr; // 공급공용면적 추가
+                listItem.dataset.houseTyNm = itemData.houseTyNm; // 주택유형명 추가
+                listItem.dataset.heatMthdDetailNm = itemData.heatMthdDetailNm; // 난방방식 추가
+                listItem.dataset.buldStleNm = itemData.buldStleNm; // 건물형태 추가
+                listItem.dataset.elvtrInstlAtNm = itemData.elvtrInstlAtNm; // 승강기 설치여부 추가
+                listItem.dataset.parkngCo = itemData.parkngCo;    // 주차수 추가
+                listItem.dataset.bassRentGtn = itemData.bassRentGtn; // 기본임대보증금 추가
+                listItem.dataset.bassMtRntchrg = itemData.bassMtRntchrg; // 기본월임대료 추가
+                listItem.dataset.msg = itemData.msg;  // 메시지 추가
 
                 const formattedDeposit = Number(itemData.bassRentGtn).toLocaleString('ko-KR');
                 const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
@@ -582,6 +636,7 @@
         // 매물 다 그린 후 찜 상태 반영
         checkLoginStatus();
     }
+
 
 
 

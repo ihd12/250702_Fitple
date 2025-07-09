@@ -22,27 +22,28 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
     private final UserRepository userRepository;
 
     @Override
-    public void scrap(Long userId, String policyId, String policyName) {
+    public void scrap(Long userId, List<String> policyIds, List<String> policyNames) {
         // User 객체 가져오기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        // 중복된 찜이 존재하는지 확인
-        if (repository.existsByUserAndPolicyId(user, policyId)) {
-            // 이미 찜한 정책이므로 저장하지 않음
-            return;
+        for (int i = 0; i < policyIds.size(); i++) {
+            String policyId = policyIds.get(i);
+            String policyName = policyNames.get(i);
+
+            // 중복된 찜이 존재하는지 확인
+            if (!repository.existsByUserAndPolicyId(user, policyId)) {
+                // 새로운 PolicyScrap 객체 생성
+                PolicyScrap scrap = new PolicyScrap();
+                scrap.setUser(user);
+                scrap.setPolicyId(policyId);
+                scrap.setPolicyName(policyName);
+
+                // 새로 찜하기 저장
+                repository.save(scrap);
+            }
         }
-
-        // 새로운 PolicyScrap 객체 생성
-        PolicyScrap scrap = new PolicyScrap();
-        scrap.setUser(user);
-        scrap.setPolicyId(policyId);
-        scrap.setPolicyName(policyName);
-
-        // 새로 찜하기 저장
-        repository.save(scrap);
     }
-
 
     @Override
     public void cancelScrap(Long userId, String policyId) {
@@ -50,21 +51,16 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isScrapped(Long userId, String policyId) {
-        // userId로 확인
         return repository.existsByUserIdAndPolicyId(userId, policyId);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isScrapped(User user, String policyId) {
-        // User 객체와 policyId로 확인
         return repository.existsByUserAndPolicyId(user, policyId);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Set<String> getScrappedPlcyNoSet(User user, List<String> policyIds) {
         return repository.findByUserAndPolicyIdIn(user, policyIds)
                 .stream()
@@ -73,9 +69,7 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<PolicyScrapDTO> getScrapList(User user) {
-        // 페이징 처리 없이 모든 데이터 조회
         List<PolicyScrap> scraps = repository.findByUser(user);
 
         return scraps.stream()
