@@ -40,24 +40,26 @@
 
   <div class="scrap-buttons">
     <div th:if="${#authentication.principal != 'anonymousUser'}">
-      <form th:action="@{/policy/scrap/web}" method="post">
-        <!-- 여러 개의 정책 ID와 이름을 리스트로 전달 -->
-        <input type="hidden" name="plcyNos" th:value="${#strings.arrayToList(policy.plcyNo)}" />
-        <input type="hidden" name="plcyNms" th:value="${#strings.arrayToList(policy.plcyNm)}" />
-        <button type="submit">찜하기</button>
-      </form>
+      <button type="button"
+              class="scrap-btn"
+              th:data-plcyno="${policy.plcyNo}"
+              th:data-plcynm="${policy.plcyNm}">
+        찜하기
+      </button>
 
-
-      <form th:if="${isScrapped == true}" th:action="@{/policy/scrap/web/cancel}" method="post">
-        <input type="hidden" name="plcyNo" th:value="${policy.plcyNo}" />
-        <button type="submit">찜취소</button>
-      </form>
+      <button type="button"
+              class="scrap-cancel-btn"
+              th:if="${isScrapped == true}"
+              th:data-plcyno="${policy.plcyNo}">
+        찜취소
+      </button>
     </div>
 
     <div th:if="${#authentication.principal == 'anonymousUser'}">
       <p>찜 기능은 <a th:href="@{/user/login}">로그인 후</a> 이용하실 수 있어요.</p>
     </div>
   </div>
+
 
   <br/>
   <form th:action="@{/policy/list}" method="get">
@@ -71,6 +73,43 @@
 <div th:if="${policy == null}">
   <p>정책 정보를 불러올 수 없습니다.</p>
 </div>
+
+                      <!-- HTML 태그 끝-->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".scrap-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const plcyNo = this.dataset.plcyno;
+        const plcyNm = this.dataset.plcynm;
+
+        fetch("/policy/scrap/web/ajax", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `plcyNos=${plcyNo}&plcyNms=${plcyNm}`
+        })
+                .then(res => res.text())
+                .then(msg => alert(msg))
+                .catch(err => alert("에러 발생"));
+      });
+    });
+
+    document.querySelectorAll(".scrap-cancel-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const plcyNo = this.dataset.plcyno;
+
+        fetch(`/policy/scrap/web/ajax/${plcyNo}/cancel`, {
+          method: "POST"
+        })
+                .then(res => res.text())
+                .then(msg => alert(msg))
+                .catch(err => alert("에러 발생"));
+      });
+    });
+  });
+</script>
 
 </body>
 </html>

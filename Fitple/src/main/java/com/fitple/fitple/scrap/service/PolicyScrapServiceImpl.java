@@ -22,32 +22,32 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
     private final UserRepository userRepository;
 
     @Override
-    public void scrap(Long userId, List<String> policyIds, List<String> policyNames) {
-        // User 객체 가져오기
+    public boolean scrap(Long userId, List<String> policyIds, List<String> policyNames) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        boolean saved = false;
 
         for (int i = 0; i < policyIds.size(); i++) {
             String policyId = policyIds.get(i);
             String policyName = policyNames.get(i);
 
-            // 중복된 찜이 존재하는지 확인
             if (!repository.existsByUserAndPolicyId(user, policyId)) {
-                // 새로운 PolicyScrap 객체 생성
                 PolicyScrap scrap = new PolicyScrap();
                 scrap.setUser(user);
                 scrap.setPolicyId(policyId);
                 scrap.setPolicyName(policyName);
-
-                // 새로 찜하기 저장
                 repository.save(scrap);
+                saved = true;
             }
         }
+
+        return saved;
     }
 
     @Override
     public void cancelScrap(Long userId, String policyId) {
-        repository.deleteByUserIdAndPolicyId(userId, policyId);  // 찜 취소
+        repository.deleteByUserIdAndPolicyId(userId, policyId);
     }
 
     @Override
