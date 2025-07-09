@@ -46,11 +46,11 @@ public class PageRequestDTO {
         return sb.toString();
     }
     public Pageable getPageable(String sortType) {
-        return PageRequest.of(getSkip(), getSize(), Sort.by(sortType).descending());
+        return PageRequest.of(getPage()-1, getSize(), Sort.by(sortType).descending());
     }
 
     public int getPage() {
-        return (page == null) ? 1 : page;
+        return (page == null || page < 1) ? 1 : page;
     }
 
     public int getSize() {
