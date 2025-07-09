@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>장소 검색하기</title>
+  <style>
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/infraCSS.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+<h1> 주변 생활권 정보</h1>
+<select id="sidoSelect">
+  <option value="">시/도 선택</option>
+</select>
+<select id="sigunguSelect">
+  <option value="">시/군/구 선택</option>
+</select>
+<input type="text" id="Pkeyword" placeholder="지역명을 입력하세요">
+<button onclick="searchAddress()">검색</button>
+<input type="text" id="keyword" placeholder="장소 검색하기" />
+<div class="map_wrap">
+  <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+  <ul id="category">
+    <li id="SW8" data-order="0"><span class="fas fa-subway"></span>지하철</li>
+    <li id="MT1" data-order="1"><span class="fas fa-store-alt"></span>마트</li>
+    <li id="HP8" data-order="2"><span class="fas fa-hospital"></span>병원</li>
+    <li id="PM9" data-order="3"><span class="fas fa-pills"></span>약국</li>
+    <li id="CE7" data-order="4"><span class="fas fa-coffee"></span>카페</li>
+    <li id="CS2" data-order="5"><span class="fas fa-store"></span>편의점</li>
+  </ul>
+</div>
+<div id="resultWrapper">
+  <ul id="placesList"></ul>
+  <div id="pagination"></div>
+</div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d&libraries=services"></script>
+<script src="/js/infraJS.js"></script>
+</body>
+</html>
