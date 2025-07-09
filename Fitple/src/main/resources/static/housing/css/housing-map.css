@@ -166,6 +166,8 @@ h2 {
     font-weight: bold;
 }
 
+/* 상세보기 팝업창 디자인 */
+
 #modal-wrapper {
     position: fixed;
     top: 0;
@@ -234,6 +236,8 @@ h2 {
     background-color: #f8f9fa;
     width: 120px;
 }
+
+/* 상세보기 팝업창 내 덧글 디자인 */
 
 .reply-content {
     margin: 5px 0;
@@ -331,6 +335,8 @@ h2 {
     cursor: pointer;
     flex-shrink: 0;
 }
+
+/* 상세보기 팝업창 내 이미지 디자인 */
 
 .image-gallery-container {
     position: relative;
@@ -484,6 +490,8 @@ h2 {
     cursor: not-allowed;
 }
 
+/* 별점 관련 디자인 */
+
 .rating-display {
     color: #666;
     font-size: 0.9em;
@@ -501,6 +509,7 @@ h2 {
     color: #333;
     margin-left: 5px;
 }
+
 
 .star-rating-section {
     margin-bottom: 20px;
@@ -537,7 +546,9 @@ h2 {
 }
 
 .stars .star.filled {
-    color: #f8b400;
+        color: #f8b400;
+        font-weight: bold;
+        text-shadow: 0 0 2px #f8b400;
 }
 
 .rating-feedback {
