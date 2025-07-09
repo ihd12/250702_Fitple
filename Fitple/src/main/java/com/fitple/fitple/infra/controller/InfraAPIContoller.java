@@ -10,12 +10,12 @@ import org.springframework.web.client.RestTemplate;
 
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api")
 public class InfraAPIContoller {
 
     private final String API_KEY = "696E63A0-9FC6-36DC-8BAA-9C9E2B6B5384";
 
+    // 시/도 목록 가져오기 API
     @GetMapping("/sido")
     public ResponseEntity<String> getSidoList() {
         String url = "https://api.vworld.kr/req/data?service=data" +
@@ -32,7 +32,7 @@ public class InfraAPIContoller {
         String response = restTemplate.getForObject(url, String.class);
         return ResponseEntity.ok(response);
     }
-
+    // 시/군/구 목록 가져오기 API
     @GetMapping("/sigungu")
     public ResponseEntity<String> getSigunguList(@RequestParam String sidoCd) {
         String baseUrl = "https://api.vworld.kr/req/data";
@@ -51,7 +51,7 @@ public class InfraAPIContoller {
         return ResponseEntity.ok(response);
     }
 
-
+    // 읍/면/동 조회 API
     @GetMapping("/emdList")
     public ResponseEntity<String> getEmdList(@RequestParam String sigunguCd) {
         String url = "https://api.vworld.kr/req/data" +
@@ -68,6 +68,8 @@ public class InfraAPIContoller {
         String response = restTemplate.getForObject(url, String.class);
         return ResponseEntity.ok(response);
     }
+
+    // 시/군/구 경계선 API
     @GetMapping("/polygon")
     public ResponseEntity<String> getPolygonData(@RequestParam String sigCd) {
         String baseUrl = "https://api.vworld.kr/req/data";

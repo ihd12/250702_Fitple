@@ -17,8 +17,9 @@ const map = new kakao.maps.Map(mapContainer, {
 // 장소 검색 서비스를 위한 객체 생성
 var ps = new kakao.maps.services.Places(map);
 
-// contentNode 스타일 및 이벤트 등록
+// contentNode : 장소 상세정보를 담을 DOM 노드
 contentNode.className = 'placeinfo_wrap';
+// 지도 기본 이벤트 방지(클릭 시 지도 드래그 방지)
 addEventHandle(contentNode, 'mousedown', kakao.maps.event.preventMap);
 addEventHandle(contentNode, 'touchstart', kakao.maps.event.preventMap);
 placeOverlay.setContent(contentNode);
@@ -32,9 +33,10 @@ function addEventHandle(target, type, callback) {
     }
 }
 
-// 키워드 기반 장소 검색
+// --------------------------- 키워드 기반 장소 검색-----------------------
 function searchKeywordPlaces(keyword) {
     if (!keyword.trim()) return;
+    // 장소 검색시 기존 마커, 오버레이 제거
     placeOverlay.setMap(null);
     removeMarker();
 
@@ -44,11 +46,11 @@ function searchKeywordPlaces(keyword) {
 
 // 카테고리 또는 키워드에 따라 검색
 function searchPlaces() {
+    // 키워드가 없고 카테고리가 있으면 카테고리 검색, 둘다 없을시 실행 X
     if (currKeyword) {
         searchKeywordPlaces(currKeyword);
         return;
     }
-
     if (!currCategory && !currKeyword) return;
 
     placeOverlay.setMap(null);
@@ -57,19 +59,23 @@ function searchPlaces() {
     ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
 }
 
-// 검색 결과 콜백 함수
+// 장소 검색 결과 콜백 함수
 function placesSearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
         if (data.length === 0) {
+            // 검색 결과가 없을때 리스트, 페이징,마커,오버레이 초기화
             document.getElementById('placesList').innerHTML = '';
             document.getElementById('pagination').innerHTML = '';
             removeMarker();
             placeOverlay.setMap(null);
             return;
         }
+
+        // 정상 결과일 경우: 장소 리스트와 페이징 생성
         displayPlaces(data);
         displayPagination(pagination);
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        // 장소가 없는 경우
         document.getElementById('placesList').innerHTML = '';
         document.getElementById('pagination').innerHTML = '';
         removeMarker();
@@ -86,36 +92,37 @@ function displayPlaces(places) {
     listEl.innerHTML = '';
 
     var useDefaultMarker = !currCategory;
-    var order = '';
 
-    if (currCategory) {
-        order = document.getElementById(currCategory).getAttribute('data-order');
-    }
 
     for (var i = 0; i < places.length; i++) {
-        var marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), order, useDefaultMarker);
+        // 마커 생성 및 지도에 표시
+        var marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), useDefaultMarker);
 
+        // 리스트 항목 생성
         var itemEl = document.createElement('li');
         itemEl.innerHTML = `<strong>${places[i].place_name}</strong><br>${places[i].address_name}`;
         listEl.appendChild(itemEl);
 
+        // 마커와 리스트 항목에 이벤트 연결 (즉시 실행 함수 사용)
         (function (marker, place, listItem) {
+            // 마커 클릭 시 → 오버레이 표시 + 리스트 강조
             kakao.maps.event.addListener(marker, 'click', function () {
                 displayPlaceInfo(place);
                 highlightListItem(listItem);
             });
 
+            // 리스트 항목 클릭 시 → 마커 클릭 이벤트 발생 + 지도 이동
             listItem.onclick = function () {
-                kakao.maps.event.trigger(marker, 'click');
-                map.panTo(marker.getPosition());
+                kakao.maps.event.trigger(marker, 'click'); // 마커 클릭 이벤트 강제 실행
+                map.panTo(marker.getPosition());                // 지도 중심 이동
                 document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
             };
-        })(marker, places[i], itemEl);
+        })(marker, places[i], itemEl); // 클로저로 값 고정
     }
 }
 
 // 마커 생성 후 지도에 표시
-function addMarker(position, order, useDefaultMarker) {
+function addMarker(position) {
     var marker = new kakao.maps.Marker({ position: position });
     marker.setMap(map);
     markers.push(marker);
@@ -130,17 +137,19 @@ function removeMarker() {
     markers = [];
 }
 
-// 장소 정보 오버레이 표시
+// -----------------특정 장소 클릭 시 상세정보 표시------------------
 function displayPlaceInfo(place) {
+    // 상세 정보
     var content = '<div class="placeinfo">' +
         `<a class="title" href="${place.place_url}" target="_blank">${place.place_name}</a>`;
 
+    // 주소 정보 표시(도로명 주소 유무)
     if (place.road_address_name) {
         content += `<span>${place.road_address_name}</span><span class="jibun">(지번: ${place.address_name})</span>`;
     } else {
         content += `<span>${place.address_name}</span>`;
     }
-
+    // 전화번호
     content += `<span class="tel">${place.phone}</span></div><div class="after"></div>`;
 
     contentNode.innerHTML = content;
@@ -186,7 +195,7 @@ function onClickCategory() {
     }
 }
 
-// 선택된 카테고리만 on 클래스 적용
+// 선택된 카테고리만 on 클래스 적용(강조)
 function changeCategoryClass(el) {
     var category = document.getElementById('category'),
         children = category.children;
@@ -221,15 +230,13 @@ function displayPagination(pagination) {
                 };
             })(i);
         }
-
         fragment.appendChild(page);
     }
-
     paginationEl.appendChild(fragment);
 }
-// ----------------------------kakao 주소 검색 함수----------------------------
+// ----------------------------kakao 주소 검색 ----------------------------
 var geocoder = new kakao.maps.services.Geocoder();
-
+let circleOverlay = null;
 function searchAddress() {
     const Pkeyword = document.getElementById('Pkeyword').value.trim();
 
@@ -237,7 +244,7 @@ function searchAddress() {
         alert("지역명을 입력하세요.");
         return;
     }
-
+    // kakao API 주소 검색 실행
     geocoder.addressSearch(Pkeyword, function (result, status) {
         if (status === kakao.maps.services.Status.OK) {
             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
@@ -249,6 +256,7 @@ function searchAddress() {
 
             map.setCenter(coords);
             map.setLevel(3);
+
 
             if (currKeyword && currKeyword.trim() !== '') {
                 searchKeywordPlaces(currKeyword);
@@ -268,6 +276,7 @@ function searchAddress() {
     });
 }
 // ----------------------------------경계선 표시----------------------------------
+// 시/군/구 폴리곤 경계선 표시
 let polygon = null;
 
 document.getElementById('sigunguSelect').addEventListener('change', function () {
@@ -275,9 +284,16 @@ document.getElementById('sigunguSelect').addEventListener('change', function () 
 
     if (!sigCd) return;
 
+    // 기존 폴리곤 제거
     if (polygon) {
         polygon.setMap(null);
         polygon = null;
+    }
+
+    // ✅ 기존 원형 오버레이 제거 ← 이거 추가!
+    if (circleOverlay) {
+        circleOverlay.setMap(null);
+        circleOverlay = null;
     }
     fetch(`/api/polygon?sigCd=${sigCd}`)
         .then(res => res.json())
@@ -340,6 +356,60 @@ document.getElementById('sigunguSelect').addEventListener('change', function () 
             alert("폴리곤 데이터를 불러오는 중 오류가 발생했습니다.");
         });
 });
+// 읍/면/동 원형 오버레이 표시
+function moveToAddress(address, drawCircle = true) {
+    geocoder.addressSearch(address, function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            currKeyword = '';
+            currCategory = '';
+            changeCategoryClass();
+            document.getElementById("keyword").value = '';
+
+            map.setCenter(coords);
+            map.setLevel(3);
+
+            if (polygon) {
+                polygon.setMap(null);
+                polygon = null;
+            }
+
+            // ✅ drawCircle이 true일 때만 원 생성
+            if (circleOverlay) {
+                circleOverlay.setMap(null);
+                circleOverlay = null;
+            }
+
+            if (drawCircle) {
+                circleOverlay = new kakao.maps.Circle({
+                    center: coords,
+                    radius: 1000,
+                    strokeWeight: 3,
+                    strokeColor: '#004c80',
+                    strokeOpacity: 0.8,
+                    fillColor: '#00a0e9',
+                    fillOpacity: 0.1
+                });
+                circleOverlay.setMap(map);
+            }
+
+            // 키워드/카테고리 검색 처리
+            if (currKeyword && currKeyword.trim() !== '') {
+                searchKeywordPlaces(currKeyword);
+            } else if (currCategory) {
+                searchPlaces();
+            } else {
+                removeMarker();
+                placeOverlay.setMap(null);
+                document.getElementById('placesList').innerHTML = '';
+                document.getElementById('pagination').innerHTML = '';
+            }
+        } else {
+            alert("해당 지역을 찾을 수 없습니다.");
+        }
+    });
+}
 // -------------------------------시/도 , 시/군/구 목록 받아오기 -------------------------------
     const sidoSelect = document.getElementById("sidoSelect");
     const sigunguSelect = document.getElementById("sigunguSelect");
@@ -397,7 +467,8 @@ document.getElementById('sigunguSelect').addEventListener('change', function () 
 
         if (sidoText && sigunguText) {
             PkeywordInput.value = `${sidoText} ${sigunguText}`;
-            searchAddress();
+
+            moveToAddress(`${sidoText} ${sigunguText}`, false);
         }
     });
     //-------------------------- 검색 엔터키 기능 처리--------------------------
@@ -424,7 +495,7 @@ document.getElementById('sigunguSelect').addEventListener('change', function () 
                 alert("지역명을 입력하세요");
                 return;
             }
-            searchAddress(); // 엔터 시 주소 검색 실행
+           moveToAddress(this.value, true); // 엔터 시 주소 검색 실행
         }
     });
 
