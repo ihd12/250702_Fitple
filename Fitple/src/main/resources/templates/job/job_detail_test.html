@@ -27,18 +27,34 @@
         <p><strong>전형 절차:</strong> <span th:text="${job.procedureDetail}"></span></p>
     </div>
 
-    <div class="back-button">
-                <<a th:href="@{/job/test(
-                  page=${requestDTO.page},
-                  size=${requestDTO.size},
-                  keyword=${requestDTO.keyword},
-                  salary=${requestDTO.salary},
-                  location=${requestDTO.location},
-                  ncs=${requestDTO.ncs},
-                  types=${requestDTO.types}
-                )}">← 목록으로 돌아가기</a>
+    <div class="scrap-buttons">
+        <!-- 로그인한 사용자에게만 찜/취소 버튼 보여줌 -->
+        <div th:if="${#authentication.principal != 'anonymousUser'}">
+            <form th:if="${isScrapped == false}" th:action="@{/job/scrap/{id}(id=${job.id})}" method="post">
+                <button type="submit">찜하기</button>
+            </form>
+            <form th:if="${isScrapped == true}" th:action="@{/job/scrap/{id}/cancel(id=${job.id})}" method="post">
+                <button type="submit">찜취소</button>
+            </form>
+        </div>
+
+        <!-- 비로그인 사용자는 안내 문구 출력 -->
+        <div th:if="${#authentication.principal == 'anonymousUser'}">
+            <p>찜하기 기능은 <a th:href="@{/user/login}">로그인 후</a> 이용할 수 있어요.</p>
+        </div>
     </div>
 
+    <div class="back-button">
+        <a th:href="@{/job/test(
+            page=${requestDTO.page},
+            size=${requestDTO.size},
+            keyword=${requestDTO.keyword},
+            salary=${requestDTO.salary},
+            location=${requestDTO.location},
+            ncs=${requestDTO.ncs},
+            types=${requestDTO.types}
+        )}">← 목록으로 돌아가기</a>
+    </div>
 </div>
 
 </body>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>정책 상세정보</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background-color: #f4f4f4; text-align: left; width: 200px; }
+  </style>
+</head>
+<body>
+
+<h2>정책 상세정보</h2>
+
+<div th:if="${policy != null}">
+  <table>
+    <tr><th>정책명</th><td th:text="${policy.plcyNm}">정책명</td></tr>
+    <tr><th>정책번호</th><td th:text="${policy.plcyNo}">정책번호</td></tr>
+    <tr><th>정책 설명</th><td th:text="${policy.plcyExplnCn}">설명</td></tr>
+    <tr><th>지원 내용</th><td th:text="${policy.plcySprtCn}">지원내용</td></tr>
+    <tr><th>대분류</th><td th:text="${policy.mclsfNm}">대분류</td></tr>
+    <tr><th>소분류</th><td th:text="${policy.lclsfNm}">소분류</td></tr>
+    <tr><th>주관 기관</th><td th:text="${policy.sprvsnInstCdNm}">기관명</td></tr>
+    <tr><th>등록 기관</th><td th:text="${policy.rgtrInstCdNm}">등록기관</td></tr>
+    <tr><th>사업 기간</th>
+      <td th:text="${policy.bizPrdBgngYmd} + ' ~ ' + ${policy.bizPrdEndYmd}">기간</td></tr>
+    <tr><th>소득 기준</th>
+      <td th:text="'₩' + ${policy.earnMinAmt} + ' ~ ₩' + ${policy.earnMaxAmt}">소득</td></tr>
+    <tr><th>신청일</th><td th:text="${policy.aplyYmd}">신청일</td></tr>
+    <tr><th>신청 방식</th><td th:text="${policy.plcyAplyMthdCn}">신청방식</td></tr>
+    <tr><th>심사 방식</th><td th:text="${policy.srngMthdCn}">심사방식</td></tr>
+    <tr><th>제출서류</th><td th:text="${policy.sbmsnDcmntCn}">서류</td></tr>
+    <tr><th>참고링크</th>
+      <td>
+        <a th:href="${policy.refUrlAddr1}" th:if="${policy.refUrlAddr1 != null}" target="_blank">링크1</a>
+      </td>
+    </tr>
+  </table>
+
+  <div class="scrap-buttons">
+    <div th:if="${#authentication.principal != 'anonymousUser'}">
+      <button type="button"
+              class="scrap-btn"
+              th:data-plcyno="${policy.plcyNo}"
+              th:data-plcynm="${policy.plcyNm}">
+        찜하기
+      </button>
+
+      <button type="button"
+              class="scrap-cancel-btn"
+              th:if="${isScrapped == true}"
+              th:data-plcyno="${policy.plcyNo}">
+        찜취소
+      </button>
+    </div>
+
+    <div th:if="${#authentication.principal == 'anonymousUser'}">
+      <p>찜 기능은 <a th:href="@{/user/login}">로그인 후</a> 이용하실 수 있어요.</p>
+    </div>
+  </div>
+
+
+  <br/>
+  <form th:action="@{/policy/list}" method="get">
+    <input type="hidden" name="page" th:value="${page}" />
+    <input type="hidden" name="keyword" th:value="${keyword}" />
+    <input type="hidden" name="zipCds" th:each="z : ${zipCds}" th:value="${z}" />
+    <button type="submit">← 목록으로</button>
+  </form>
+</div>
+
+<div th:if="${policy == null}">
+  <p>정책 정보를 불러올 수 없습니다.</p>
+</div>
+
+                      <!-- HTML 태그 끝-->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".scrap-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const plcyNo = this.dataset.plcyno;
+        const plcyNm = this.dataset.plcynm;
+
+        fetch("/policy/scrap/web/ajax", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `plcyNos=${plcyNo}&plcyNms=${plcyNm}`
+        })
+                .then(res => res.text())
+                .then(msg => alert(msg))
+                .catch(err => alert("에러 발생"));
+      });
+    });
+
+    document.querySelectorAll(".scrap-cancel-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const plcyNo = this.dataset.plcyno;
+
+        fetch(`/policy/scrap/web/ajax/${plcyNo}/cancel`, {
+          method: "POST"
+        })
+                .then(res => res.text())
+                .then(msg => alert(msg))
+                .catch(err => alert("에러 발생"));
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

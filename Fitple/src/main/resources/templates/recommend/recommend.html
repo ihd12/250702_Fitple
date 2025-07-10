@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>추천 결과</title>
+</head>
+<body>
+
+<h2>희망 연봉: <span th:text="${userSalary} + '만원'"></span></h2>
+<table border="1">
+  <thead>
+  <tr>
+    <th>제목</th>
+    <th>지역</th>
+    <th>직무</th>
+    <th>연봉</th>
+    <th>추천 점수</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="dto : ${recommendList}">
+    <td th:text="${dto.title}">제목</td>
+    <td th:text="${dto.location}">지역</td>
+    <td th:text="${dto.ncs}">직무</td>
+    <td th:text="${dto.salary} + '만원'">연봉</td>
+    <td th:text="${dto.score}">점수</td>
+  </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h2>희망 월세: <span th:text="${wantedRent} + '만원'"></span></h2>
+<table border="1">
+  <thead>
+  <tr>
+    <th>단지명</th>
+    <th>주소</th>
+    <th>월세</th>
+    <th>보증금</th>
+    <th>추천 점수</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="house : ${housingList}">
+    <td th:text="${house.uid}">단지명</td>
+    <td th:text="${house.area}">주소</td>
+    <td th:text="${#numbers.formatInteger(house.rent, 3, 'COMMA') + '원'}">월세</td>
+    <td th:text="${#numbers.formatInteger(house.deposit, 3, 'COMMA') + '원'}">보증금</td>
+    <td th:text="${house.score}">점수</td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

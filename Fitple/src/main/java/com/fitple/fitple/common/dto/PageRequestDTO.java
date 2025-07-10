@@ -23,9 +23,22 @@ public class PageRequestDTO {
     // 지역 필터링용 법정시군구코드
     private String[] zipCds;
 
-//    public String[] getZipCds() {
-//        return zipCds;
-//    }
+    public String getLink() {
+        StringBuilder sb = new StringBuilder();
+
+        if (keyword != null && !keyword.isEmpty()) {
+            sb.append("&keyword=").append(keyword);
+        }
+
+        if (zipCds != null) {
+            for (String zip : zipCds) {
+                sb.append("&zipCds=").append(zip);
+            }
+        }
+
+        return sb.toString();
+    }
+
 
     public int getPage() {
         return (page == null) ? 1 : page;
