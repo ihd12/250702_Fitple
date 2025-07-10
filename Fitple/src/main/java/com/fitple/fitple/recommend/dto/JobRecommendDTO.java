@@ -1,24 +1,17 @@
 package com.fitple.fitple.recommend.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobRecommendDTO {
 
-    private Long id;
-    private String title;
-    private String location;
-    private String ncs;
-    private Integer salary;
-    private int score;
-
-    public JobRecommendDTO(Long id, String title, String location, String ncs, Integer salary) {
-        this.id = id;
-        this.title = title;
-        this.location = location;
-        this.ncs = ncs;
-        this.salary = salary;
-    }
+    private Long jobId;         // JobDetail.jobId
+    private String title;       // JobDetail.title
+    private String orgName;     // JobDetail.orgName (기관명)
+    private Integer salary;     // JobDetail.salary
+    private int score;          // 추천 점수 (10점 만점)
 }

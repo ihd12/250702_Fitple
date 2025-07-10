@@ -1,55 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>추천 결과</title>
+    <meta charset="UTF-8">
+    <title>추천 결과</title>
+    <link rel="stylesheet" href="/css/tailwind.min.css">
 </head>
-<body>
+<body class="bg-gray-100 text-gray-900">
+<div class="container mx-auto px-4 py-8">
 
-<h2>희망 연봉: <span th:text="${userSalary} + '만원'"></span></h2>
-<table border="1">
-  <thead>
-  <tr>
-    <th>제목</th>
-    <th>지역</th>
-    <th>직무</th>
-    <th>연봉</th>
-    <th>추천 점수</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="dto : ${recommendList}">
-    <td th:text="${dto.title}">제목</td>
-    <td th:text="${dto.location}">지역</td>
-    <td th:text="${dto.ncs}">직무</td>
-    <td th:text="${dto.salary} + '만원'">연봉</td>
-    <td th:text="${dto.score}">점수</td>
-  </tr>
-  </tbody>
-</table>
+    <h1 class="text-3xl font-bold mb-8 text-center">맞춤 추천 결과</h1>
 
-<hr/>
+    <!-- 추천 채용공고 섹션 -->
+    <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">추천 채용공고</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow" th:each="job : ${recommendedJobs}">
+                <h3 class="text-lg font-bold mb-1">
+                    <a th:href="@{/job/detail/{id}(id=${job.jobId})}"
+                       class="text-blue-600 hover:underline"
+                       th:text="${job.title}">채용 제목</a>
+                </h3>
+                <p class="text-gray-600 mb-2" th:text="${job.companyName}">회사 이름</p>
+                <p class="text-sm text-gray-500" th:text="'연봉: ' + ${job.salary} + '만원'">연봉 정보</p>
+                <p class="mt-2 text-sm font-semibold text-green-600" th:text="'추천 점수: ' + ${job.score} + '점'">점수</p>
+            </div>
+        </div>
+    </section>
 
-<h2>희망 월세: <span th:text="${wantedRent} + '만원'"></span></h2>
-<table border="1">
-  <thead>
-  <tr>
-    <th>단지명</th>
-    <th>주소</th>
-    <th>월세</th>
-    <th>보증금</th>
-    <th>추천 점수</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="house : ${housingList}">
-    <td th:text="${house.uid}">단지명</td>
-    <td th:text="${house.area}">주소</td>
-    <td th:text="${#numbers.formatInteger(house.rent, 3, 'COMMA') + '원'}">월세</td>
-    <td th:text="${#numbers.formatInteger(house.deposit, 3, 'COMMA') + '원'}">보증금</td>
-    <td th:text="${house.score}">점수</td>
-  </tr>
-  </tbody>
-</table>
+    <!-- 추천 주거지 섹션 -->
+    <section>
+        <h2 class="text-2xl font-semibold mb-4">추천 주거지</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow" th:each="house : ${recommendedHousings}">
+                <h3 class="text-lg font-bold mb-1" th:text="${house.hsmpNm}">단지명</h3>
+                <p class="text-gray-600 mb-2" th:text="${house.rnAdres}">주소</p>
+                <p class="text-sm text-gray-500" th:text="'보증금: ' + ${house.bassRentGtn} + '원'">보증금</p>
+                <p class="text-sm text-gray-500" th:text="'월세: ' + ${house.bassMtRntchrg} + '원'">월세</p>
+                <p class="mt-2 text-sm font-semibold text-green-600" th:text="'추천 점수: ' + ${house.score} + '점'">점수</p>
+            </div>
+        </div>
+    </section>
 
+
+</div>
 </body>
 </html>
