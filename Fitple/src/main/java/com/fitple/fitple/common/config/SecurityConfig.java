@@ -42,7 +42,7 @@ public class SecurityConfig {
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/user/login")                // 수정: 로그인 페이지 경로
+                        .loginPage("/user/login")                // 로그인 페이지 경로
                         .usernameParameter("email")              // 이메일로 로그인
                         .passwordParameter("password")
                         .defaultSuccessUrl("/mypage", true)
@@ -53,7 +53,9 @@ public class SecurityConfig {
                         .logoutUrl("/user/logout")              // 수정: 로그아웃 경로
                         .logoutSuccessUrl("/")
                         .permitAll()
-                );
+                )
+
+                .userDetailsService(customUserDetailsService);  // CustomUserDetailsService 등록
 
         return http.build();
     }

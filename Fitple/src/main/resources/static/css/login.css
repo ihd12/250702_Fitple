@@ -1,0 +1,89 @@
+
+:root {
+    --accent-color: #0d6efd;
+    --surface-color: #ffffff;
+    --default-color: #6c757d;
+    --contrast-color: #ffffff;
+    --heading-color: #212529;
+    --default-font: 'Poppins', sans-serif;
+}
+
+.login-container {
+    max-width: 420px;
+    margin: 200px auto;
+    padding: 40px 30px;
+    background-color: var(--surface-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    font-family: var(--default-font);
+}
+
+.login-container h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--heading-color);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.login-container .form-label {
+    font-weight: 600;
+    color: var(--heading-color);
+    margin-bottom: 6px;
+}
+
+.login-container .form-control {
+    border: 1px solid color-mix(in srgb, var(--default-color), transparent 70%);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.login-container .form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--accent-color), transparent 75%);
+}
+
+.login-container .btn-login {
+    background-color: var(--accent-color);
+    color: var(--contrast-color);
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    margin-top: 15px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.login-container .btn-login:hover {
+    background-color: color-mix(in srgb, var(--accent-color), black 10%);
+}
+
+.login-container .remember-box input {
+    margin-right: 8px;
+}
+
+.login-container .remember-box label {
+    font-size: 14px;
+    color: var(--default-color);
+}
+
+
+.login-footer {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 14px;
+}
+
+.login-footer a {
+    margin: 0 8px;
+    color: #888;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    color: #000;
+}

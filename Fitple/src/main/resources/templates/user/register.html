@@ -1,38 +1,126 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
     <title>회원가입</title>
-    <link rel="stylesheet" href="/css/user/register.css">
+
+    <!-- Vendor CSS -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+
+    <style>
+        .register-container {
+            max-width: 500px;
+            margin: 80px auto;
+            background-color: var(--surface-color, #fefefe);
+            border: 1px solid #e0e0e0;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            font-family: var(--default-font, 'Noto Sans KR', sans-serif);
+        }
+
+        .register-container h2 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 26px;
+            color: var(--heading-color, #222);
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--heading-color, #333);
+        }
+
+        .form-control {
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color, #008374);
+            box-shadow: 0 0 0 0.2rem rgba(0, 131, 116, 0.2);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color, #008374);
+            color: white;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            margin-top: 15px;
+        }
+
+        .btn-register:hover {
+            background-color: #006e61;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <form class="signup-form" th:action="@{/user/register}" method="post">
-        <h2>회원가입</h2>
-        <div class="form-group">
-            <label for="email">이메일 *</label>
-            <input type="email" id="email" name="email" required placeholder="직접 입력">
-        </div>
-        <div class="form-group">
-            <label for="nickname">닉네임 *</label>
-            <input type="text" id="nickname" name="nickname" required placeholder="사용하실 이름을 입력">
-        </div>
 
-        <div class="form-group">
-            <label for="password">비밀번호 *</label>
-            <input type="password" id="password" name="password" required placeholder="Password">
+<div th:replace="fragments/header :: header"></div>
+
+<section style="min-height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #f9f9f9;">
+    <div class="register-container">
+        <h2>회원가입</h2>
+        <form th:action="@{/user/register}" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">이메일 <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="email" placeholder="example" required />
+                </div>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">닉네임</label>
+                <input type="text" class="form-control" name="nickname" />
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" name="password" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">비밀번호 확인</label>
+                <input type="password" class="form-control" name="confirmPassword" />
+            </div>
+
+            <button type="submit" class="btn btn-register">회원가입</button>
+
+            <div th:if="${param.success}" class="alert alert-success mt-3" role="alert">
+                회원가입이 완료되었습니다.
+            </div>
+
+        </form>
+
+        <div class="register-footer">
+            이미 계정이 있으신가요? <a href="/user/login" class="text-primary">로그인</a>
         </div>
-        <div class="form-group">
-            <label for="confirm-password">비밀번호 확인 *</label>
-            <input type="password" id="confirm-password" name="confirm-password" required placeholder="입력하신 비밀번호와 일치하게 입력">
-        </div>
-        <button type="submit" class="signup-btn">회원가입</button>
-        <div class="login-link">
-            <p>이미 계정이 있으신가요? <a href="/user/login">로그인</a></p>
-        </div>
-    </form>
-</div>
+    </div>
+</section>
 
 </body>
 </html>
+

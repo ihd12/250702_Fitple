@@ -1,0 +1,42 @@
+* [33m172bfe8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m 테스트 만듬
+[31m|[m * [33m6bb11e8[m[33m ([m[1;31morigin/policy[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m 폴리시 2차
+[31m|[m *   [33mfd15881[m Merge branch 'policy'
+[31m|[m [33m|[m[34m\[m  
+[31m|[m [33m|[m * [33m75e0fa5[m 공공지원 1차
+[31m|[m [33m|[m[31m/[m  
+[31m|[m[31m/[m[33m|[m   
+[31m|[m * [33m68394ad[m 제외 폴더 수정
+[31m|[m * [33m699e39d[m 하우징 기본 및 housing_map_test로 좌표 기반 테스트 완료.
+[31m|[m[31m/[m  
+* [33mc505b6f[m[33m ([m[1;31morigin/job[m[33m)[m 2025-07-04 채용 정보 페이지 테스트 완료
+*   [33m1f5ce55[m Merge branch 'main' into job
+[35m|[m[36m\[m  
+[35m|[m * [33m447f6c2[m[33m ([m[1;31morigin/base[m[33m)[m 2025.07.02 area, user, comment, admin, notice 추가
+* [36m|[m [33me619823[m 2025-07-03 Job관련 테이블 수정
+[36m|[m[36m/[m  
+*   [33m91a5d5f[m Merge branch 'job'
+[1;31m|[m[1;32m\[m  
+[1;31m|[m * [33m1ee72ee[m 2025.07.02 job 추가
+* [1;32m|[m   [33m3c24352[m[33m ([m[1;31morigin/infra[m[33m, [m[1;32minfra[m[33m)[m Merge branch 'main' into infra
+[1;33m|[m[1;34m\[m [1;32m\[m  
+* [1;34m|[m [1;32m|[m [33m6aec77e[m infra 컨트롤러 dto 서비스 추가
+* [1;34m|[m [1;32m|[m [33mfcb4b39[m 인프라 dto, service, contorller 생성(내용은 아직)
+[1;34m|[m [1;34m|[m [1;32m|[m *   [33m788e9fe[m[33m ([m[1;31morigin/LCPrice[m[33m)[m Merge remote-tracking branch 'origin/LCPrice' into LCPrice
+[1;34m|[m [1;34m|[m [1;32m|[m [1;35m|[m[1;36m\[m  
+[1;34m|[m [1;34m|[m [1;32m|[m [1;35m|[m * [33m0640860[m LCPrice, LCCustom, LCPlan 추가
+[1;34m|[m [1;34m|[m [1;32m|[m[1;34m_[m[1;35m|[m[1;34m/[m  
+[1;34m|[m [1;34m|[m[1;34m/[m[1;32m|[m [1;35m|[m   
+[1;34m|[m [1;34m|[m [1;32m|[m * [33m560cfa5[m LCPrice, LCCustom, LCPlan 추가
+[1;34m|[m [1;34m|[m [1;32m|[m[1;34m/[m  
+[1;34m|[m [1;34m|[m[1;34m/[m[1;32m|[m   
+[1;34m|[m * [1;32m|[m [33m09556c9[m Merge branch 'main' into LCPrice
+[1;34m|[m [31m|[m[1;32m\[m[1;32m|[m 
+[1;34m|[m [31m|[m * [33me88d0d5[m 2025.07.02 변동 사항 확인
+[1;34m|[m [31m|[m * [33mc59069e[m 2025.07.02 변동 사항 확인
+[1;34m|[m [31m|[m * [33m47fc06d[m 2025.07.02 policy Scrap 추가
+[1;34m|[m [31m|[m[1;34m/[m  
+[1;34m|[m[1;34m/[m[31m|[m   
+[1;34m|[m * [33mb995ef6[m 지역 물가 정보(LCPrice) 추가
+[1;34m|[m[1;34m/[m  
+* [33m3cb6c29[m 프로젝트 최초 생성
+* [33m444cb57[m Initial commit

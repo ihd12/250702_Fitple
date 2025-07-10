@@ -1,12 +1,13 @@
 package com.fitple.fitple.base.user.dto;
 
 import com.fitple.fitple.base.user.domain.User;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserDTO {
     private Long id;

@@ -46,10 +46,11 @@ public class PolicyService {
                         .path("/go/ythip/getPlcy")
                         .queryParam("apiKeyNm", apiKey)
                         .queryParam("rtnType", "json")
-                        .queryParam("bizId", plcyNo)
+                        .queryParam("plcyNo", plcyNo)  // 수정
                         .build())
                 .retrieve()
                 .bodyToMono(YouthPolicyDetailResponse.class)
                 .block();
     }
+
 }
