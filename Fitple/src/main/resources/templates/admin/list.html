@@ -1,10 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>회원 리스트</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 10px;
+            text-align: center;
+        }
+        .search-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-box input[type="text"] {
+            width: 200px;
+            padding: 5px;
+        }
+        .delete-button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+
+<h2 style="text-align:center;">회원 리스트</h2>
+
+<div class="search-box">
+    <form th:action="@{/admin/users}" method="get">
+        <input type="text" name="search" placeholder="회원 id 검색" />
+        <button type="submit">🔍</button>
+    </form>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>No</th>
+        <th>회원 ID</th>
+        <th>회원 정보</th>
+        <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user, iterStat : ${userList}">
+        <td th:text="${iterStat.count}">1</td>
+        <td th:text="${user.username}">회원 ID</td>
+        <td>
+            <p th:text="'가입일: ' + ${#dates.format(user.createdAt, 'yyyy-MM-dd')}"></p>
+            <p th:text="'닉네임: ' + ${user.nickname}"></p>
+        </td>
+        <td>
+            <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post"
+                  onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                <button class="delete-button" type="submit">회원 삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

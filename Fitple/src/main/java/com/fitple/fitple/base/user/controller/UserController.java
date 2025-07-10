@@ -2,12 +2,15 @@ package com.fitple.fitple.base.user.controller;
 
 import com.fitple.fitple.base.user.dto.UserDTO;
 import com.fitple.fitple.base.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.AccessDeniedException;
 
@@ -62,6 +65,6 @@ public class UserController {
             throw new AccessDeniedException("권한이 없습니다.");
         }
         userService.delete(userDetails.getUsername());
-        return "redirect:/";
+        return "redirect:/user/login";
     }
 }

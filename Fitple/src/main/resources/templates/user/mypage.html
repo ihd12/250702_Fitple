@@ -3,12 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>마이페이지</title>
-  <style>
-    h2 { margin-top: 30px; }
-    ul { padding-left: 20px; }
-    li { margin: 6px 0; }
-    .section { margin-bottom: 40px; }
-  </style>
+
 </head>
 <body>
 
@@ -38,6 +33,12 @@
       <a th:href="@{/policy/detail(plcyNo=${policy.policyId})}" th:text="${policy.policyName}"></a>
     </li>
   </ul>
+</div>
+
+<div>
+  <form action="/user/modify" method="get">
+    <button type="submit">내 정보수정</button>
+  </form>
 </div>
 
 

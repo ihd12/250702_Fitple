@@ -26,8 +26,8 @@
 
 <h2>📢 공지사항</h2>
 <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/notice/register}">글쓰기</a>
-<a sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-<a sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+<a sec:authorize="isAnonymous()" th:href="@{/css/user/login}">로그인</a>
+<a sec:authorize="isAuthenticated()" th:href="@{/css/user/logout}">로그아웃</a>
 <table>
   <thead>
   <tr>
