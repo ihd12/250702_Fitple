@@ -4,6 +4,7 @@ import com.fitple.fitple.base.user.dto.UserDTO;
 import com.fitple.fitple.base.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserServiceImpl userService;
+
 
     // 로그인 폼
     @GetMapping("/login")
