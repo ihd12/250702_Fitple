@@ -1,66 +1,231 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8">
-    <title>지도와 매물 리스트</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Index - Impact Bootstrap Template</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <!--  <link href="/img/favicon.png" rel="icon">-->
+    <!--  <link href="/img/apple-touch-icon.png" rel="apple-touch-icon">-->
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+
+    <!-- Main CSS File -->
     <link rel="stylesheet" th:href="@{/housing/css/housing-map.css}">
+
+    <!-- =======================================================
+    * Template Name: Impact
+    * Template URL: https://bootstrapmade.com/impact-bootstrap-business-website-template/
+    * Updated: Aug 07 2024 with Bootstrap v5.3.3
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
 </head>
-<body>
-<h2>임대 주택 정보</h2>
-<div id="search-panel"><strong>지역 검색:</strong><select id="sido-select"></select><select id="sigungu-select"></select>
-    <strong>호출 개수:</strong>
-    <select id="num-of-rows-select">
-        <option value="5">5개</option>
-        <option value="10" selected>10개</option>
-        <option value="25">25개</option>
-    </select>
-    <button id="search-btn">검색</button><button id="toggle-advanced-search-btn">상세 검색</button></div>
-<div id="advanced-filter-panel">
-    <div class="filter-group"><label>보증금(만원)</label><input type="number" id="min-deposit" placeholder="최소"><span>~</span><input type="number" id="max-deposit" placeholder="최대"></div>
-    <div class="filter-group"><label>월세(만원)</label><input type="number" id="min-rent" placeholder="최소"><span>~</span><input type="number" id="max-rent" placeholder="최대"></div>
-    <div class="filter-group"><label>전용면적(㎡)</label><input type="number" id="min-area" placeholder="최소"><span>~</span><input type="number" id="max-area" placeholder="최대"></div>
-    <div class="filter-group preset-buttons"><label></label><button class="area-preset-btn" data-min="" data-max="33">~33㎡</button><button class="area-preset-btn" data-min="33" data-max="66">33~66㎡</button><button class="area-preset-btn" data-min="66" data-max="99">66~99㎡</button><button class="area-preset-btn" data-min="99" data-max="132">99~132㎡</button></div>
-    <div class="filter-group"><label>주택유형</label>
-        <div class="preset-buttons"><button class="type-filter-btn active" data-type="">전체</button><button class="type-filter-btn" data-type="다가구주택">다가구</button><button class="type-filter-btn" data-type="다세대주택">다세대</button><button class="type-filter-btn" data-type="아파트">아파트</button><button class="type-filter-btn" data-type="오피스텔">오피스텔</button><button class="type-filter-btn" data-type="etc">기타</button></div>
-    </div>
-    <div class="filter-group"><label></label><button id="apply-filter-btn">필터 적용</button><button id="reset-filter-btn">초기화</button></div>
-</div>
-<div id="info-panel">
-    <div class="info-item">
-        <span class="info-label">📍 현재 주소</span>
-        <span id="info-addr"></span>
-    </div>
-    <div class="info-item">
-        <span class="info-label">🌐 위도 / 경도</span>
-        <span><span id="info-lat"></span>, <span id="info-lng"></span></span>
-    </div>
-    <div class="info-item">
-        <span class="info-label">🔢 법정동 코드</span>
-        <span id="info-code"></span>
-    </div>
-</div>
-    <div id="main-container">
-    <div id="map"></div>
-    <div id="list-panel">
-        <h3>매물 리스트</h3>
-        <div id="loading-animation" style="display:none; text-align:center; padding:20px;">
-            <div class="loader"></div>
-            <p>검색 중입니다...</p>
+
+<body class="index-page">
+
+<div th:replace="fragments/header :: header"></div>
+
+<main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section accent-background">
+        <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-5 justify-content-between align-items-center">
+
+                <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                    <h2><span> 주거지 </span></h2>
+                    <p>여러분들의 주거지를 찾아드립니다.</p>
+                </div>
+
+                <div class="col-lg-5 order-1 order-lg-2">
+                    <img src="https://www.freeiconspng.com/uploads/description-crystal-project-folder-home-8.png" class="img-fluid" style="width: 30%;" alt="파란색 폴더 아이콘">
+                </div>
+            </div>
         </div>
-        <div id="list-content">
-            <ul id="property-list"></ul>
+    </section>
+
+    </section>
+
+    <section id="housing-info" class="about section">
+        <div class="container" data-aos="fade-up">
+            <div id="search-panel">
+                <strong>지역 검색:</strong>
+                <select id="sido-select"></select>
+                <select id="sigungu-select"></select>
+                <strong>호출 개수:</strong>
+                <select id="num-of-rows-select">
+                    <option value="5">5개</option>
+                    <option value="10" selected>10개</option>
+                    <option value="25">25개</option>
+                </select>
+                <button id="search-btn">검색</button>
+                <button id="toggle-advanced-search-btn">상세 검색</button>
+            </div>
+            <div id="advanced-filter-panel">
+                <div class="filter-group">
+                    <label>보증금(만원)</label>
+                    <input type="number" id="min-deposit" placeholder="최소"><span>~</span><input type="number" id="max-deposit" placeholder="최대">
+                </div>
+                <div class="filter-group">
+                    <label>월세(만원)</label>
+                    <input type="number" id="min-rent" placeholder="최소"><span>~</span><input type="number" id="max-rent" placeholder="최대">
+                </div>
+                <div class="filter-group">
+                    <label>전용면적(㎡)</label>
+                    <input type="number" id="min-area" placeholder="최소"><span>~</span><input type="number" id="max-area" placeholder="최대">
+                </div>
+                <div class="filter-group preset-buttons">
+                    <label></label>
+                    <button class="area-preset-btn" data-min="" data-max="33">~33㎡</button>
+                    <button class="area-preset-btn" data-min="33" data-max="66">33~66㎡</button>
+                    <button class="area-preset-btn" data-min="66" data-max="99">66~99㎡</button>
+                    <button class="area-preset-btn" data-min="99" data-max="132">99~132㎡</button>
+                </div>
+                <div class="filter-group">
+                    <label>주택유형</label>
+                    <div class="preset-buttons">
+                        <button class="type-filter-btn active" data-type="">전체</button>
+                        <button class="type-filter-btn" data-type="다가구주택">다가구</button>
+                        <button class="type-filter-btn" data-type="다세대주택">다세대</button>
+                        <button class="type-filter-btn" data-type="아파트">아파트</button>
+                        <button class="type-filter-btn" data-type="오피스텔">오피스텔</button>
+                        <button class="type-filter-btn" data-type="etc">기타</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label></label>
+                    <button id="apply-filter-btn">필터 적용</button>
+                    <button id="reset-filter-btn">초기화</button>
+                </div>
+            </div>
+            <div id="info-panel">
+                <div class="info-item">
+                    <span class="info-label">📍 현재 주소</span>
+                    <span id="info-addr"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🌐 위도 / 경도</span>
+                    <span><span id="info-lat"></span>, <span id="info-lng"></span></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🔢 법정동 코드</span>
+                    <span id="info-code"></span>
+                </div>
+            </div>
+            <div id="main-container">
+                <div id="map"></div>
+                <div id="list-panel">
+                    <h3>매물 리스트</h3>
+                    <div id="loading-animation" style="display:none; text-align:center; padding:20px;">
+                        <div class="loader"></div>
+                        <p>검색 중입니다...</p>
+                    </div>
+                    <div id="list-content">
+                        <ul id="property-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div> <div id="modal-wrapper">
+        <div id="modal-content">
+            <div id="modal-header">
+                <h2>매물 상세 정보</h2><button id="close-modal-btn">✖</button>
+            </div>
+            <div id="modal-body">
+            </div>
         </div>
     </div>
-</div>
-<div id="modal-wrapper">
-    <div id="modal-content">
-        <div id="modal-header">
-            <h2>매물 상세 정보</h2><button id="close-modal-btn">✖</button>
+    </section>
+</main>
+<footer id="footer" class="footer accent-background">
+
+    <div class="container footer-top">
+        <div class="row gy-4">
+            <div class="col-lg-5 col-md-12 footer-about">
+                <a href="index.html" class="logo d-flex align-items-center">
+                    <span class="sitename">Impact</span>
+                </a>
+                <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
+                <div class="social-links d-flex mt-4">
+                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                    <a href=""><i class="bi bi-facebook"></i></a>
+                    <a href=""><i class="bi bi-instagram"></i></a>
+                    <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-6 footer-links">
+                <h4>Useful Links</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Terms of service</a></li>
+                    <li><a href="#">Privacy policy</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-6 footer-links">
+                <h4>Our Services</h4>
+                <ul>
+                    <li><a href="#">Web Design</a></li>
+                    <li><a href="#">Web Development</a></li>
+                    <li><a href="#">Product Management</a></li>
+                    <li><a href="#">Marketing</a></li>
+                    <li><a href="#">Graphic Design</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contact Us</h4>
+                <p>A108 Adam Street</p>
+                <p>New York, NY 535022</p>
+                <p>United States</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+                <p><strong>Email:</strong> <span>info@example.com</span></p>
+            </div>
+
         </div>
-        <div id="modal-body"></div>
     </div>
-</div>
+
+    <div class="container copyright text-center mt-4">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Impact</strong> <span>All Rights Reserved</span></p>
+        <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you've purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+        </div>
+    </div>
+
+</footer>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Preloader -->
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script th:src="@{/housing/js/housing-map-templates.js}"></script>
+
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a0e30d98f6dfa0bc355f0bdba19e03da&libraries=services&autoload=false"></script>
 <script th:src="@{/housing/js/housing-map.js}"></script>
 </body>

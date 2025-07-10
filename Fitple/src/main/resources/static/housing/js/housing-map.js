@@ -800,7 +800,7 @@ async function populateAndShowModal(itemData) {
                 <div class="stars" data-rating="0" data-property-id="${propertyId}">
                     <span class="star" data-value="1">☆</span><span class="star" data-value="2">☆</span><span class="star" data-value="3">☆</span><span class="star" data-value="4">☆</span><span class="star" data-value="5">☆</span>
                 </div>
-                <p class="rating-feedback"></p>
+                <div><p class="rating-feedback"></p></div>
             </div>
             <div class="image-gallery-container">
                 <div class="gallery-header"><div class="header-left"><span class="image-title">매물 이미지</span></div></div>
@@ -1248,4 +1248,7 @@ function initGallery() {
         showImage(0); // 갤러리 초기 이미지 (첫 번째 이미지) 표시
     };
     firstImage.src = images[0].src; // 첫 이미지의 소스를 설정하여 로드 시작
+
+
+
 }
