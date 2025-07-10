@@ -43,6 +43,21 @@ function searchKeywordPlaces(keyword) {
     // 키워드 기반 검색 수행
     ps.keywordSearch(keyword, placesSearchCB, { useMapBounds: true });
 }
+// 키워드 검색 버튼
+function searchKeyword() {
+    const keyword = document.getElementById('keyword').value.trim();
+    if (!keyword) {
+        alert('검색어를 입력해주세요.');
+        return;
+    }
+    currKeyword = keyword;
+    currCategory = '';
+    changeCategoryClass();
+
+    searchPlaces();
+    // 기존 키워드 검색 함수 호출
+    ps.keywordSearch(keyword, placesSearchCB);
+}
 
 // 카테고리 또는 키워드에 따라 검색
 function searchPlaces() {
@@ -103,7 +118,7 @@ function displayPlaces(places) {
 
         // 리스트 항목 생성
         var itemEl = document.createElement('li');
-        itemEl.innerHTML = `<strong>${places[i].place_name}</strong><br>${places[i].address_name}`;
+        itemEl.innerHTML = `<strong>${places[i].place_name}</strong><br>${places[i].address_name}<br>${places[i].phone}`;
         listEl.appendChild(itemEl);
 
         // 마커와 리스트 항목에 이벤트 연결 (즉시 실행 함수 사용)
