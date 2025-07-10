@@ -61,9 +61,11 @@ function searchPlaces() {
 
 // 장소 검색 결과 콜백 함수
 function placesSearchCB(data, status, pagination) {
+    // 검색 성공시
     if (status === kakao.maps.services.Status.OK) {
         if (data.length === 0) {
             // 검색 결과가 없을때 리스트, 페이징,마커,오버레이 초기화
+            alert("검색된 장소가 없습니다.");
             document.getElementById('placesList').innerHTML = '';
             document.getElementById('pagination').innerHTML = '';
             removeMarker();
@@ -76,6 +78,7 @@ function placesSearchCB(data, status, pagination) {
         displayPagination(pagination);
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         // 장소가 없는 경우
+        alert("검색된 장소가 없습니다.");
         document.getElementById('placesList').innerHTML = '';
         document.getElementById('pagination').innerHTML = '';
         removeMarker();
