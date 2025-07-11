@@ -46,12 +46,14 @@ public class RecommendService {
         return new double[]{avgDeposit, avgRent};
     }
 
-    // 추천 채용공고 리스트 반환
-    public List<JobRecommendDTO> getRecommendedJobs(User user) {
+    // 사용자 스크랩한 채용만 추천
+    public List<JobRecommendDTO> getRecommendedScrappedJobs(User user) {
         double avgSalary = getAverageSalary(user);
+        List<JobScrap> scraps = jobScrapRepository.findByUser(user);
 
-        return jobDetailRepository.findAll().stream()
-                .map(job -> {
+        return scraps.stream()
+                .map(scrap -> {
+                    var job = scrap.getJob();
                     int score = ScoreCalculator.calculateJobScore(
                             job.getSalary() != null ? job.getSalary() : 0,
                             avgSalary
@@ -68,13 +70,15 @@ public class RecommendService {
                 .collect(Collectors.toList());
     }
 
-    // 추천 주거지 리스트 반환
-    public List<HousingRecommendDTO> getRecommendedHousings(User user) {
+    // 사용자 스크랩한 주거지만 추천 점수 부여
+    public List<HousingRecommendDTO> getRecommendedScrappedHousings(User user) {
         double[] avgCost = getAverageHousingCost(user);
         double avgDeposit = avgCost[0];
         double avgRent = avgCost[1];
 
-        return housingScrapRepository.findAll().stream()
+        List<HousingScrap> scraps = housingScrapRepository.findByUserId(user.getId());
+
+        return scraps.stream()
                 .map(h -> {
                     int score = ScoreCalculator.calculateHousingScore(
                             h.getBassRentGtn() != null ? h.getBassRentGtn().intValue() : 0,

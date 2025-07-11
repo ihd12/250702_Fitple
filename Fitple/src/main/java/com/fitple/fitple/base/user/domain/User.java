@@ -14,6 +14,9 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String auth;
+
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
@@ -38,6 +41,14 @@ public class User {
     @PreUpdate
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
     }
 
     // UserDTO로부터 값을 받아서 User 객체 생성

@@ -1,95 +1,40 @@
-package com.fitple.fitple.recommend.controller;
-
-import com.fitple.fitple.base.user.domain.User;
-import com.fitple.fitple.base.user.security.CustomUserDetails;
-import com.fitple.fitple.job.domain.JobDetail;
-import com.fitple.fitple.job.repository.JobDetailRepository;
-import com.fitple.fitple.recommend.dto.HousingRecommendDTO;
-import com.fitple.fitple.recommend.dto.JobRecommendDTO;
-import com.fitple.fitple.recommend.service.RecommendService;
-import com.fitple.fitple.recommend.util.ScoreCalculator;
-import com.fitple.fitple.scrap.domain.HousingScrap;
-import com.fitple.fitple.scrap.repository.HousingScrapRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-@RestController
-@RequiredArgsConstructor
-public class RecommendController {
-
-    private final RecommendService recommendService;
-    private final JobDetailRepository jobDetailRepository;
-    private final HousingScrapRepository housingScrapRepository;
-
-    // 채용 추천 리스트
-    @GetMapping("/api/recommend/jobs")
-    public List<JobRecommendDTO> recommendJobs(@AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        // 로그인되지 않은 경우 빈 리스트 반환 또는 예외 처리 가능
-        if (userDetails == null || userDetails.getUser() == null) {
-            return List.of();
-        }
-
-        User user = userDetails.getUser();
-        double avgSalary = recommendService.getAverageSalary(user);
-        List<JobDetail> allJobs = jobDetailRepository.findAll();
-
-        return allJobs.stream()
-                .map(job -> {
-                    int score = ScoreCalculator.calculateJobScore(
-                            job.getSalary() != null ? job.getSalary() : 0,
-                            avgSalary
-                    );
-                    return new JobRecommendDTO(
-                            job.getJobId(),
-                            job.getTitle(),
-                            job.getOrgName(),
-                            job.getSalary(),
-                            score
-                    );
-                })
-                .sorted((a, b) -> Integer.compare(b.getScore(), a.getScore()))
-                .collect(Collectors.toList());
-    }
-
-    // 주거 추천 리스트
-    @GetMapping("/api/recommend/housings")
-    public List<HousingRecommendDTO> recommendHousings(@AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        if (userDetails == null || userDetails.getUser() == null) {
-            return List.of();
-        }
-
-        User user = userDetails.getUser();
-        double[] avgCost = recommendService.getAverageHousingCost(user);
-        double avgDeposit = avgCost[0];
-        double avgRent = avgCost[1];
-
-        List<HousingScrap> allHousings = housingScrapRepository.findAll();
-
-        return allHousings.stream()
-                .map(h -> {
-                    int score = ScoreCalculator.calculateHousingScore(
-                            h.getBassRentGtn() != null ? h.getBassRentGtn().intValue() : 0,
-                            h.getBassMtRntchrg() != null ? h.getBassMtRntchrg().intValue() : 0,
-                            avgDeposit,
-                            avgRent
-                    );
-                    return new HousingRecommendDTO(
-                            h.getHousingInfoId(),
-                            h.getHsmpNm(),
-                            h.getRnAdres(),
-                            h.getBassRentGtn(),
-                            h.getBassMtRntchrg(),
-                            score
-                    );
-                })
-                .sorted((a, b) -> Integer.compare(b.getScore(), a.getScore()))
-                .collect(Collectors.toList());
-    }
-}
+//package com.fitple.fitple.recommend.controller;
+//
+//import com.fitple.fitple.base.user.domain.User;
+//import com.fitple.fitple.base.user.security.CustomUserDetails;
+//import com.fitple.fitple.recommend.dto.HousingRecommendDTO;
+//import com.fitple.fitple.recommend.dto.JobRecommendDTO;
+//import com.fitple.fitple.recommend.service.RecommendService;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.RestController;
+//
+//import java.util.List;
+//
+//@RestController
+//@RequiredArgsConstructor
+//public class RecommendController {
+//
+//    private final RecommendService recommendService;
+//
+//    // 채용 추천 (스크랩 기반)
+//    @GetMapping("/api/recommend/jobs")
+//    public List<JobRecommendDTO> recommendJobs(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//        if (userDetails == null || userDetails.getUser() == null) {
+//            return List.of();
+//        }
+//        User user = userDetails.getUser();
+//        return recommendService.getRecommendedScrappedJobs(user);
+//    }
+//
+//    // 주거 추천 (스크랩 기반)
+//    @GetMapping("/api/recommend/housings")
+//    public List<HousingRecommendDTO> recommendHousings(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//        if (userDetails == null || userDetails.getUser() == null) {
+//            return List.of();
+//        }
+//        User user = userDetails.getUser();
+//        return recommendService.getRecommendedScrappedHousings(user);
+//    }
+//}

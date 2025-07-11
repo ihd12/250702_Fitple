@@ -1,14 +1,23 @@
 package com.fitple.fitple.base.user.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class UserDTO {
+
     private Long id;
     private String email;
-    private String password;  // 클라이언트에서 보내는 비밀번호
     private String nickname;
+    private String password;
+
+    // User → UserDTO 변환용 정적 메서드
+    public static UserDTO toDTO(com.fitple.fitple.base.user.domain.User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .build();
+    }
 }

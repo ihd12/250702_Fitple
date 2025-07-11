@@ -50,7 +50,7 @@ public class MyPageController {
         if (policyScraps == null) policyScraps = List.of();
         if (housingScraps == null) housingScraps = List.of();
 
-        // 🔽 추가: JSON 문자열 리스트 생성
+        // 추가: JSON 문자열 리스트 생성
         ObjectMapper mapper = new ObjectMapper();
         List<String> housingJsonList = housingScraps.stream()
                 .map(h -> {
