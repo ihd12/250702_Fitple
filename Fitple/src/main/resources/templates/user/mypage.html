@@ -2,143 +2,82 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
-  <title>마이페이지</title>
-  <style>
-    h2 { margin-top: 30px; }
-    ul { padding-left: 20px; }
-    li { margin: 6px 0; cursor: pointer; }
-    .section { margin-bottom: 40px; }
+  <!-- Vendor CSS Files -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="/css/user/mypage.css" rel="stylesheet">
 
-    /* 모달 스타일 */
-    #modal-wrapper {
-      display: none; position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6); justify-content: center; align-items: center;
-      z-index: 1000;
-    }
-    #modal-content {
-      background: white; width: 90%; max-width: 600px; border-radius: 8px;
-      padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-    #modal-header {
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    #modal-body {
-      max-height: 70vh; overflow-y: auto; margin-top: 10px;
-    }
-    #modal-body table {
-      width: 100%; border-collapse: collapse;
-    }
-    #modal-body th, #modal-body td {
-      border: 1px solid #ddd; padding: 8px; font-size: 0.9em;
-    }
-    #modal-body th {
-      background-color: #f8f9fa; width: 120px;
-    }
-    #close-modal-btn {
-      font-size: 1.5em; background: none; border: none; cursor: pointer;
-    }
-  </style>
+  <!-- Main CSS File -->
+  <link href="/css/main.css" rel="stylesheet">
+  <title>마이페이지</title>
+z
 </head>
 <body>
+
+<div th:replace="fragments/header :: header"></div>
+
 
 <h1>마이페이지</h1>
 
 <p><strong>사용자 이메일:</strong> <span th:text="${user.email}">이메일</span></p>
 
-<div class="section">
-  <h2>찜한 채용공고</h2>
-  <ul>
-    <li th:if="${jobScraps == null or jobScraps.isEmpty()}">찜한 채용공고가 없습니다.</li>
-    <li th:each="job : ${jobScraps}">
-      <a th:href="@{/job/detail/{id}(id=${job.jobPostId})}">
-        <span th:text="${job.jobTitle}"></span> -
-        <span th:text="${job.companyName}"></span>
-        <span style="color: gray;" th:text="' (' + ${job.createdAt} + ')'"></span>
-      </a>
-    </li>
-  </ul>
-</div>
+<div class="container">
+  <div class="section">
+    <h2>찜한 채용공고</h2>
+    <ul>
+      <li th:if="${jobScraps == null or jobScraps.isEmpty()}">찜한 채용공고가 없습니다.</li>
+      <li th:each="job : ${jobScraps}">
+        <a th:href="@{/job/detail/{id}(id=${job.jobPostId})}">
+          <span th:text="${job.jobTitle}"></span> -
+          <span th:text="${job.companyName}"></span>
+          <span style="color: gray;" th:text="' (' + ${job.createdAt} + ')'"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-<div class="section">
-  <h2>찜한 정책</h2>
-  <ul>
-    <li th:if="${policyScraps == null or policyScraps.isEmpty()}">찜한 정책이 없습니다.</li>
-    <li th:each="policy : ${policyScraps}">
-      <a th:href="@{/policy/detail(plcyNo=${policy.policyId})}" th:text="${policy.policyName}"></a>
-    </li>
-  </ul>
-</div>
+  <div class="section">
+    <h2>찜한 정책</h2>
+    <ul>
+      <li th:if="${policyScraps == null or policyScraps.isEmpty()}">찜한 정책이 없습니다.</li>
+      <li th:each="policy : ${policyScraps}">
+        <a th:href="@{/policy/detail(plcyNo=${policy.policyId})}" th:text="${policy.policyName}"></a>
+      </li>
+    </ul>
+  </div>
 
-<div class="section">
-  <h2>찜한 주거정보</h2>
-  <ul>
-    <li th:if="${housingScraps == null or housingScraps.isEmpty()}">찜한 주거정보가 없습니다.</li>
-    <li th:each="house, stat : ${housingScraps}"
-        th:attr="data-house-info=${housingJsonList[stat.index]}">
-    <span th:text="${house.hsmpNm != null ? house.hsmpNm : '정보 없음'}"></span> -
-      <span th:text="${house.rnAdres != null ? house.rnAdres : '정보 없음'}"></span>
-      <span class="house-type" th:text="' (' + ${house.houseTyNm != null ? house.houseTyNm : '정보 없음'} + ')'"></span>
-    </li>
-  </ul>
-</div>
+  <div class="section">
+    <h2>찜한 주거정보</h2>
+    <ul>
+      <li th:if="${housingScraps == null or housingScraps.isEmpty()}">찜한 주거정보가 없습니다.</li>
+      <li th:each="house, stat : ${housingScraps}"
+          th:attr="data-house-info=${housingJsonList[stat.index]}">
+      <span th:text="${house.hsmpNm != null ? house.hsmpNm : '정보 없음'}"></span> -
+        <span th:text="${house.rnAdres != null ? house.rnAdres : '정보 없음'}"></span>
+        <span class="house-type" th:text="' (' + ${house.houseTyNm != null ? house.houseTyNm : '정보 없음'} + ')'"></span>
+      </li>
+    </ul>
+  </div>
 
-<!-- 모달 구조 -->
-<div id="modal-wrapper">
-  <div id="modal-content">
-    <div id="modal-header">
-      <h2>상세 정보</h2>
-      <button id="close-modal-btn">✖</button>
+  <!-- 모달 구조 -->
+  <div id="modal-wrapper">
+    <div id="modal-content">
+      <div id="modal-header">
+        <h2>상세 정보</h2>
+        <button id="close-modal-btn">✖</button>
+      </div>
+      <div id="modal-body"></div>
     </div>
-    <div id="modal-body"></div>
   </div>
 </div>
 
-<script>
-  const modalWrapper = document.getElementById('modal-wrapper');
-  const modalBody = document.getElementById('modal-body');
-  const closeModalBtn = document.getElementById('close-modal-btn');
+<div th:replace="fragments/footer :: footer"></div>
 
-  closeModalBtn.addEventListener('click', () => {
-    modalWrapper.style.display = 'none';
-  });
 
-  modalWrapper.addEventListener('click', (e) => {
-    if (e.target === modalWrapper) modalWrapper.style.display = 'none';
-  });
-
-  function showHousingDetail(houseData) {
-    const check = val => val ?? '정보 없음';
-    const format = val => Number(val || 0).toLocaleString('ko-KR') + ' 원';
-
-    modalBody.innerHTML = `
-      <table>
-        <tr><th>단지명</th><td>${check(houseData.hsmpNm)}</td></tr>
-        <tr><th>주소</th><td>${check(houseData.rnAdres)}</td></tr>
-        <tr><th>유형</th><td>${check(houseData.houseTyNm)}</td></tr>
-        <tr><th>전용면적</th><td>${check(houseData.suplyPrvuseAr)} ㎡</td></tr>
-        <tr><th>보증금</th><td>${format(houseData.bassRentGtn)}</td></tr>
-        <tr><th>월세</th><td>${format(houseData.bassMtRntchrg)}</td></tr>
-        <tr><th>기관</th><td>${check(houseData.insttNm)}</td></tr>
-      </table>
-    `;
-    modalWrapper.style.display = 'flex';
-  }
-
-  // 이벤트 바인딩
-  window.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('li[data-house-info]').forEach(li => {
-      const raw = li.getAttribute('data-house-info');
-      try {
-        const houseData = JSON.parse(raw.replace(/&quot;/g, '"'));  // JSON 문자열 복원
-        li.addEventListener('click', () => showHousingDetail(houseData));
-      } catch (e) {
-        console.error('주거정보 파싱 오류:', e);
-      }
-    });
-  });
-</script>
-
+<script src="/js/mypage.js"></script>
 </body>
 </html>
 

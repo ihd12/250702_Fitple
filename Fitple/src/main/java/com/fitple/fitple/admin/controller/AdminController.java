@@ -24,11 +24,6 @@ public class AdminController {
         model.addAttribute("responseDTO",userService.getUserList(pageRequestDTO));
         return "admin/list";
     }
-    @DeleteMapping("/member")
-    public String deleteUser(UserDTO userDTO) {
-        userService.delete(userDTO.getEmail());
-        return "redirect:/admin/member/";
-    }
 
     @GetMapping("/notice/{id}/edit")
     public String editNotice(@PathVariable Long id, PageRequestDTO pageRequestDTO, @AuthenticationPrincipal UserDetails userDetails, Model model){
