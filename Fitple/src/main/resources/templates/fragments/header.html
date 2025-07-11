@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <header id="header" class="header fixed-top">
     <div class="topbar d-flex align-items-center">
@@ -6,10 +8,23 @@
             <div class="contact-info d-flex align-items-center">
             </div>
             <div class="social-links d-none d-md-flex align-items-center">
-                <a href="/user/register" class="twitter">회원가입</a>
-                <a href="/user/login" class="facebook">로그인</a>
-                <a href="#" class="instagram">로그아웃</a>
-                <a href="/mypage" class="linkedin">마이페이지</a>
+                <th:block sec:authorize="isAnonymous()">
+                    <a href="/user/register" class="">회원가입</a>
+                    <a href="/user/login" class="">로그인</a>
+                </th:block>
+                <th:block sec:authorize="isAuthenticated()">
+                    <a href="/user/logout" class="">로그아웃</a>
+
+                    <!-- 관리자 전용: auth = ROLE_ADMIN -->
+                    <th:block sec:authorize="hasRole('ADMIN')">
+                        <a href="/admin/member" class="linkedin">회원 관리</a>
+                    </th:block>
+
+                    <!-- 일반회원 전용: auth = ROLE_USER -->
+                    <th:block sec:authorize="hasRole('USER')">
+                        <a href="/mypage" class="linkedin">마이페이지</a>
+                    </th:block>
+                </th:block>
             </div>
         </div>
     </div><!-- End Top Bar -->
@@ -25,11 +40,11 @@
 
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="#">일자리<br></a></li>
+                    <li><a href="/job">일자리<br></a></li>
                     <li><a href="/housing_map_test">주거지</a></li>
                     <li><a href="/infra">인프라</a></li>
-                    <li><a href="#">공공정책</a></li>
-                    <li><a href="/policy/list">공지사항</a></li>
+                    <li><a href="/policy/list">공공정책</a></li>
+                    <li><a href="/notice">공지사항</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
