@@ -3,26 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>공지사항</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/notice/register.css" rel="stylesheet">
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
+    <h2>공지사항 등록</h2>
 
-<h2>📢 공지사항 등록</h2>
+    <form th:action="@{/notice/write}" method="post">
+        <div>
+            <label for="title">제목</label><br>
+            <input type="text" id="title" name="title" required />
+        </div>
+        <br>
+        <div>
+            <label for="content">내용</label><br>
+            <textarea id="content" name="content"  rows="10" cols="60" required></textarea>
+        </div>
+        <br>
+        <button type="submit">등록</button>
+        <div>
+            <a href="/notice" class="btn btn-outline-secondary btn-sm">← 목록으로</a>
+        </div>
 
-<form th:action="@{/notice/write}" method="post">
-    <div>
-        <label for="title">제목</label><br>
-        <input type="text" id="title" name="title" required />
-    </div>
-    <br>
-    <div>
-        <label for="content">내용</label><br>
-        <textarea id="content" name="content"  rows="10" cols="60" required></textarea>
-    </div>
-    <br>
-    <button type="submit">등록</button>
-</form>
+    </form>
 
-<a href="/notice">← 목록으로</a>
+
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>

@@ -95,9 +95,13 @@
             background-color: #c00;
         }
     </style>
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet"> <!-- Impact 메인 스타일 -->
+    <link href="/css/admin/list.css" rel="stylesheet">
 </head>
 <body>
-
+<div th:replace="fragments/header :: header"></div>
 <h2>회원 리스트</h2>
 
 <div class="search-box">
@@ -149,6 +153,7 @@
         </li>
     </ul>
 </div>
+<div th:replace="fragments/footer :: footer"></div>
 <script>
     // http://localhost:8080/admin/member
     function deleteMember(data){

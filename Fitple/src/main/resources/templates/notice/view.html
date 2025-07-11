@@ -1,32 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>공지사항</title>
+
+    <!-- Bootstrap / Impact 템플릿 리소스 -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet"> <!-- Impact 메인 스타일 -->
+    <link href="/css/notice/view.css" rel="stylesheet">
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 
-<h2 th:text="${notice.title}">공지 제목</h2>
+<div class="notice-detail-container">
+    <h2 class="notice-title" th:text="${notice.title}">공지 제목</h2>
 
-<p>
-    <strong>작성일:</strong>
-    <span th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">2025-07-08</span>
-    |
-    <strong>조회수:</strong>
-    <span th:text="${notice.viewCount}">0</span>
-</p>
+    <div class="notice-meta d-flex justify-content-between">
+        <div>
+            🗓 <span th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">2025-07-08 10:00</span>
+        </div>
+        <div>
+            👁 <span th:text="${notice.viewCount}">0</span> views
+        </div>
+    </div>
 
-<hr>
+    <hr>
 
-<div th:utext="${notice.content}">
-    <!-- HTML 태그도 보여주려면 th:utext (주의: XSS 필터링 필요) -->
-    공지 내용
+    <div class="notice-content" th:utext="${notice.content}">
+        공지 내용
+    </div>
+
+    <hr>
+
+    <div class="notice-actions">
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/notice/{id}/edit(id=${notice.id})}"
+           class="btn btn-outline-primary btn-sm">
+            ✏ 수정하기
+        </a>
+        <a href="/notice" class="btn btn-outline-secondary btn-sm">← 목록으로</a>
+    </div>
 </div>
-
-<hr>
-
-<a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/notice/{id}/edit(id=${notice.id})}" >← 수정하기</a>
-<a href="/notice">← 목록으로</a>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
