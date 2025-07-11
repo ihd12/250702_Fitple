@@ -4,13 +4,115 @@
 <head>
     <meta charset="UTF-8">
     <title>회원수정</title>
-    <link rel="stylesheet" href="/css/user/edit.css">
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/user/edit">
+<style>
+
+
+    .profile-container {
+        max-width: 600px;
+        margin: 200px auto;
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 50px 60px;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .profile-container h2 {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 40px;
+        color: black;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        color: #444;
+    }
+
+    .form-control {
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        border: 1px solid #ced4da;
+    }
+
+    .inline-group .input-wrapper {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .inline-group input {
+        flex: 1;
+    }
+
+    .inline-group .input-wrapper input {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .inline-group button,
+    .submit-wrapper button,
+    .bottom-actions button {
+        background-color: #008374;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: background 0.2s ease;
+    }
+
+    .inline-group .input-wrapper button {
+        white-space: nowrap;
+        padding: 10px 20px;
+        border-radius: 6px;
+        background-color: var(--accent-color, #008374);
+        color: white;
+        font-weight: 600;
+        border: none;
+        transition: background-color 0.2s ease;
+    }
+
+    .inline-group button:hover,
+    .submit-wrapper button:hover {
+        background-color: #006e61;
+    }
+
+    .bottom-actions button.danger {
+        background-color: #dc3545;
+    }
+
+    .bottom-actions button.danger:hover {
+        background-color: #b02a37;
+    }
+
+    .submit-wrapper {
+        text-align: center;
+        margin: 30px 0;
+    }
+</style>
+
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div class="profile-container">
     <h2>프로필 수정</h2>
 
-    <form name="frm" method="post">
+    <form name="frm" method="post" th:action="@{/user/modify}">
         <input type="hidden" name="id" th:value="${user.id}" />
         <input type="hidden" name="email" th:value="${user.email}" />
         <div class="form-group">
@@ -19,7 +121,7 @@
         </div>
 
         <div class="form-group inline-group">
-            <label >닉네임:</label>
+            <label >닉네임</label>
                 <div class="input-wrapper">
                     <input type="text" name="nickname" th:value="${user.nickname}" />
                     <button type="button" id="nickBtn">수정</button>
@@ -27,12 +129,12 @@
         </div>
 
         <div class="form-group">
-            <label>이메일:</label>
+            <label>이메일</label>
             <input type="email" th:value="${user.email}" disabled />
         </div>
 
         <div class="form-group inline-group">
-            <label>비밀번호</label>
+            <label>새 비밀번호</label>
             <input type="password" name="password" />
         </div>
 

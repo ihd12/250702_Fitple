@@ -8,71 +8,7 @@
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
-
-    <style>
-        .register-container {
-            max-width: 500px;
-            margin: 80px auto;
-            background-color: var(--surface-color, #fefefe);
-            border: 1px solid #e0e0e0;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-            font-family: var(--default-font, 'Noto Sans KR', sans-serif);
-        }
-
-        .register-container h2 {
-            text-align: center;
-            font-weight: 700;
-            font-size: 26px;
-            color: var(--heading-color, #222);
-            margin-bottom: 30px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: var(--heading-color, #333);
-        }
-
-        .form-control {
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        .form-control:focus {
-            border-color: var(--accent-color, #008374);
-            box-shadow: 0 0 0 0.2rem rgba(0, 131, 116, 0.2);
-        }
-
-        .btn-register {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--accent-color, #008374);
-            color: white;
-            font-weight: 600;
-            border-radius: 6px;
-            border: none;
-            margin-top: 15px;
-        }
-
-        .btn-register:hover {
-            background-color: #006e61;
-        }
-
-        .error-msg {
-            color: red;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        .register-footer {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-    </style>
+    <link href="/css/user/register.css" rel="stylesheet">
 </head>
 <body>
 
@@ -86,14 +22,14 @@
             <div class="mb-3">
                 <label class="form-label">이메일 <span class="text-danger">*</span></label>
                 <div class="input-group">
-                    <input type="text" class="form-control" name="email" placeholder="example" required />
+                    <input type="text" class="form-control" name="email" placeholder="example@email.Domain" required />
                 </div>
             </div>
 
 
             <div class="mb-3">
                 <label class="form-label">닉네임</label>
-                <input type="text" class="form-control" name="nickname" />
+                <input type="text" class="form-control" name="nickname" placeholder="Nickname"/>
             </div>
 
 
@@ -104,7 +40,7 @@
 
             <div class="mb-3">
                 <label class="form-label">비밀번호 확인</label>
-                <input type="password" class="form-control" name="confirmPassword" />
+                <input type="password" class="form-control" name="confirmPassword" placeholder="입력하신 비밀번호와 동일하게 입력해주세요"/>
             </div>
 
             <button type="submit" class="btn btn-register">회원가입</button>
