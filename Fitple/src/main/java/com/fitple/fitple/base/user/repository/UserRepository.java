@@ -12,8 +12,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);  // 로그인용
 
-    @Query("SELECT u FROM User u WHERE u.email LIKE %:keyword% OR u.nickname LIKE %:keyword%")
+    @Query("SELECT u FROM User u WHERE (:keyword IS NULL OR u.email LIKE %:keyword% OR u.nickname LIKE %:keyword%)")
     Page<User> searchUser(@Param("keyword") String keyword, Pageable pageable);
+
 
     void deleteByEmail(String email);
 }

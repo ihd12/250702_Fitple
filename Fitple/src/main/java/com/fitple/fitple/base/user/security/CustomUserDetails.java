@@ -33,11 +33,12 @@ public class CustomUserDetails implements UserDetails {
         String role = user.getAuth();
 
         if (role == null || role.trim().isEmpty()) {
-            role = "ROLE_USER"; // 기본 권한을 지정해서 에러 방지
+            role = "USER"; // DB에 ROLE_ 없이 저장되어 있다고 가정
         }
 
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
     }
+
 
 
 

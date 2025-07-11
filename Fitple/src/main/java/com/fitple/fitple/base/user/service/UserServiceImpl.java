@@ -53,6 +53,10 @@ public class UserServiceImpl implements UserService {
                 .map(UserDTO::toDTO)
                 .toList();
 
+        System.out.println("검색어: " + keyword);
+        System.out.println("전체 회원 수: " + result.getTotalElements());
+        System.out.println("가져온 회원 리스트: " + dtoList);
+
         return new PageResponseDTO<>(pageRequestDTO, dtoList, (int) result.getTotalElements());
     }
 
