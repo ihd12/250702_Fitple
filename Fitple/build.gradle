@@ -43,7 +43,9 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    // 유효성 검증 및 모니터링
+    // 유효성 검증에 필요한 의존성 모음
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // 모니터링을 위한 의존성 모음
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // ✅ QueryDSL (jakarta 버전)

@@ -1,23 +1,29 @@
 package com.fitple.fitple.base.user.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import com.fitple.fitple.base.user.domain.User;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserDTO {
-
     private Long id;
     private String email;
-    private String nickname;
     private String password;
+    private String nickname;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    // User → UserDTO 변환용 정적 메서드
-    public static UserDTO toDTO(com.fitple.fitple.base.user.domain.User user) {
+    public static UserDTO toDTO(User user){
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 }
