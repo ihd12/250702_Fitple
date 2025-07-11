@@ -15,6 +15,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+
 import java.util.List;
 
 @Controller
@@ -46,11 +50,23 @@ public class MyPageController {
         if (policyScraps == null) policyScraps = List.of();
         if (housingScraps == null) housingScraps = List.of();
 
+        // 추가: JSON 문자열 리스트 생성
+        ObjectMapper mapper = new ObjectMapper();
+        List<String> housingJsonList = housingScraps.stream()
+                .map(h -> {
+                    try {
+                        return mapper.writeValueAsString(h);
+                    } catch (JsonProcessingException e) {
+                        return "{}";
+                    }
+                }).toList();
+
         // 모델에 데이터 추가
         model.addAttribute("user", user);
         model.addAttribute("jobScraps", jobScraps);
         model.addAttribute("policyScraps", policyScraps);
         model.addAttribute("housingScraps", housingScraps);
+        model.addAttribute("housingJsonList", housingJsonList);  // 🔽 추가
 
         return "user/mypage";
     }

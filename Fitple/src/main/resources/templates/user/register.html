@@ -1,28 +1,62 @@
-<!-- src/main/resources/templates/register.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>회원가입</title>
+
+    <!-- Vendor CSS -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/user/register.css" rel="stylesheet">
 </head>
 <body>
-<h2>회원가입</h2>
-<form th:action="@{/user/register}" method="post">
-    <div>
-        <label>이메일:</label>
-        <input type="email" name="email" required />
+
+<div th:replace="fragments/header :: header"></div>
+
+<section style="min-height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #f9f9f9;">
+    <div class="register-container">
+        <h2>회원가입</h2>
+        <form th:action="@{/user/register}" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">이메일 <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="email" placeholder="example@email.Domain" required />
+                </div>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">닉네임</label>
+                <input type="text" class="form-control" name="nickname" placeholder="Nickname"/>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" name="password" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">비밀번호 확인</label>
+                <input type="password" class="form-control" name="confirmPassword" placeholder="입력하신 비밀번호와 동일하게 입력해주세요"/>
+            </div>
+
+            <button type="submit" class="btn btn-register">회원가입</button>
+
+            <div th:if="${param.success}" class="alert alert-success mt-3" role="alert">
+                회원가입이 완료되었습니다.
+            </div>
+
+        </form>
+
+        <div class="register-footer">
+            이미 계정이 있으신가요? <a href="/user/login" class="text-primary">로그인</a>
+        </div>
     </div>
-    <div>
-        <label>비밀번호:</label>
-        <input type="password" name="password" required />
-    </div>
-    <div>
-        <label>닉네임:</label>
-        <input type="text" name="nickname" required />
-    </div>
-    <div>
-        <button type="submit">가입하기</button>
-    </div>
-</form>
+</section>
+
 </body>
 </html>
+

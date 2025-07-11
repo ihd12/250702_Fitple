@@ -2,17 +2,26 @@ package com.fitple.fitple.common.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+
 
 @Data
+@Builder
 public class PageRequestDTO {
 
+    @Builder.Default
     @Min(1)
-    private Integer page;
+    private Integer page = 1;
 
+    @Builder.Default
     @Min(5)
     @Max(100)
-    private Integer size;
+    private Integer size = 10;
 
     private String[] types;
     private String keyword;
@@ -40,8 +49,12 @@ public class PageRequestDTO {
     }
 
 
+    public Pageable getPageable(String sortType) {
+        return PageRequest.of(getPage()-1, getSize(), Sort.by(sortType).descending());
+    }
+
     public int getPage() {
-        return (page == null) ? 1 : page;
+        return (page == null || page < 1) ? 1 : page;
     }
 
     public int getSize() {
@@ -51,4 +64,8 @@ public class PageRequestDTO {
     public int getSkip() {
         return (getPage() - 1) * getSize();
     }
+
+
+
+
 }

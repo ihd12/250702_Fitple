@@ -1,38 +1,70 @@
 package com.fitple.fitple.base.user.controller;
 
 import com.fitple.fitple.base.user.dto.UserDTO;
-import com.fitple.fitple.base.user.service.UserServiceImpl;
+import com.fitple.fitple.base.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.nio.file.AccessDeniedException;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user") // 디렉토리 구조에 맞춤
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
-
-    // 로그인 폼
     @GetMapping("/login")
     public String loginForm() {
         return "user/login";  // templates/user/login.html
     }
 
-    // 회원가입 폼
     @GetMapping("/register")
     public String registerForm() {
         return "user/register";
     }
 
-    // 회원가입 처리
     @PostMapping("/register")
     public String register(UserDTO dto) {
         userService.register(dto);
+        return "redirect:/user/login";  // 경로 일치
+    }
+//    @GetMapping("/{id}")
+//    public String getUser(@PathVariable Long id, Model model, PageRequestDTO pageRequestDTO) {
+//        model.addAttribute("user", userService.getUser(id));
+//        return "user/mypage";
+//    }
+    @GetMapping("/modify")
+    public String getModifyUser(@AuthenticationPrincipal UserDetails userDetails, Model model) throws AccessDeniedException {
+        String email = userDetails.getUsername();
+        UserDTO user = userService.getUser(email);
+        if(!email.equals(user.getEmail())) {
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+        model.addAttribute("user", user);
+        return "user/edit";
+    }
+    @PostMapping("/modify")
+    public String modifyUser(UserDTO dto, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException {
+        if(!userDetails.getUsername().equals(dto.getEmail())){
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+        userService.modify(dto);
+        return "redirect:/user/modify";
+    }
+    @PostMapping("/remove")
+    public String deleteUser(UserDTO userDTO, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException{
+        if(!userDetails.getUsername().equals(userDTO.getEmail())){
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+        userService.delete(userDetails.getUsername());
         return "redirect:/user/login";
     }
-
-    // 로그인/로그아웃 POST/GET 메서드는 Spring Security가 처리하므로 삭제함
 }

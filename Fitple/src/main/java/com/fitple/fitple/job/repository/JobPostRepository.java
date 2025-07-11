@@ -1,7 +1,6 @@
 package com.fitple.fitple.job.repository;
 
 import com.fitple.fitple.job.domain.JobPost;
-import com.fitple.fitple.recommend.dto.JobRecommendDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -70,14 +69,4 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
                                   @Param("ncs") String ncs,
                                   @Param("salary") Integer salary);
 
-    // 테스트용 추천 ID 목록으로 DTO 추출
-    @Query("""
-        SELECT new com.fitple.fitple.recommend.dto.JobRecommendDTO(
-            jp.id, jp.title, jp.location, jp.ncs, jd.salary
-        )
-        FROM JobPost jp
-        JOIN jp.jobDetail jd
-        WHERE jp.id IN :ids
-    """)
-    List<JobRecommendDTO> findByIdIn(@Param("ids") List<Long> ids);
 }

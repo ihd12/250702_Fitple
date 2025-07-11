@@ -1,4 +1,4 @@
-package com.fitple.fitple.main.MainCotroller;
+package com.fitple.fitple.main.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

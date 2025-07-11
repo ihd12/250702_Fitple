@@ -429,93 +429,93 @@ function moveToAddress(address, drawCircle = true) {
     });
 }
 // -------------------------------시/도 , 시/군/구 목록 받아오기 -------------------------------
-    const sidoSelect = document.getElementById("sidoSelect");
-    const sigunguSelect = document.getElementById("sigunguSelect");
-    const PkeywordInput = document.getElementById("Pkeyword");
-    const keywordInput = document.getElementById("keyword");
+const sidoSelect = document.getElementById("sidoSelect");
+const sigunguSelect = document.getElementById("sigunguSelect");
+const PkeywordInput = document.getElementById("Pkeyword");
+const keywordInput = document.getElementById("keyword");
 
-    // 시/도 데이터 목록 받아오기
-    fetch("/api/sido")
+// 시/도 데이터 목록 받아오기
+fetch("/api/sido")
+    .then(res => res.json())
+    .then(data => {
+        const features = data.response.result.featureCollection.features;
+        const sidoList = features.map(f => ({
+            code: f.properties.ctprvn_cd,
+            name: f.properties.ctp_kor_nm
+        }));
+
+        sidoList.forEach(sido => {
+            const option = document.createElement("option");
+            option.value = sido.code;
+            option.textContent = sido.name;
+            sidoSelect.appendChild(option);
+        });
+    });
+
+// 시/도 선택시 해당 시/군/구 데이터 받아오기
+sidoSelect.addEventListener("change", function () {
+    const sidoCd = this.value;
+    sigunguSelect.innerHTML = "<option value=''>시/군/구 선택</option>";
+
+    if (!sidoCd) {
+        PkeywordInput.value = "";
+        return;
+    }
+    fetch(`/api/sigungu?sidoCd=${sidoCd}`)
         .then(res => res.json())
         .then(data => {
             const features = data.response.result.featureCollection.features;
-            const sidoList = features.map(f => ({
-                code: f.properties.ctprvn_cd,
-                name: f.properties.ctp_kor_nm
+            const sigunguList = features.map(f => ({
+                code: f.properties.sig_cd,
+                name: f.properties.sig_kor_nm
             }));
 
-            sidoList.forEach(sido => {
+            sigunguList.forEach(sig => {
                 const option = document.createElement("option");
-                option.value = sido.code;
-                option.textContent = sido.name;
-                sidoSelect.appendChild(option);
+                option.value = sig.code;
+                option.textContent = sig.name;
+                sigunguSelect.appendChild(option);
             });
         });
+});
+// 시/군/구 선택시 실행. 해당 지도 중심으로 이동
+sigunguSelect.addEventListener("change", function () {
+    const sidoText = sidoSelect.options[sidoSelect.selectedIndex].text;
+    const sigunguText = this.options[this.selectedIndex].text;
 
-    // 시/도 선택시 해당 시/군/구 데이터 받아오기
-    sidoSelect.addEventListener("change", function () {
-        const sidoCd = this.value;
-        sigunguSelect.innerHTML = "<option value=''>시/군/구 선택</option>";
+    if (sidoText && sigunguText) {
+        PkeywordInput.value = `${sidoText} ${sigunguText}`;
 
-        if (!sidoCd) {
-            PkeywordInput.value = "";
+        moveToAddress(`${sidoText} ${sigunguText}`, false);
+    }
+});
+//-------------------------- 검색 엔터키 기능 처리--------------------------
+// 장소명 입력창 엔터로 검색하는 기능
+keywordInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        if (!this.value.trim()) {
+            alert("장소명을 입력하세요");
             return;
         }
-        fetch(`/api/sigungu?sidoCd=${sidoCd}`)
-    .then(res => res.json())
-            .then(data => {
-                const features = data.response.result.featureCollection.features;
-                const sigunguList = features.map(f => ({
-                    code: f.properties.sig_cd,
-                    name: f.properties.sig_kor_nm
-                }));
 
-                sigunguList.forEach(sig => {
-                    const option = document.createElement("option");
-                    option.value = sig.code;
-                    option.textContent = sig.name;
-                    sigunguSelect.appendChild(option);
-                });
-            });
-    });
-    // 시/군/구 선택시 실행. 해당 지도 중심으로 이동
-    sigunguSelect.addEventListener("change", function () {
-        const sidoText = sidoSelect.options[sidoSelect.selectedIndex].text;
-        const sigunguText = this.options[this.selectedIndex].text;
-
-        if (sidoText && sigunguText) {
-            PkeywordInput.value = `${sidoText} ${sigunguText}`;
-
-            moveToAddress(`${sidoText} ${sigunguText}`, false);
+        currKeyword = this.value;
+        currCategory = '';
+        changeCategoryClass(); // 카테고리 선택 해제
+        searchPlaces();        // 검색 실행
+    }
+});
+// 지역명 입력창 엔터로 검색하는 기능
+PkeywordInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        if (!this.value.trim()) {
+            alert("지역명을 입력하세요");
+            return;
         }
-    });
-    //-------------------------- 검색 엔터키 기능 처리--------------------------
-    // 장소명 입력창 엔터로 검색하는 기능
-    keywordInput.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            if (!this.value.trim()) {
-                alert("장소명을 입력하세요");
-                return;
-            }
-
-            currKeyword = this.value;
-            currCategory = '';
-            changeCategoryClass(); // 카테고리 선택 해제
-            searchPlaces();        // 검색 실행
-        }
-    });
-    // 지역명 입력창 엔터로 검색하는 기능
-    PkeywordInput.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            if (!this.value.trim()) {
-                alert("지역명을 입력하세요");
-                return;
-            }
-           moveToAddress(this.value, true); // 엔터 시 주소 검색 실행
-        }
-    });
+        moveToAddress(this.value, true); // 엔터 시 주소 검색 실행
+    }
+});
 
 // 카테고리 버튼 이벤트 초기화
 addCategoryClickEvent();

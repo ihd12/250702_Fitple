@@ -1,18 +1,31 @@
 package com.fitple.fitple.base.user.domain;
 
-import com.fitple.fitple.base.user.dto.UserDTO;
-import lombok.*;
+
 import jakarta.persistence.*;
+import lombok.*;
+import com.fitple.fitple.base.user.dto.UserDTO;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDateTime;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "user")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String auth;
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
@@ -47,5 +60,12 @@ public class User {
         this.nickname = dto.getNickname();
         this.createdAt = LocalDateTime.now();  // 기본 생성일자
         this.updatedAt = LocalDateTime.now();  // 기본 수정일자
+    }
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
