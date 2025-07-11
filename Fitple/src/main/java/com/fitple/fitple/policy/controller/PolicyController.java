@@ -66,6 +66,7 @@ public class PolicyController {
                 .collect(Collectors.joining())
                 : "");
         model.addAttribute("keyword", requestDTO.getKeyword());
+        model.addAttribute("zipCodeMap", policyService.getZipCodeMap());
 
         return "/policy/list";
     }

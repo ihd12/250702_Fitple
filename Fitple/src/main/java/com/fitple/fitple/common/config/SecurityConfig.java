@@ -65,7 +65,7 @@ public class SecurityConfig {
                                 String authority = userDetails.getUser().getAuth(); // 예: "ADMIN" 또는 "USER"
 
                                 if ("ADMIN".equalsIgnoreCase(authority)) {
-                                    response.sendRedirect("/admin/member"); // 관리자 → 회원 목록
+                                    response.sendRedirect("/"); // 관리자 → 회원 목록
                                 } else {
                                     response.sendRedirect("/"); // 일반 사용자 → 인덱스 페이지
                                 }

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -52,5 +54,28 @@ public class PolicyService {
                 .bodyToMono(YouthPolicyDetailResponse.class)
                 .block();
     }
+
+    public Map<String, String> getZipCodeMap() {
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("11000", "서울특별시");
+        map.put("26000", "부산광역시");
+        map.put("27000", "대구광역시");
+        map.put("28000", "인천광역시");
+        map.put("29000", "광주광역시");
+        map.put("30000", "대전광역시");
+        map.put("31000", "울산광역시");
+        map.put("36000", "세종특별자치시");
+        map.put("41000", "경기도");
+        map.put("42000", "강원특별자치도");
+        map.put("43000", "충청북도");
+        map.put("44000", "충청남도");
+        map.put("45000", "전라북도");
+        map.put("46000", "전라남도");
+        map.put("47000", "경상북도");
+        map.put("48000", "경상남도");
+        map.put("50000", "제주특별자치도");
+        return map;
+    }
+
 
 }

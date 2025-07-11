@@ -19,6 +19,19 @@
 
   <!-- Main CSS -->
   <link href="/css/main.css" rel="stylesheet">
+
+  <style>
+    .job-card {
+      border: 2px solid #007bff !important;
+      border-radius: 10px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .job-card:hover {
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
+    }
+  </style>
+
 </head>
 <body>
 
@@ -30,7 +43,7 @@
   <h1 class="mb-4 fw-bold text-primary">채용공고 리스트</h1>
 
   <!-- 필터 검색 폼 -->
-  <form th:action="@{/job/test}" method="get" class="row gy-2 gx-3 align-items-center mb-4">
+  <form th:action="@{/job}" method="get" class="row gy-2 gx-3 align-items-center mb-4">
     <div class="col-sm-2">
       <input type="text" class="form-control" name="location" placeholder="지역" th:value="${param.location}" />
     </div>
@@ -51,10 +64,10 @@
   <!-- 카드형 채용공고 리스트 -->
   <div class="row g-4">
     <div class="col-md-4" th:each="job : ${pageResponse.dtoList}">
-      <div class="card h-100 shadow-sm border-0">
+      <div class="card job-card h-100 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">
-            <a th:href="@{/job/test/{id}(id=${job.id},
+            <a th:href="@{/job/{id}(id=${job.id},
                                page=${param.page != null and param.page != '' ? param.page : 1},
                                size=${param.size != null and param.size != '' ? param.size : 10},
                                keyword=${param.keyword},
@@ -76,13 +89,12 @@
     </div>
   </div>
 
-
   <!-- 페이징 -->
   <div class="mt-4 text-center">
     <nav>
       <ul class="pagination justify-content-center">
         <li class="page-item" th:if="${pageResponse.prev}">
-          <a class="page-link" th:href="@{/job/test(
+          <a class="page-link" th:href="@{/job(
               page=${pageResponse.start - 1},
               size=${param.size != null and param.size != '' ? param.size : 10},
               location=${param.location},
@@ -95,7 +107,7 @@
         <li class="page-item"
             th:each="p : ${pageResponse.pageList}"
             th:classappend="${p == pageResponse.page} ? 'active'">
-          <a class="page-link" th:text="${p}" th:href="@{/job/test(
+          <a class="page-link" th:text="${p}" th:href="@{/job(
               page=${p},
               size=${param.size != null and param.size != '' ? param.size : 10},
               location=${param.location},
@@ -106,7 +118,7 @@
         </li>
 
         <li class="page-item" th:if="${pageResponse.next}">
-          <a class="page-link" th:href="@{/job/test(
+          <a class="page-link" th:href="@{/job(
               page=${pageResponse.end + 1},
               size=${param.size != null and param.size != '' ? param.size : 10},
               location=${param.location},
