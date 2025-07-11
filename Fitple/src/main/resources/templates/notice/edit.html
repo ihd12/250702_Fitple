@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항</title>
+</head>
+<body>
+
+<h2>📢 공지사항 수정</h2>
+
+<form name="frm" th:action="@{/admin/notice/modify}" method="post">
+    <input type="hidden" name="id" th:value="${notice.id}"/>
+    <div>
+        <label for="title">제목</label><br>
+        <input type="text" name="title" id="title" th:field="${notice.title}" required />
+    </div>
+    <br>
+    <div>
+        <label for="content">내용</label><br>
+        <textarea id="content" name="content" th:field="${notice.content}" rows="10" cols="60" required></textarea>
+    </div>
+    <br>
+    <button type="submit">수정</button>
+    <button type="button" id="deleteBtn">삭제</button>
+</form>
+<a href="/notice">← 목록으로</a>
+<script>
+    document.querySelector("#deleteBtn").addEventListener("click",(e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(confirm("정말로 삭제하시겠습니까?")){
+            let formObj = document.frm;
+            formObj.action="/admin/notice/remove";
+            formObj.submit();
+        }
+    })
+</script>
+</body>
+</html>

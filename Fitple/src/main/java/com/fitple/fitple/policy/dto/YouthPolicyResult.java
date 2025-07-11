@@ -11,16 +11,18 @@ public class YouthPolicyResult {
     @JsonProperty("youthPolicyList")
     private List<YouthPolicy> youthPolicyList;
 
-    // getters & setters
     public Pagging getPagging() {
         return pagging;
     }
+
     public void setPagging(Pagging pagging) {
         this.pagging = pagging;
     }
+
     public List<YouthPolicy> getYouthPolicyList() {
         return youthPolicyList;
     }
+
     public void setYouthPolicyList(List<YouthPolicy> youthPolicyList) {
         this.youthPolicyList = youthPolicyList;
     }

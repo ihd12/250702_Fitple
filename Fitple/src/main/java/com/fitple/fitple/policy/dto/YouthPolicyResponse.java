@@ -13,22 +13,26 @@ public class YouthPolicyResponse {
     @JsonProperty("result")
     private YouthPolicyResult result;
 
-    // getters & setters
     public int getResultCode() {
         return resultCode;
     }
+
     public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
     }
+
     public String getResultMessage() {
         return resultMessage;
     }
+
     public void setResultMessage(String resultMessage) {
         this.resultMessage = resultMessage;
     }
+
     public YouthPolicyResult getResult() {
         return result;
     }
+
     public void setResult(YouthPolicyResult result) {
         this.result = result;
     }

@@ -30,7 +30,6 @@
 <h1>청년정책 목록 (총 [[${totalCount}]] 건)</h1>
 
 <!-- 지역 필터링 -->
-<!-- 지역 필터링 -->
 <form th:action="@{/policy/list}" method="get">
   <label><input type="checkbox" name="zipCds" value="11000"
                 th:checked="${zipCds != null and #arrays.contains(zipCds, '11000')}"> 서울특별시</label><br>
@@ -88,7 +87,10 @@
   <tbody>
   <tr th:each="policy : ${policies}">
     <td th:text="${policy.plcyNo}">정책번호</td>
-    <td th:text="${policy.plcyNm}">정책명</td>
+    <td>
+      <a th:href="@{'/policy/detail?plcyNo=' + ${policy.plcyNo} + '&page=' + ${responseDTO.page} + '&keyword=' + ${keyword} + ${zipCdsParam}}"
+         th:text="${policy.plcyNm}">정책명</a>
+    </td>
     <td th:text="${policy.plcyKywdNm}">키워드</td>
     <td th:text="${policy.plcyExplnCn}">설명</td>
     <td th:text="${policy.plcySprtCn}">지원내용</td>
@@ -102,15 +104,15 @@
 <div class="pagination">
   <ul>
     <li th:if="${responseDTO.prev}">
-      <a th:href="@{/policy/list(page=${responseDTO.start - 1}, zipCd=${zipCd})}">&laquo;</a>
+      <a th:href="@{'/policy/list?page=' + ${responseDTO.start - 1} + ${zipCdsParam}}">&laquo;</a>
     </li>
     <li th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-      <a th:href="@{/policy/list(page=${i}, zipCd=${zipCd})}"
+      <a th:href="@{'/policy/list?page=' + ${i} + ${zipCdsParam}}"
          th:text="${i}"
          th:classappend="${responseDTO.page == i} ? 'active' : ''">1</a>
     </li>
     <li th:if="${responseDTO.next}">
-      <a th:href="@{/policy/list(page=${responseDTO.end + 1}, zipCd=${zipCd})}">&raquo;</a>
+      <a th:href="@{'/policy/list?page=' + ${responseDTO.end + 1} + ${zipCdsParam}}">&raquo;</a>
     </li>
   </ul>
 </div>

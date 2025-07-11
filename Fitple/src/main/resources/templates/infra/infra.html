@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>인프라 살펴보기</title>
+  <style>
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/infraCSS.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+
+  <!-- Main CSS File -->
+  <link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+  <div class="search-bar theme">
+    <!-- 지역 선택 -->
+    <div class="search-group">
+      <label for="sidoSelect">지역</label>
+      <select id="sidoSelect">
+        <option value="">시/도 선택</option>
+      </select>
+      <select id="sigunguSelect">
+        <option value="">시/군/구 선택</option>
+      </select>
+    </div>
+
+    <!-- 주소 키워드 검색 -->
+    <div class="search-group">
+      <label for="Pkeyword">지역 검색</label>
+      <input type="text" id="Pkeyword" placeholder="예: 서울시 강남구">
+      <button onclick="searchAddress()">검색</button>
+    </div>
+
+    <!-- 장소 키워드 검색 -->
+    <div class="search-group">
+      <label for="keyword">장소 키워드</label>
+      <input type="text" id="keyword" placeholder="예: 카페, 병원, 편의점 등">
+      <button onclick="searchKeyword()">검색</button>
+    </div>
+  </div>
+    <div class="map_wrap">
+      <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+      <ul id="category">
+        <li id="SW8" data-order="0"><span class="fas fa-subway"></span>지하철</li>
+        <li id="MT1" data-order="1"><span class="fas fa-store-alt"></span>마트</li>
+        <li id="HP8" data-order="2"><span class="fas fa-hospital"></span>병원</li>
+        <li id="PM9" data-order="3"><span class="fas fa-pills"></span>약국</li>
+        <li id="CE7" data-order="4"><span class="fas fa-coffee"></span>카페</li>
+        <li id="CS2" data-order="5"><span class="fas fa-store"></span>편의점</li>
+      </ul>
+    </div>
+<div id="resultWrapper">
+  <ul id="placesList"></ul>
+  <div id="pagination"></div>
+</div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d&libraries=services"></script>
+<script src="/js/infraJS.js"></script>
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
+</body>
+</html>

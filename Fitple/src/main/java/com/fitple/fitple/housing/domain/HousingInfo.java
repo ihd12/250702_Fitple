@@ -1,95 +1,69 @@
 package com.fitple.fitple.housing.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Table(name = "home_sigungu")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@NoArgsConstructor // 기본 생성자 자동 생성
 @Entity
-@Getter
-@Builder
+@Getter // 모든 필드에 대해 getter 메소드 자동 생성
 public class HousingInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "house_id")
+    private Long houseId;  // 자바 필드명은 houseId로 변경
 
-    @Column(name = "property_id", unique = true, nullable = false)
-    private String propertyId;
+    @Column(name = "hsmpNm", nullable = false)
+    private String hsmpNm; // 단지 명
 
-    @Column(name = "brtc", nullable = false)
-    private String brtc;
+    @Column(name = "houseTyNm", nullable = false)
+    private String houseTyNm; // 주택 유형명
 
-    @Column(name = "local_code", nullable = false)
+    @Column(name = "hshldCo", nullable = false)
+    private long hshldCo; // 세대수
+
+    @Column(name = "bassMtRntchrg", nullable = false)
+    private long bassMtRntchrg; // 기준 월 임대료
+
+    @Column(name = "bassRentGtn", nullable = false)
+    private long bassRentGtn; // 기준 임대보증금
+
+    @Column(name = "suplyPrvuseAr", nullable = false)
+    private long suplyPrvuseAr; // 공급 전용 면적
+
+    @Column(name = "suplyCmnuseAR", nullable = false)
+    private long suplyCmnuseAR; // 공급 공용 면적
+
+    @Column(name = "rnAdres", nullable = false)
+    private String rnAdres; // 도로명 주소
+
+    @Column(name = "btrcNm", nullable = false)
+    private String btrcNm; // 광역시도 명칭
+
+    @Column(name = "signguNm", nullable = false)
+    private String sigungu; // 시군구 명칭
+
+    @Column(name = "local_code", nullable = false, updatable = false, unique = true)
     private Long localCode;
 
-    @Column(name = "sigungu", nullable = false)
-    private String sigungu;
+    @Column
+    private String insttNm; // 기관명
+    private String mngtEntrpsNm; // 관리사무소 or 관리부동산 명
+    private String entrpsTel; // 연락처
+    private String competDe; // 준공일자
+    private String buldStleNm; // 건물 형태
+    private String elvtrInstlAtNm; // 승강기 설치 여부
+    private String parkngCo; // 주차 가능 수
 
-    @Column(name = "signgu_nm", nullable = false)
-    private String signguNm;
+    @Column(name = "score", nullable = false)
+    private Integer score; // 추천 점수
 
-    @Column(name = "house_nm", nullable = false)
-    private String houseNm;
+    @Column(name = "isScrapped", nullable = false)
+    private Boolean isScrapped; // 스크랩 여부
 
-    @Column(name = "pnu", nullable = false)
-    private String pnu;
-
-    @Column(name = "hsmp_nm", nullable = false)
-    private String hsmpNm;
-
-    @Column(name = "house_ty_nm", nullable = false)
-    private String houseTyNm;
-
-    @Column(name = "hshld_co", nullable = false)
-    private long hshldCo;
-
-    @Column(name = "bass_mt_rntchrg", nullable = false)
-    private long bassMtRntchrg;
-
-    @Column(name = "bass_rent_gtn", nullable = false)
-    private long bassRentGtn;
-
-    @Column(name = "suply_prvuse_ar", nullable = false)
-    private long suplyPrvuseAr;
-
-    @Column(name = "suply_cmnusear", nullable = false)
-    private long suplyCmnuseAr;
-
-    @Column(name = "rn_adres", nullable = false)
-    private String rnAdres;
-
-    @Column(name = "btrc_nm", nullable = false)
-    private String btrcNm;
-
-    // --- Nullable 필드들 ---
-    @Column(name = "compet_de")
-    private String competDe;
-
-    @Column(name = "entrps_tel")
-    private String entrpsTel;
-
-    @Column(name = "instt_nm")
-    private String insttNm;
-
-    @Column(name = "mngt_entrps_nm")
-    private String mngtEntrpsNm;
-
-    @Column(name = "buld_stle_nm")
-    private String buldStleNm;
-
-    @Column(name = "elvt_instl_at")
-    private String elvtInstlAt;
-
-    @Column(name = "parking_co")
-    private String parkingCo;
-
-    @Column(name = "score")
-    private Integer score;
-
-    @Column(name = "is_scrapped")
-    private Boolean isScrapped;
-
+    // 매물 정보를 받아오는 생성자 추가
+    public HousingInfo(Long houseId) {
+        this.houseId = houseId;
+    }
 }

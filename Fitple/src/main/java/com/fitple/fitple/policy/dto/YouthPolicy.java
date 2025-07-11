@@ -2,7 +2,9 @@ package com.fitple.fitple.policy.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class YouthPolicy {
 
@@ -57,109 +59,15 @@ public class YouthPolicy {
     @JsonProperty("aplyYmd")
     private String aplyYmd;
 
-    // 필요한 나머지 필드도 동일하게 추가
+    @JsonProperty("plcyAplyMthdCn")
+    private String plcyAplyMthdCn;
 
-    // getters & setters
-    public String getPlcyNo() {
-        return plcyNo;
-    }
-    public void setPlcyNo(String plcyNo) {
-        this.plcyNo = plcyNo;
-    }
-    public String getPlcyNm() {
-        return plcyNm;
-    }
-    public void setPlcyNm(String plcyNm) {
-        this.plcyNm = plcyNm;
-    }
-    public String getPlcyKywdNm() {
-        return plcyKywdNm;
-    }
-    public void setPlcyKywdNm(String plcyKywdNm) {
-        this.plcyKywdNm = plcyKywdNm;
-    }
-    public String getPlcyExplnCn() {
-        return plcyExplnCn;
-    }
-    public void setPlcyExplnCn(String plcyExplnCn) {
-        this.plcyExplnCn = plcyExplnCn;
-    }
-    public String getLclsfNm() {
-        return lclsfNm;
-    }
-    public void setLclsfNm(String lclsfNm) {
-        this.lclsfNm = lclsfNm;
-    }
-    public String getMclsfNm() {
-        return mclsfNm;
-    }
-    public void setMclsfNm(String mclsfNm) {
-        this.mclsfNm = mclsfNm;
-    }
-    public String getPlcySprtCn() {
-        return plcySprtCn;
-    }
-    public void setPlcySprtCn(String plcySprtCn) {
-        this.plcySprtCn = plcySprtCn;
-    }
-    public String getSprvsnInstCdNm() {
-        return sprvsnInstCdNm;
-    }
-    public void setSprvsnInstCdNm(String sprvsnInstCdNm) {
-        this.sprvsnInstCdNm = sprvsnInstCdNm;
-    }
-    public String getAplyPrdSeCd() {
-        return aplyPrdSeCd;
-    }
-    public void setAplyPrdSeCd(String aplyPrdSeCd) {
-        this.aplyPrdSeCd = aplyPrdSeCd;
-    }
-    public String getBizPrdSeCd() {
-        return bizPrdSeCd;
-    }
-    public void setBizPrdSeCd(String bizPrdSeCd) {
-        this.bizPrdSeCd = bizPrdSeCd;
-    }
-    public String getBizPrdBgngYmd() {
-        return bizPrdBgngYmd;
-    }
-    public void setBizPrdBgngYmd(String bizPrdBgngYmd) {
-        this.bizPrdBgngYmd = bizPrdBgngYmd;
-    }
-    public String getBizPrdEndYmd() {
-        return bizPrdEndYmd;
-    }
-    public void setBizPrdEndYmd(String bizPrdEndYmd) {
-        this.bizPrdEndYmd = bizPrdEndYmd;
-    }
-    public String getEarnMinAmt() {
-        return earnMinAmt;
-    }
-    public void setEarnMinAmt(String earnMinAmt) {
-        this.earnMinAmt = earnMinAmt;
-    }
-    public String getEarnMaxAmt() {
-        return earnMaxAmt;
-    }
-    public void setEarnMaxAmt(String earnMaxAmt) {
-        this.earnMaxAmt = earnMaxAmt;
-    }
-    public String getRgtrInstCdNm() {
-        return rgtrInstCdNm;
-    }
-    public void setRgtrInstCdNm(String rgtrInstCdNm) {
-        this.rgtrInstCdNm = rgtrInstCdNm;
-    }
-    public String getZipCd() {
-        return zipCd;
-    }
-    public void setZipCd(String zipCd) {
-        this.zipCd = zipCd;
-    }
-    public String getAplyYmd() {
-        return aplyYmd;
-    }
-    public void setAplyYmd(String aplyYmd) {
-        this.aplyYmd = aplyYmd;
-    }
+    @JsonProperty("srngMthdCn")
+    private String srngMthdCn;
+
+    @JsonProperty("sbmsnDcmntCn")
+    private String sbmsnDcmntCn;
+
+    @JsonProperty("refUrlAddr1")
+    private String refUrlAddr1;
 }

@@ -32,6 +32,7 @@ public class PageResponseDTO<E> {
         int tempEnd = (int)(Math.ceil(page / 10.0)) * 10;
         this.start = tempEnd - 9;
         this.end = Math.min((int)(Math.ceil(total / (double)size)), tempEnd);
+        this.end = Math.max(end, 1);
         this.last = (int)(Math.ceil(total / (double)size));
 
         this.prev = this.start > 1;

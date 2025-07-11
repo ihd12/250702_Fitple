@@ -24,20 +24,20 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
     );
 
     @Query("""
-    SELECT jp FROM JobPost jp
-    JOIN FETCH jp.jobDetail jd
-    WHERE jp.title LIKE %:keyword%
-""")
+        SELECT jp FROM JobPost jp
+        JOIN FETCH jp.jobDetail jd
+        WHERE jp.title LIKE %:keyword%
+    """)
     List<JobPost> searchByKeyword(@Param("keyword") String keyword);
 
     @Query("""
-    SELECT jp FROM JobPost jp
-    JOIN FETCH jp.jobDetail jd
-    WHERE (:location IS NULL OR jp.location LIKE %:location%)
-      AND (:ncs IS NULL OR jp.ncs LIKE %:ncs%)
-      AND (:salary IS NULL OR jd.salary >= :salary)
-      AND (:keyword IS NULL OR jp.title LIKE %:keyword%)
-""")
+        SELECT jp FROM JobPost jp
+        JOIN FETCH jp.jobDetail jd
+        WHERE (:location IS NULL OR jp.location LIKE %:location%)
+          AND (:ncs IS NULL OR jp.ncs LIKE %:ncs%)
+          AND (:salary IS NULL OR jd.salary >= :salary)
+          AND (:keyword IS NULL OR jp.title LIKE %:keyword%)
+    """)
     List<JobPost> advancedSearch(
             @Param("location") String location,
             @Param("ncs") String ncs,
@@ -47,13 +47,13 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
     );
 
     @Query("""
-    SELECT COUNT(jp) FROM JobPost jp
-    JOIN jp.jobDetail jd
-    WHERE (:location IS NULL OR jp.location LIKE %:location%)
-      AND (:ncs IS NULL OR jp.ncs LIKE %:ncs%)
-      AND (:salary IS NULL OR jd.salary >= :salary)
-      AND (:keyword IS NULL OR jp.title LIKE %:keyword%)
-""")
+        SELECT COUNT(jp) FROM JobPost jp
+        JOIN jp.jobDetail jd
+        WHERE (:location IS NULL OR jp.location LIKE %:location%)
+          AND (:ncs IS NULL OR jp.ncs LIKE %:ncs%)
+          AND (:salary IS NULL OR jd.salary >= :salary)
+          AND (:keyword IS NULL OR jp.title LIKE %:keyword%)
+    """)
     int advancedSearchCount(
             @Param("location") String location,
             @Param("ncs") String ncs,
@@ -61,7 +61,12 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
             @Param("keyword") String keyword
     );
 
-
-
+    @Query("SELECT j FROM JobPost j WHERE " +
+            "(:location IS NULL OR j.location = :location) AND " +
+            "(:ncs IS NULL OR j.ncs = :ncs) AND " +
+            "(:salary IS NULL OR j.jobDetail.salary >= :salary)")
+    List<JobPost> findRecommended(@Param("location") String location,
+                                  @Param("ncs") String ncs,
+                                  @Param("salary") Integer salary);
 
 }
