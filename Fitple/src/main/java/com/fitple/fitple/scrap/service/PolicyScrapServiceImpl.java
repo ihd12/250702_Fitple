@@ -20,6 +20,8 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
 
     private final PolicyScrapRepository repository;
     private final UserRepository userRepository;
+    private final PolicyScrapRepository policyScrapRepository;
+
 
     @Override
     public boolean scrap(Long userId, List<String> policyIds, List<String> policyNames) {
@@ -83,5 +85,10 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void cancelScrap(String policyId, User user) {
+        policyScrapRepository.deleteByUserAndPolicyId(user, String.valueOf(policyId));
     }
 }

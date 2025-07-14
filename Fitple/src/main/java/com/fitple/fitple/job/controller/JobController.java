@@ -66,11 +66,21 @@ public class JobController {
 
     // [변경] 채용 리스트 페이지: /job
     @GetMapping
-    public String jobListPage(PageRequestDTO pageRequestDTO, Model model) {
+    public String jobListPage(PageRequestDTO pageRequestDTO,
+                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                              Model model) {
+
         PageResponseDTO<JobListDTO> response = jobService.advancedSearch(pageRequestDTO);
         model.addAttribute("pageResponse", response);
+
+        if (userDetails != null) {
+            List<Long> scrappedJobIds = jobScrapService.getScrappedJobIdsByUser(userDetails.getUser());
+            model.addAttribute("scrappedJobIds", scrappedJobIds);
+        }
+
         return "job/job_list";
     }
+
 
     // [변경] 채용 상세 페이지: /job/{id}
     @GetMapping("/{id}")

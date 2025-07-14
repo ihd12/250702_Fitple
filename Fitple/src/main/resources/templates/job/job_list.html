@@ -77,6 +77,11 @@
                th:text="${job.title}"
                class="text-decoration-none text-dark">제목</a>
           </h5>
+          <!-- 스크랩 여부 표시 -->
+          <div th:if="${scrappedJobIds != null and scrappedJobIds.contains(job.id)}">
+            <span class="badge bg-warning text-dark">★ 저장</span>
+          </div>
+
           <p class="mb-1"><strong>기관:</strong> <span th:text="${job.orgName}">기관명</span></p>
           <p class="mb-1"><strong>지역:</strong> <span th:text="${job.location}">지역</span></p>
           <p class="mb-1"><strong>직무:</strong> <span th:text="${job.ncs}">직무</span></p>

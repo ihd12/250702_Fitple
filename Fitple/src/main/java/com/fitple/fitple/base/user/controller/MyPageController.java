@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.util.List;
 
@@ -69,5 +72,26 @@ public class MyPageController {
         model.addAttribute("housingJsonList", housingJsonList);  // 🔽 추가
 
         return "user/mypage";
+    }
+
+    @PostMapping("/job-scrap/delete")
+    public String deleteJobScrap(@RequestParam Long jobId,
+                                 @AuthenticationPrincipal CustomUserDetails userDetails) {
+        jobScrapService.cancelScrap(jobId, userDetails.getUser());
+        return "redirect:/mypage";
+    }
+
+    @PostMapping("/policy-scrap/delete")
+    public String deletePolicyScrap(@RequestParam String policyId,
+                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+        policyScrapService.cancelScrap(policyId, userDetails.getUser());
+        return "redirect:/mypage";
+    }
+
+    @PostMapping("/housing-scrap/delete")
+    public String deleteHousingScrap(@RequestParam Long housingInfoId,
+                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
+        housingScrapService.cancelScrap(housingInfoId, userDetails.getUser());
+        return "redirect:/mypage";
     }
 }

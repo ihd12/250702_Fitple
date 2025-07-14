@@ -17,4 +17,9 @@ public interface JobScrapService {
 
     // 마이페이지용: 로그인 사용자의 채용 찜 목록 조회
     List<JobScrapDTO> getScrapList(User user);
+
+    List<Long> getScrappedJobIdsByUser(User user);
+
+    void cancelScrap(Long jobId, User user);
+
 }

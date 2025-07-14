@@ -75,6 +75,10 @@
                th:text="${policy.plcyNm}"
                class="text-decoration-none text-dark">정책명</a>
           </h5>
+          <!-- ✔ 이미 스크랩된 정책만 표시 -->
+          <div class="mt-2" th:if="${scrappedSet.contains(policy.plcyNo)}">
+            <span class="text-primary fw-bold">✔ 저장</span>
+          </div>
           <p class="mb-1"><strong>키워드:</strong> <span th:text="${policy.plcyKywdNm}">키워드</span></p>
           <p class="mb-1"><strong>설명:</strong> <span th:text="${policy.plcyExplnCn}">설명</span></p>
           <p class="mb-1"><strong>기관:</strong> <span th:text="${policy.sprvsnInstCdNm}">기관</span></p>

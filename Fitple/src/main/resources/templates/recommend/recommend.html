@@ -45,9 +45,10 @@
             <div class="scroll-box pe-2">
                 <div class="bg-white p-3 mb-3 rounded shadow-sm" th:each="job : ${recommendedJobs}">
                     <h5 class="mb-1">
-                        <a th:href="@{/job/detail/{id}(id=${job.jobId})}"
+                        <a th:href="@{/job/{id}(id=${job.jobId})}"
                            class="text-primary text-decoration-none"
                            th:text="${job.title}">채용 제목</a>
+
                     </h5>
                     <div class="text-muted small" th:text="${job.orgName}">회사 이름</div>
                     <div class="text-secondary small" th:text="'연봉: ' + ${job.salary} + '만원'"></div>

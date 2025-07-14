@@ -28,7 +28,7 @@ public class PolicyService {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/go/ythip/getPlcy")
-                        .queryParam("pageIndex", page)
+                        .queryParam("pageNum", page)
                         .queryParam("display", size)
                         .queryParam("apiKeyNm", apiKey)
                         .queryParam("rtnType", "json")

@@ -28,7 +28,7 @@ public class PolicyController {
     @GetMapping("/policy/list")
     public String policyList(PageRequestDTO requestDTO,
                              @AuthenticationPrincipal CustomUserDetails userDetails,
-                             @ModelAttribute("message") String message,  // ✅ 추가
+                             @ModelAttribute("message") String message,
                              Model model) {
 
         int page = requestDTO.getPage();

@@ -103,4 +103,11 @@ public class HousingScrapService {
                 .collect(Collectors.toList());
     }
 
+    public void cancelScrap(Long housingInfoId, User user) {
+        HousingScrap existing = housingScrapRepository.findByUserIdAndHousingInfoId(user.getId(), housingInfoId);
+        if (existing != null) {
+            existing.setIsScrapped(false);              // 스크랩 취소 (비활성화)
+            housingScrapRepository.save(existing);      // DB에 반영
+        }
+    }
 }
