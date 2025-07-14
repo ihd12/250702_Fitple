@@ -64,14 +64,14 @@
             <div class="col-xl-3 col-md-6">
               <div class="icon-box">
                 <div class="icon"><i class="bi bi-briefcase"></i></div>
-                <h4 class="title"><a href="" class="stretched-link">일자리</a></h4>
+                <h4 class="title"><a href="/job" class="stretched-link">일자리</a></h4>
               </div>
             </div><!--End Icon Box -->
 
             <div class="col-xl-3 col-md-6">
               <div class="icon-box">
                 <div class="icon"><i class="bi bi-house-door"></i></div>
-                <h4 class="title"><a href="" class="stretched-link">주거지</a></h4>
+                <h4 class="title"><a href="/housing_map_test" class="stretched-link">주거지</a></h4>
               </div>
             </div><!--End Icon Box -->
 
@@ -85,7 +85,7 @@
             <div class="col-xl-3 col-md-6">
               <div class="icon-box">
                 <div class="icon"><i class="bi bi-bank"></i></div>
-                <h4 class="title"><a href="" class="stretched-link">공공정책</a></h4>
+                <h4 class="title"><a href="/policy/list" class="stretched-link">공공정책</a></h4>
               </div>
             </div><!--End Icon Box -->
 
@@ -100,37 +100,37 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>About Us<br></h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        <h2>맞춤 추천<br></h2>
+        <p>나에게 최적화된 일자리와 주거지를 찾아보세요!</p>
       </div><!-- End Section Title -->
 
       <div class="container">
 
         <div class="row gy-4">
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-            <h3>Voluptatem dignissimos provident laboris nisi ut aliquip ex ea commodo</h3>
-            <img src="/img/about.jpg" class="img-fluid rounded-4 mb-4" alt="">
-            <p>Ut fugiat ut sunt quia veniam. Voluptate perferendis perspiciatis quod nisi et. Placeat debitis quia recusandae odit et consequatur voluptatem. Dignissimos pariatur consectetur fugiat voluptas ea.</p>
-            <p>Temporibus nihil enim deserunt sed ea. Provident sit expedita aut cupiditate nihil vitae quo officia vel. Blanditiis eligendi possimus et in cum. Quidem eos ut sint rem veniam qui. Ut ut repellendus nobis tempore doloribus debitis explicabo similique sit. Accusantium sed ut omnis beatae neque deleniti repellendus.</p>
+            <h3>추천 서비스 바로가기<a href="/recommend" class="btn-get-started">
+              <i class="bi bi-arrow-right-circle"></i>
+            </a></h3>
+            <a href="/recommend">
+            <img src="/img/recommand.png" class="img-fluid rounded-4 mb-4" alt=""></a>
           </div>
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
             <div class="content ps-0 ps-lg-5">
               <p class="fst-italic">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                추천 서비스 이런분들한테 좋아요!
               </p>
               <ul>
-                <li><i class="bi bi-check-circle-fill"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
                 <li><i class="bi bi-check-circle-fill"></i> <span>Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
                 <li><i class="bi bi-check-circle-fill"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</span></li>
               </ul>
-              <p>
-                Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident
-              </p>
-
               <div class="position-relative mt-4">
-               대충 추천 넣을곳
+                <h2 class="mb-3">📢 공지사항<a href="/notice" class="btn-get-started"> <i class="bi bi-plus-circle"></i></a></h2>
+                <ul class="list-group">
+                  <li th:each="notice : ${notices}" class="list-group-item d-flex justify-content-between align-items-center">
+                    <a th:href="@{/notice/{id}/read(id=${notice.id})}" th:text="${notice.title}">공지사항 제목</a>
+                    <span th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd')}" class="text-muted small">날짜</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
