@@ -62,7 +62,7 @@ public class NoticeService {
 
         Notice notice = Notice.builder()
                 .title(dto.getTitle())
-                .content(dto.getContent())
+                .content(dto.getContent().replaceAll("(\r\n|\r|\n)", "<br/>"))
                 .admin(admin)
                 .viewCount(0)
                 .build();

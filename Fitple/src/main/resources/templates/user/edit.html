@@ -8,103 +8,8 @@
     <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="/vendor/aos/aos.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/user/edit">
-<style>
+    <link href="/css/user/edit.css" rel="stylesheet" >
 
-
-    .profile-container {
-        max-width: 600px;
-        margin: 200px auto;
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        padding: 50px 60px;
-        font-family: 'Noto Sans KR', sans-serif;
-    }
-
-    .profile-container h2 {
-        text-align: center;
-        font-size: 26px;
-        font-weight: 700;
-        margin-bottom: 40px;
-        color: black;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    label {
-        font-weight: 600;
-        margin-bottom: 8px;
-        display: block;
-        color: #444;
-    }
-
-    .form-control {
-        padding: 12px;
-        border-radius: 8px;
-        font-size: 15px;
-        border: 1px solid #ced4da;
-    }
-
-    .inline-group .input-wrapper {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .inline-group input {
-        flex: 1;
-    }
-
-    .inline-group .input-wrapper input {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .inline-group button,
-    .submit-wrapper button,
-    .bottom-actions button {
-        background-color: #008374;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-weight: 600;
-        border-radius: 6px;
-        transition: background 0.2s ease;
-    }
-
-    .inline-group .input-wrapper button {
-        white-space: nowrap;
-        padding: 10px 20px;
-        border-radius: 6px;
-        background-color: var(--accent-color, #008374);
-        color: white;
-        font-weight: 600;
-        border: none;
-        transition: background-color 0.2s ease;
-    }
-
-    .inline-group button:hover,
-    .submit-wrapper button:hover {
-        background-color: #006e61;
-    }
-
-    .bottom-actions button.danger {
-        background-color: #dc3545;
-    }
-
-    .bottom-actions button.danger:hover {
-        background-color: #b02a37;
-    }
-
-    .submit-wrapper {
-        text-align: center;
-        margin: 30px 0;
-    }
-</style>
 
 </head>
 <body>
@@ -124,7 +29,7 @@
             <label >닉네임</label>
                 <div class="input-wrapper">
                     <input type="text" name="nickname" th:value="${user.nickname}" />
-                    <button type="button" id="nickBtn">수정</button>
+                    <button type="button" id="nickBtn" class="btn btn-sm btn-outline-primary">수정</button>
                 </div>
         </div>
 
@@ -142,7 +47,7 @@
             <label>비밀번호 확인</label>
             <div class="input-wrapper">
                 <input type="password" id="pw_confirm" />
-                <button type="button" id="pwBtn">수정</button>
+                <button type="button" id="pwBtn" class="btn btn-sm btn-outline-primary">수정</button>
             </div>
         </div>
 
@@ -150,48 +55,13 @@
             <button type="button" id="removeBtn" class="danger">회원탈퇴</button>
         </div>
     </form>
+    <div class="submit-wrapper">
+        <form action="/mypage" method="get">
+            <button type="submit">수정완료</button>
+        </form>
+    </div>
 </div>
-<div class="submit-wrapper">
-    <form action="/mypage" method="get">
-        <button type="submit">수정완료</button>
-    </form>
-</div>
-<script>
-    document.querySelector("#removeBtn").addEventListener("click",(e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        if (confirm("정말로 회원을 탈퇴하시겠습니까?")) {
-            let formObj = document.frm;
-            formObj.action = "/user/remove"
-            formObj.submit();
-            alert('회원 탈퇴가 완료되었습니다.');
-        }
-    })
-    document.querySelector("#nickBtn").addEventListener("click",(e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        let formObj = document.frm;
-        formObj.action="/user/modify"
-        formObj.password.value = "";
-        formObj.submit();
-        alert(`닉네임이 변경되었습니다.`);
-    })
-    document.querySelector("#pwBtn").addEventListener("click",(e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        let formObj = document.frm;
-        let pw = formObj.password.value;
-        let pw_confirm = document.querySelector("#pw_confirm").value;
-        if(pw !== pw_confirm){
-            alert("비밀번호를 확인해주세요!");
-            return;
-        }
-        formObj.action="/user/modify"
-        formObj.nickname.value = "";
-        formObj.submit();
-        alert('비밀번호가 변경되었습니다.');
-    })
-//     http://localhost:8080/user/modify
-</script>
+
+<script src="/js/user.js"></script>
 </body>
 </html>

@@ -48,7 +48,7 @@
     margin-right: 10px;
 }
 
-.notice-edit-container button[type="submit"] {
+.notice-edit-container button[type="submit"]{
     background-color: #0d6efd;
     border: none;
     color: #fff;
@@ -71,3 +71,6 @@
 .notice-edit-container a:hover {
     text-decoration: none;
 }
+
+
+
