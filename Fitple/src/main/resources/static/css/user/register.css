@@ -47,7 +47,8 @@
 }
 
 .btn-register:hover {
-    background-color: #006e61;
+    background-color: color-mix(in srgb, var(--accent-color), black 10%);
+    color: white;
 }
 
 .error-msg {
