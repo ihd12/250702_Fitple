@@ -828,7 +828,10 @@ section,
 
 .list-group-item {
     padding-top: 1rem !important;    /* 위쪽 패딩 */
-    padding-bottom: 1rem !important; /* 아래쪽 패딩 */
+    padding-bottom: 1rem !important;
+    border-left: none ;
+    border-right: none ;
+    color: black !important;
 }
 
 /*--------------------------------------------------------------

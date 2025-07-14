@@ -120,13 +120,17 @@
                 추천 서비스 이런분들한테 좋아요!
               </p>
               <ul>
-                <li><i class="bi bi-check-circle-fill"></i> <span>Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
-                <li><i class="bi bi-check-circle-fill"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span>취업 준비 중이면서 나에게 맞는 일자리를 정보를 알고싶은 청년분 </span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span>내 상황에 알맞는 주거지를 찾고싶은 청년분</span></li>
               </ul>
               <div class="position-relative mt-4">
                 <h2 class="mb-3">📢 공지사항<a href="/notice" class="btn-get-started"> <i class="bi bi-plus-circle"></i></a></h2>
+                <p th:if="${#lists.isEmpty(notices)}" class="alert alert-light text-center border rounded-3 py-3 mb-0">
+                  <i class="bi bi-exclamation-circle text-secondary me-2"></i>
+                  등록된 게시물이 없습니다.
+                </p>
                 <ul class="list-group">
-                  <li th:each="notice : ${notices}" class="list-group-item d-flex justify-content-between align-items-center">
+                  <li th:each="notice : ${notices}" class="list-group-item d-flex justify-content-between align-items-center ps-0">
                     <a th:href="@{/notice/{id}/read(id=${notice.id})}" th:text="${notice.title}">공지사항 제목</a>
                     <span th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd')}" class="text-muted small">날짜</span>
                   </li>

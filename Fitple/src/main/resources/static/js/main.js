@@ -103,13 +103,6 @@
     window.addEventListener('load', aosInit);
 
     /**
-     * Initiate glightbox
-     */
-    const glightbox = GLightbox({
-        selector: '.glightbox'
-    });
-
-    /**
      * Init swiper sliders
      */
     function initSwiper() {
@@ -127,11 +120,6 @@
     }
 
     window.addEventListener("load", initSwiper);
-
-    /**
-     * Initiate Pure Counter
-     */
-    new PureCounter();
 
     /**
      * Init isotope layout and filters

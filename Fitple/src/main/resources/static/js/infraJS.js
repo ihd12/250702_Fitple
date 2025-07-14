@@ -519,3 +519,4 @@ PkeywordInput.addEventListener("keydown", function (e) {
 
 // 카테고리 버튼 이벤트 초기화
 addCategoryClickEvent();
+
