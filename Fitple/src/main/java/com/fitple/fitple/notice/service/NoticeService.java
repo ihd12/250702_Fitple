@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
@@ -68,6 +70,15 @@ public class NoticeService {
                 .build();
 
         noticeRepository.save(notice);
+    }
+
+    public List<NoticeDTO> getRecentNotices() {
+        List<Notice> all = noticeRepository.findAllByOrderByCreatedAtDesc();
+
+        return all.stream()
+                .limit(5)
+                .map(NoticeDTO::toDTO)
+                .toList();
     }
 
 

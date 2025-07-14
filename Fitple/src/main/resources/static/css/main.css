@@ -220,6 +220,10 @@ h6 {
     color: var(--contrast-color);
 }
 
+.header .topbar .social-links .nick {
+    color :#ffffff;
+}
+
 .header .branding {
     min-height: 60px;
     padding: 10px 0;
@@ -245,6 +249,10 @@ h6 {
     font-size: 32px;
     margin-left: 2px;
     color: var(--nav-hover-color);
+}
+
+.header span {
+
 }
 
 .scrolled .header {
@@ -815,6 +823,12 @@ section,
 
 .section-title p {
     margin-bottom: 0;
+}
+
+
+.list-group-item {
+    padding-top: 1rem !important;    /* 위쪽 패딩 */
+    padding-bottom: 1rem !important; /* 아래쪽 패딩 */
 }
 
 /*--------------------------------------------------------------
