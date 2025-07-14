@@ -26,10 +26,12 @@ public class HousingApiController {
     @GetMapping(value = "/api/housing", produces = "application/json; charset=UTF-8")
     public String getRentalHouseList(
             @RequestParam String brtcCode,
-            @RequestParam String signguCode) throws IOException {
+            @RequestParam String signguCode,
+            @RequestParam String numOfRows) throws IOException { // 최대 100개까지 호출이기는 하나, 매번 100번씩 호출하면 느려져서 일부러 5 10 25로 제한함.
 
         // --- 1. 정부 API에서 원본 데이터 가져오기 ---
-        String housingDataJson = getHousingDataFromGov(brtcCode, signguCode);
+        // 여기서 numOfRows 값을 getHousingDataFromGov 메소드로 전달
+        String housingDataJson = getHousingDataFromGov(brtcCode, signguCode, numOfRows);
         if (housingDataJson == null || housingDataJson.isEmpty()) {
             return "{\"error\":\"Failed to get data from government API\"}";
         }
@@ -57,14 +59,14 @@ public class HousingApiController {
         return objectMapper.writeValueAsString(housingDataMap);
     }
 
-    // 정부 API에서 데이터를 가져오는 기존 로직 (수정 없음)
-    private String getHousingDataFromGov(String brtcCode, String signguCode) throws IOException {
+    // 정부 API에서 데이터를 가져오는 기존 로직 (numOfRows 인자 추가 및 사용)
+    private String getHousingDataFromGov(String brtcCode, String signguCode, String numOfRows) throws IOException {
         String serviceKey = "/muR9hnQHPp2eCu/lLRpq2/XeHUS3uAZ4kAX1qQDBd+jyVHF9JMyDVdo2M6CUAArUU1eKIpLJACxJr4Qc/Pb9w=="; // 실제 키는 보안에 유의하세요.
         StringBuilder urlBuilder = new StringBuilder("https://data.myhome.go.kr:443/rentalHouseList");
         urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + URLEncoder.encode(serviceKey, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("brtcCode", "UTF-8") + "=" + URLEncoder.encode(brtcCode, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("signguCode", "UTF-8") + "=" + URLEncoder.encode(signguCode, "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("100", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8")); // <--- 이 부분이 수정되었습니다.
         urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
 
         URL url = new URL(urlBuilder.toString());
