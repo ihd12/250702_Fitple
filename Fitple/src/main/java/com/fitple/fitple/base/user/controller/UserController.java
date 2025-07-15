@@ -1,10 +1,15 @@
 package com.fitple.fitple.base.user.controller;
 
 import com.fitple.fitple.base.user.dto.UserDTO;
+import com.fitple.fitple.base.user.security.CustomUserDetails;
+import com.fitple.fitple.base.user.security.CustomUserDetailsService;
 import com.fitple.fitple.base.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -20,6 +25,7 @@ import java.nio.file.AccessDeniedException;
 public class UserController {
 
     private final UserService userService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @GetMapping("/login")
     public String loginForm() {
@@ -57,6 +63,11 @@ public class UserController {
             throw new AccessDeniedException("권한이 없습니다.");
         }
         userService.modify(dto);
+
+        UserDetails mainName = customUserDetailsService.loadUserByUsername(userDetails.getUsername());
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(mainName, mainName.getPassword(), mainName.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
         return "redirect:/user/modify";
     }
     @PostMapping("/remove")
