@@ -24,7 +24,7 @@
           당신에게 꼭 맞는 혜택을 놓치지 마세요.</p>
       </div>
       <div class="col-lg-5 order-1 order-lg-2">
-        <img src="/img/mainimg-Photoroom.png" class="img-fluid" alt="">
+        <img src="/img/policyback.png" class="img-fluid" alt="">
       </div>
     </div>
   </div>
@@ -88,7 +88,9 @@
                 </div>
               </div>
               <a class="btn btn-secondary"
-                 th:href="@{/policy/list(page=${page}, keyword=${keyword}, zipCds=${zipCds})}">← 목록으로 돌아가기</a>
+                 th:href="@{'/policy/list?page=' + ${page} + ${zipCdParams} + ${keywordParams}}">
+                ← 목록으로 돌아가기
+              </a>
             </div>
 
           </div>

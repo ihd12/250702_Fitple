@@ -17,20 +17,16 @@
   <link href="/css/main.css" rel="stylesheet">
 
   <style>
-    /* 카드 테두리 파란색 + 진하게 */
     .policy-card {
       border: 2px solid #007bff !important;
       border-radius: 10px;
       transition: box-shadow 0.2s ease;
     }
 
-    /* 호버 효과 (선택) */
     .policy-card:hover {
       box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
     }
-
   </style>
-
 </head>
 <body>
 
@@ -38,7 +34,6 @@
 <div th:replace="fragments/header :: header"></div>
 
 <section id="hero" class="hero section accent-background">
-
   <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
     <div class="row gy-5 justify-content-between">
       <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
@@ -48,7 +43,7 @@
           당신에게 꼭 맞는 혜택을 놓치지 마세요.</p>
       </div>
       <div class="col-lg-5 order-1 order-lg-2">
-        <img src="/img/mainimg-Photoroom.png" class="img-fluid" alt="">
+        <img src="/img/policyback.png" class="img-fluid" alt="">
       </div>
     </div>
   </div>
@@ -59,40 +54,69 @@
 
   <h1 class="mb-4 fw-bold text-success">청년정책 리스트</h1>
 
-  <!-- 필터 폼 (지역 체크박스) -->
+  <!-- 필터 폼 -->
   <form th:action="@{/policy/list}" method="get" class="mb-4">
-    <fieldset class="border rounded p-3">
+
+    <!-- 지역 필터 -->
+    <fieldset class="border rounded p-3 mb-3">
       <legend class="float-none w-auto px-2 text-success">지역 필터</legend>
       <div class="row g-2">
         <div class="col-12 d-flex flex-wrap gap-3">
           <th:block th:each="entry : ${zipCodeMap}">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="zipCds" th:value="${entry.key}"
+              <input class="form-check-input" type="checkbox" name="zipCds"
+                     th:value="${entry.key}"
                      th:checked="${zipCds != null and #arrays.contains(zipCds, entry.key)}"
                      th:id="'chk__' + ${entry.key}" />
-              <label class="form-check-label" th:for="'chk__' + ${entry.key}" th:text="${entry.value}">지역</label>
+              <label class="form-check-label"
+                     th:for="'chk__' + ${entry.key}"
+                     th:text="${entry.value}">지역</label>
             </div>
           </th:block>
         </div>
-        <div class="col-auto mt-2">
-          <input type="hidden" name="page" value="1" />
-          <button type="submit" class="btn btn-success">검색</button>
+      </div>
+    </fieldset>
+
+    <!-- 키워드 필터 -->
+    <fieldset class="border rounded p-3 mb-3">
+      <legend class="float-none w-auto px-2 text-primary">키워드 필터</legend>
+      <div class="row g-2">
+        <div class="col-12 d-flex flex-wrap gap-3">
+          <th:block th:each="keyword : ${keywordList}">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="keywords"
+                     th:value="${keyword}"
+                     th:checked="${keywords != null and #lists.contains(keywords, keyword)}"
+                     th:id="'kw__' + ${keyword}" />
+              <label class="form-check-label"
+                     th:for="'kw__' + ${keyword}"
+                     th:text="${keyword}">키워드</label>
+            </div>
+          </th:block>
         </div>
       </div>
     </fieldset>
+
+    <!-- 검색 버튼 -->
+    <div class="col-auto mt-2">
+      <input type="hidden" name="page" value="1" />
+      <button type="submit" class="btn btn-success">검색</button>
+    </div>
+
   </form>
 
-  <!-- ✅ 카드형 정책 리스트 -->
+  <!-- 카드형 정책 리스트 -->
   <div class="row g-4">
     <div class="col-md-4" th:each="policy : ${policies}">
       <div class="card policy-card h-100 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">
-            <a th:href="@{'/policy/detail?plcyNo=' + ${policy.plcyNo} + '&page=' + ${responseDTO.page} + '&keyword=' + ${keyword} + ${zipCdsParam}}"
+            <a th:href="@{'/policy/detail?plcyNo=' + ${policy.plcyNo}
+                          + '&page=' + ${responseDTO.page}
+                          + ${zipCdsParam} + ${keywordsParam}}"
                th:text="${policy.plcyNm}"
                class="text-decoration-none text-dark">정책명</a>
           </h5>
-          <!-- ✔ 이미 스크랩된 정책만 표시 -->
           <div class="mt-2" th:if="${scrappedSet.contains(policy.plcyNo)}">
             <span class="text-primary fw-bold">✔ 저장</span>
           </div>
@@ -107,20 +131,27 @@
     </div>
   </div>
 
-  <!-- ✅ 페이지네이션 -->
+  <!-- 페이지네이션 -->
   <div class="mt-4 text-center">
     <nav>
       <ul class="pagination justify-content-center">
         <li class="page-item" th:if="${responseDTO.prev}">
-          <a class="page-link" th:href="@{'/policy/list?page=' + ${responseDTO.start - 1} + ${zipCdsParam}}">&laquo; 이전</a>
+          <a class="page-link"
+             th:href="@{'/policy/list?page=' + ${responseDTO.start - 1}
+                       + ${zipCdsParam} + ${keywordsParam}}">&laquo; 이전</a>
         </li>
         <li class="page-item"
             th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}"
             th:classappend="${responseDTO.page == i} ? 'active'">
-          <a class="page-link" th:text="${i}" th:href="@{'/policy/list?page=' + ${i} + ${zipCdsParam}}">1</a>
+          <a class="page-link"
+             th:text="${i}"
+             th:href="@{'/policy/list?page=' + ${i}
+                       + ${zipCdsParam} + ${keywordsParam}}">1</a>
         </li>
         <li class="page-item" th:if="${responseDTO.next}">
-          <a class="page-link" th:href="@{'/policy/list?page=' + ${responseDTO.end + 1} + ${zipCdsParam}}">다음 &raquo;</a>
+          <a class="page-link"
+             th:href="@{'/policy/list?page=' + ${responseDTO.end + 1}
+                       + ${zipCdsParam} + ${keywordsParam}}">다음 &raquo;</a>
         </li>
       </ul>
     </nav>
@@ -136,12 +167,9 @@
   <i class="bi bi-arrow-up-short"></i>
 </a>
 
-
-<!-- Vendor JS Files -->
+<!-- Vendor JS -->
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/vendor/aos/aos.js"></script>
-
-<!-- Main JS File -->
 <script src="/js/main.js"></script>
 
 </body>

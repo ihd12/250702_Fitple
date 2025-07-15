@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import com.fitple.fitple.common.dto.PageRequestDTO;
+import com.fitple.fitple.policy.dto.YouthPolicy;
 
 @Service
 public class PolicyService {
@@ -77,5 +79,63 @@ public class PolicyService {
         return map;
     }
 
+    public List<String> getKeywordList() {
+        YouthPolicyResponse response = getPolicies(1, 1000, null);
+
+        if (response == null || response.getResult() == null || response.getResult().getYouthPolicyList() == null) {
+            return List.of(); // 빈 목록 반환
+        }
+
+        return response.getResult().getYouthPolicyList().stream()
+                .map(p -> p.getPlcyKywdNm())
+                .filter(Objects::nonNull)
+                .flatMap(s -> Arrays.stream(s.split("[,·/]"))) // 쉼표, 점, 슬래시로 분리
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public List<YouthPolicy> getFilteredPolicies(PageRequestDTO requestDTO) {
+        // 지역 필터 파라미터
+        String zipCdParam = (requestDTO.getZipCds() != null && requestDTO.getZipCds().length > 0)
+                ? String.join(",", requestDTO.getZipCds())
+                : null;
+
+        // 정책 목록 조회
+        YouthPolicyResponse response = getPolicies(requestDTO.getPage(), requestDTO.getSize(), zipCdParam);
+
+        if (response == null || response.getResult() == null || response.getResult().getYouthPolicyList() == null) {
+            return List.of();
+        }
+
+        List<YouthPolicy> originalList = response.getResult().getYouthPolicyList();
+
+        // 키워드 필터링이 없으면 그대로 반환
+        if (requestDTO.getKeywords() == null || requestDTO.getKeywords().isEmpty()) {
+            return originalList;
+        }
+
+        // 키워드 필터 적용
+        List<String> keywords = requestDTO.getKeywords().stream()
+                .map(String::toLowerCase)
+                .toList();
+
+        return originalList.stream()
+                .filter(policy -> {
+                    String kywd = policy.getPlcyKywdNm();
+                    if (kywd == null) return false;
+
+                    String lowerKywd = kywd.toLowerCase();
+                    for (String keyword : keywords) {
+                        if (lowerKywd.contains(keyword)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+    }
 
 }
