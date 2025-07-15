@@ -14,13 +14,29 @@
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
+
+<section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                <h2><span class="accent">회원정보 수정</span></h2>
+                <p>회원정보를 수정할 수 있는 페이지입니다.<br>
+                    닉네임, 이메일, 비밀번호 등 내 정보를 변경해보세요.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/mainimg-Photoroom.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="profile-container">
     <h2>프로필 수정</h2>
 
     <form name="frm" method="post" th:action="@{/user/modify}">
         <input type="hidden" name="id" th:value="${user.id}" />
         <input type="hidden" name="email" th:value="${user.email}" />
-                <div class="form-group inline-group">
 
         <div class="form-group inline-group">
             <label >닉네임</label>
@@ -59,6 +75,20 @@
     </div>
 </div>
 
-<script src="/js/user.js"></script>
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
 </body>
 </html>

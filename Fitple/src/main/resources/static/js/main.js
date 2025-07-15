@@ -102,12 +102,12 @@
     }
     window.addEventListener('load', aosInit);
 
-    /**
-     * Initiate glightbox
-     */
-    const glightbox = GLightbox({
-        selector: '.glightbox'
-    });
+    // /**
+    //  * Initiate glightbox
+    //  */
+    // const glightbox = GLightbox({
+    //     selector: '.glightbox'
+    // });
 
     /**
      * Init swiper sliders
@@ -131,7 +131,7 @@
     /**
      * Initiate Pure Counter
      */
-    new PureCounter();
+    // new PureCounter();
 
     /**
      * Init isotope layout and filters

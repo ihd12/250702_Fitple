@@ -9,9 +9,33 @@
     <link href="/css/main.css" rel="stylesheet"> <!-- Impact 메인 스타일 -->
     <link href="/css/notice/edit.css" rel="stylesheet">
 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
+
+
+
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
+
+<section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                <h2><span class="accent">공지사항</span></h2>
+                <p>핏플의 소식과 안내를 전해드립니다.<br>
+                    중요한 공지사항을 이곳에서 확인해주세요.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/mainimg-Photoroom.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="notice-edit-container">
 <h2> 공지사항 수정</h2>
 
@@ -37,6 +61,16 @@
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
 <script src="/js/notice.js"></script>
 </body>
 </html>

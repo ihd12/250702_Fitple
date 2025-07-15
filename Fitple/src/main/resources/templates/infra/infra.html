@@ -23,9 +23,31 @@
   <!-- Main CSS File -->
   <link href="/css/main.css" rel="stylesheet">
 </head>
-<body>
+<body class="index-page"
+      th:data-is-authenticated="${#authorization.expression('isAuthenticated()')}"
+      th:data-user-id="${#authentication.principal != 'anonymousUser' ? #authentication.principal.username : 'null'}">
 
 <div th:replace="fragments/header :: header"></div>
+
+<main class="main">
+
+  <section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-5 justify-content-between">
+        <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+          <h2><span>청년의 삶을 바꾸는 건,</span><span class="accent"><br>주변의 환경입니다.</span></h2>
+          <p>직장과 집 사이, 카페와 도서관, 병원과 공원까지.<br>
+            청년에게 꼭 필요한 생활 인프라 정보를 한눈에 확인하고,<br>
+            당신에게 어울리는 동네를 찾아보세요.</p>
+        </div>
+        <div class="col-lg-5 order-1 order-lg-2">
+          <img src="/img/mainimg-Photoroom.png" class="img-fluid" alt="">
+        </div>
+      </div>
+    </div>
+  </section>
+
 <div class="container">
   <div class="search-bar theme">
     <!-- 지역 선택 -->
@@ -69,7 +91,9 @@
   <div id="pagination"></div>
 </div>
 </div>
+</main>
 <div th:replace="fragments/footer :: footer"></div>
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d&libraries=services"></script>
 <script src="/js/infraJS.js"></script>
 <!-- Vendor JS Files -->
