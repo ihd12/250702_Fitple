@@ -3,37 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>공지사항</title>
+    <!-- Bootstrap / Impact 템플릿 리소스 -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet"> <!-- Impact 메인 스타일 -->
+    <link href="/css/notice/edit.css" rel="stylesheet">
+
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
+<div class="notice-edit-container">
+<h2> 공지사항 수정</h2>
 
-<h2>📢 공지사항 수정</h2>
+    <form name="frm" th:action="@{/admin/notice/modify}" method="post">
+        <input type="hidden" name="id" th:value="${notice.id}"/>
+        <div>
+            <label for="title">제목</label><br>
+            <input type="text" name="title" id="title" th:field="${notice.title}" required />
+        </div>
+        <br>
+        <div>
+            <label for="content">내용</label><br>
+            <textarea id="content" name="content" th:field="${notice.content}" rows="10" cols="60" required></textarea>
+        </div>
+        <br>
+        <button type="submit">수정</button>
+        <button type="button" id="deleteBtn">삭제</button>
+        <div>
+            <a href="/notice" class="btn btn-outline-secondary btn-sm">← 목록으로</a>
+        </div>
+    </form>
 
-<form name="frm" th:action="@{/admin/notice/modify}" method="post">
-    <input type="hidden" name="id" th:value="${notice.id}"/>
-    <div>
-        <label for="title">제목</label><br>
-        <input type="text" name="title" id="title" th:field="${notice.title}" required />
-    </div>
-    <br>
-    <div>
-        <label for="content">내용</label><br>
-        <textarea id="content" name="content" th:field="${notice.content}" rows="10" cols="60" required></textarea>
-    </div>
-    <br>
-    <button type="submit">수정</button>
-    <button type="button" id="deleteBtn">삭제</button>
-</form>
-<a href="/notice">← 목록으로</a>
-<script>
-    document.querySelector("#deleteBtn").addEventListener("click",(e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        if(confirm("정말로 삭제하시겠습니까?")){
-            let formObj = document.frm;
-            formObj.action="/admin/notice/remove";
-            formObj.submit();
-        }
-    })
-</script>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script src="/js/notice.js"></script>
 </body>
 </html>

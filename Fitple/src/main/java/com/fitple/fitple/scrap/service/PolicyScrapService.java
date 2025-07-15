@@ -19,4 +19,7 @@ public interface PolicyScrapService {
     Set<String> getScrappedPlcyNoSet(User user, List<String> policyIds);
 
     List<PolicyScrapDTO> getScrapList(User user);
+
+    void cancelScrap(String policyId, User user);
+
 }

@@ -10,8 +10,10 @@ import com.fitple.fitple.scrap.dto.JobScrapDTO;
 import com.fitple.fitple.scrap.repository.JobScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,11 +75,26 @@ public class JobScrapServiceImpl implements JobScrapService {
                         .createdAt(scrap.getCreatedAt())
                         .updatedAt(scrap.getUpdatedAt())
                         .jobTitle(scrap.getJobPost().getTitle())
-                        .salary(String.valueOf(scrap.getJob().getSalary())) // ✅ 수정
+                        .salary(String.valueOf(scrap.getJob().getSalary()))
                         .companyName(scrap.getJobPost().getOrgName())
                         .build())
                 .collect(Collectors.toList());
 
     }
 
+    @Override
+    public List<Long> getScrappedJobIdsByUser(User user) {
+        List<JobScrap> scraps = jobScrapRepository.findByUser(user);
+        return scraps.stream()
+                .map(scrap -> scrap.getJob().getJobId())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void cancelScrap(Long jobId, User user) {
+        JobPost jobPost = JobPost.builder().id(jobId).build(); // ID만 사용
+        jobScrapRepository.deleteByUserAndJobPost(user, jobPost);
+    }
 }

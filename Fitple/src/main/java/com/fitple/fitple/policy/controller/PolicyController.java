@@ -28,7 +28,7 @@ public class PolicyController {
     @GetMapping("/policy/list")
     public String policyList(PageRequestDTO requestDTO,
                              @AuthenticationPrincipal CustomUserDetails userDetails,
-                             @ModelAttribute("message") String message,  // ✅ 추가
+                             @ModelAttribute("message") String message,
                              Model model) {
 
         int page = requestDTO.getPage();
@@ -66,6 +66,7 @@ public class PolicyController {
                 .collect(Collectors.joining())
                 : "");
         model.addAttribute("keyword", requestDTO.getKeyword());
+        model.addAttribute("zipCodeMap", policyService.getZipCodeMap());
 
         return "/policy/list";
     }

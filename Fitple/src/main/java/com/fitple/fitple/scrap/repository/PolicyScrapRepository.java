@@ -20,4 +20,6 @@ public interface PolicyScrapRepository extends JpaRepository<PolicyScrap, Long> 
     List<PolicyScrap> findByUserAndPolicyIdIn(User user, List<String> policyIds);
 
     List<PolicyScrap> findByUser(User user);
+
+    void deleteByUserAndPolicyId(User user, String policyId);
 }
