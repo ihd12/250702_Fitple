@@ -1,38 +1,51 @@
 package com.fitple.fitple.scrap.dto;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class HousingScrapRequest {
-    private Long hsmpSn;                // 단지 식별자
-    private String brtcCode;            // 광역시도 코드
-    private String signguCode;          // 시군구 코드
-    private String brtcNm;              // 광역시도 명
-    private String signguNm;            // 시군구 명
 
-    // 추가된 필드들
-    private String insttNm;             // 기관 명
-    private String hsmpNm;              // 단지 명
-    private String rnAdres;             // 도로명 주소
-    private String competDe;            // 준공 일자
-    private Integer hshldCo;            // 세대 수
-    private String suplyTyNm;           // 공급 유형 명
-    private String styleNm;             // 형 명
-    private Double suplyPrvuseAr;       // 공급 전용 면적
-    private Double suplyCmnuseAr;       // 공급 공용 면적
-    private String houseTyNm;           // 주택 유형 명
-    private String heatMthdDetailNm;    // 난방 방식
-    private String buldStleNm;          // 건물 형태
-    private String elvtrInstlAtNm;      // 승강기 설치여부
-    private Integer parkngCo;           // 주차수
-    private Long bassRentGtn;           // 기본 임대보증금
-    private Long bassMtRntchrg;         // 기본 월임대료
-    private Long bassCnvrsGtnLmt;       // 기본 전환보증금
-    private String msg;                 // 메시지
+    // ▼▼▼▼▼ 추가된 필수 필드 ▼▼▼▼▼
+    @JsonProperty("property_id")
+    private Long propertyId;
+
+    @JsonProperty("housing_info_id")
+    private Long housingInfoId;
+
+    @JsonProperty("userId")
+    private String userId;
+
+    private boolean isScrapped;
+    // ▲▲▲▲▲ 추가된 필수 필드 ▲▲▲▲▲
+
+
+    // --- 기존 필드 ---
+    private Long hsmpSn;
+    private String brtcCode;
+    private String signguCode;
+    private String brtcNm;
+    private String signguNm;
+    private String insttNm;
+    private String hsmpNm;
+    private String rnAdres;
+    private String competDe;
+    private Integer hshldCo;
+    private String suplyTyNm;
+    private String styleNm;
+    private Double suplyPrvuseAr;
+    private Double suplyCmnuseAr;
+    private String houseTyNm;
+    private String heatMthdDetailNm;
+    private String buldStleNm;
+    private String elvtrInstlAtNm;
+    private Integer parkngCo;
+    private Long bassRentGtn;
+    private Long bassMtRntchrg;
+    private Long bassCnvrsGtnLmt;
+    private String msg;
 }

@@ -24,27 +24,17 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
 
 
     @Override
-    public boolean scrap(Long userId, List<String> policyIds, List<String> policyNames) {
+    public void scrap(Long userId, String policyId, String policyName) {
+        // ✅ 중복 검사 제거하고, 항상 저장
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        boolean saved = false;
+        PolicyScrap scrap = new PolicyScrap();
+        scrap.setUser(user);
+        scrap.setPolicyId(policyId);
+        scrap.setPolicyName(policyName);
 
-        for (int i = 0; i < policyIds.size(); i++) {
-            String policyId = policyIds.get(i);
-            String policyName = policyNames.get(i);
-
-            if (!repository.existsByUserAndPolicyId(user, policyId)) {
-                PolicyScrap scrap = new PolicyScrap();
-                scrap.setUser(user);
-                scrap.setPolicyId(policyId);
-                scrap.setPolicyName(policyName);
-                repository.save(scrap);
-                saved = true;
-            }
-        }
-
-        return saved;
+        repository.save(scrap);
     }
 
     @Override
@@ -53,16 +43,19 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isScrapped(Long userId, String policyId) {
         return repository.existsByUserIdAndPolicyId(userId, policyId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isScrapped(User user, String policyId) {
         return repository.existsByUserAndPolicyId(user, policyId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<String> getScrappedPlcyNoSet(User user, List<String> policyIds) {
         return repository.findByUserAndPolicyIdIn(user, policyIds)
                 .stream()
@@ -71,6 +64,7 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PolicyScrapDTO> getScrapList(User user) {
         List<PolicyScrap> scraps = repository.findByUser(user);
 
