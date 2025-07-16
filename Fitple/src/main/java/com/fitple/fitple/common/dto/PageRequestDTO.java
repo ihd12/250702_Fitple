@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.List;
 
 
 @Data
@@ -31,6 +32,9 @@ public class PageRequestDTO {
 
     // 지역 필터링용 법정시군구코드
     private String[] zipCds;
+
+    private List<String> keywords;
+
 
     public String getLink() {
         StringBuilder sb = new StringBuilder();

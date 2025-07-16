@@ -76,7 +76,7 @@ public class NoticeService {
         List<Notice> all = noticeRepository.findAllByOrderByCreatedAtDesc();
 
         return all.stream()
-                .limit(5)
+                .limit(7)
                 .map(NoticeDTO::toDTO)
                 .toList();
     }

@@ -388,7 +388,7 @@ url("./fonts/bootstrap-icons.woff?dd67030699838ea613ee6dbda90effa6") format("wof
 .bi-chat-text::before { content: "\f267"; }
 .bi-chat::before { content: "\f268"; }
 .bi-check-all::before { content: "\f269"; }
-.bi-check-circle-fill::before { content: "\f26a"; }
+.bi-check-circle-fill::before { content: "\f26a"; color: #389AF5 }
 .bi-check-circle::before { content: "\f26b"; }
 .bi-check-square-fill::before { content: "\f26c"; }
 .bi-check-square::before { content: "\f26d"; }
