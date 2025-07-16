@@ -16,6 +16,7 @@
     <link href="/vendor/aos/aos.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/housing.css}">
+<!--    <link href="/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">-->
 </head>
 
 <body class="index-page"
@@ -38,7 +39,8 @@
                 </div>
             </div>
         </div>
-    </section><section id="about" class="about section">
+    </section>
+    <section id="about" class="about section">
     <div id="housing-page-wrapper">
         <div id="left-panel">
             <div id="search-panel">
@@ -124,11 +126,14 @@
 </section> </main>
 <div th:replace="fragments/footer :: footer"></div>
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-<div id="preloader"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/vendor/aos/aos.js"></script>
-<script src="/js/main.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a0e30d98f6dfa0bc355f0bdba19e03da&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d&libraries=services"></script>
 <script th:src="@{/js/housing.js}"></script>
+<script src="/vendor/aos/aos.js"></script>
+<!--<script src="/js/glightbox.js"></script>-->
+
+
 </body>
 </html>

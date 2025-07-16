@@ -18,7 +18,7 @@ public interface JobScrapRepository extends JpaRepository<JobScrap, Long> {
 
     // 마이페이지용: 로그인 사용자의 찜 목록 조회
     List<JobScrap> findAllByUser(User user);
+
     // 추천페이지용
     List<JobScrap> findByUser(User user);
-
 }

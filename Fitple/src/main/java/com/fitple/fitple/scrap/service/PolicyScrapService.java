@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface PolicyScrapService {
 
-    boolean scrap(Long userId, List<String> policyIds, List<String> policyNames);  // 여러 개의 정책을 저장하도록 수정
+    void scrap(Long userId, String policyId, String policyName);
 
     void cancelScrap(Long userId, String policyId);
 

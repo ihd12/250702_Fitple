@@ -376,6 +376,8 @@ h2 {
     border-radius: 4px;
     margin-top: 5px;
 }
+
+/* ================== ▼▼▼▼▼ 수정된 부분 ▼▼▼▼▼ ================== */
 .property-item button {
     background-color: #ffc107;
     color: #333;
@@ -385,15 +387,27 @@ h2 {
     cursor: pointer;
     margin-top: 8px;
     font-size: 0.85em;
-    transition: background-color 0.3s ease;
+    filter: grayscale(100%); /* 기본 상태를 흑백으로 변경 */
+    transition: all 0.3s ease; /* filter 효과도 부드럽게 전환되도록 'all'로 변경 */
 }
 .property-item button:hover {
     background-color: #e0a800;
+    filter: grayscale(0%); /* 마우스를 올리면 컬러로 변경 */
 }
+/* ================== ▲▲▲▲▲ 수정된 부분 ▲▲▲▲▲ ================== */
+
+/* 찜하기가 완료된 버튼 스타일 */
 .property-item button.scrapped {
-    background-color: #6c757d;
-    color: white;
-    cursor: not-allowed;
+    background-color: #ffc107; /* 기존 노란색 유지 */
+    color: #333; /* 글자색 */
+    cursor: pointer; /* 다시 클릭할 수 있도록 커서 모양 변경 */
+    filter: none; /* 흑백 필터 제거 */
+    border: 1px solid #e0a800; /* 약간의 테두리로 구분감 추가 */
+}
+
+/* 호버 시에는 약간 더 어둡게 */
+.property-item button.scrapped:hover {
+    background-color: #e0a800;
 }
 
 /* 로딩 애니메이션 */

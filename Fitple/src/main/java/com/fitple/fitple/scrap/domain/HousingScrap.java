@@ -1,94 +1,81 @@
 package com.fitple.fitple.scrap.domain;
 
+import com.fitple.fitple.base.user.domain.User;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
-@Data
+@Table(name = "Housing_Scrap") // 실제 DB 테이블 이름 지정
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class HousingScrap {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // HousingInfo 객체 대신 housing_info_id를 저장
+    @Column(name = "property_id", nullable = false, unique = true)
+    private Long propertyId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Column(name = "housing_info_id", nullable = false)
-    private Long housingInfoId;  // housing_info_id만 저장 (외래키 제약 없음)
+    private Long housingInfoId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "is_scrapped", nullable = false)
+    private boolean isScrapped;
 
-    @Column(name = "is_scrapped", nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean isScrapped;
-
-    // 요청하신 필드들
     @Column(name = "hsmp_sn", nullable = false)
-    private Long hsmpSn; // 단지 식별자
+    private Long hsmpSn;
 
+    // ... 이하 다른 모든 필드 ...
     @Column(name = "brtc_code", nullable = false)
-    private String brtcCode; // 광역시도 코드
-
+    private String brtcCode;
     @Column(name = "signgu_code", nullable = false)
-    private String signguCode; // 시군구 코드
-
+    private String signguCode;
     @Column(name = "brtc_nm", nullable = false)
-    private String brtcNm; // 광역시도 명
-
+    private String brtcNm;
     @Column(name = "signgu_nm", nullable = false)
-    private String signguNm; // 시군구 명
-
-    // 추가된 필드들
+    private String signguNm;
     @Column(name = "instt_nm")
-    private String insttNm; // 기관 명
-
+    private String insttNm;
     @Column(name = "hsmp_nm")
-    private String hsmpNm; // 단지 명
-
+    private String hsmpNm;
     @Column(name = "rn_adres")
-    private String rnAdres; // 도로명 주소
-
+    private String rnAdres;
     @Column(name = "compet_de")
-    private String competDe; // 준공 일자
-
+    private String competDe;
     @Column(name = "hshld_co")
-    private Integer hshldCo; // 세대 수
-
+    private Integer hshldCo;
     @Column(name = "suply_ty_nm")
-    private String suplyTyNm; // 공급 유형 명
-
+    private String suplyTyNm;
     @Column(name = "style_nm")
-    private String styleNm; // 형 명
-
+    private String styleNm;
     @Column(name = "suply_prvuse_ar")
-    private Double suplyPrvuseAr; // 공급 전용 면적
-
+    private Double suplyPrvuseAr;
     @Column(name = "suply_cmnuse_ar")
-    private Double suplyCmnuseAr; // 공급 공용 면적
-
+    private Double suplyCmnuseAr;
     @Column(name = "house_ty_nm")
-    private String houseTyNm; // 주택 유형 명
-
+    private String houseTyNm;
     @Column(name = "heat_mthd_detail_nm")
-    private String heatMthdDetailNm; // 난방 방식
-
+    private String heatMthdDetailNm;
     @Column(name = "buld_stle_nm")
-    private String buldStleNm; // 건물 형태
-
+    private String buldStleNm;
     @Column(name = "elvtr_instl_at_nm")
-    private String elvtrInstlAtNm; // 승강기 설치여부
-
+    private String elvtrInstlAtNm;
     @Column(name = "parkng_co")
-    private Integer parkngCo; // 주차수
-
+    private Integer parkngCo;
     @Column(name = "bass_rent_gtn")
-    private Long bassRentGtn; // 기본 임대보증금
-
+    private Long bassRentGtn;
     @Column(name = "bass_mt_rntchrg")
-    private Long bassMtRntchrg; // 기본 월임대료
-
+    private Long bassMtRntchrg;
     @Column(name = "bass_cnvrs_gtn_lmt")
-    private Long bassCnvrsGtnLmt; // 기본 전환보증금
-
+    private Long bassCnvrsGtnLmt;
     @Column(name = "msg")
-    private String msg; // 메시지
+    private String msg;
 }
