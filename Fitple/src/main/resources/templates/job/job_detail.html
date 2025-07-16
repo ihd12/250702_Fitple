@@ -13,6 +13,23 @@
 <!-- 헤더 -->
 <div th:replace="fragments/header :: header"></div>
 
+<section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+            <h2><span>당신의 커리어 여정,</span><span class="accent"><br>지금부터 함께합니다.</span></h2>
+            <p>스펙보다 중요한 건 ‘나에게 맞는 일자리’입니다.
+                청년을 위한 맞춤 채용 정보를 쉽고<br>
+                정확하게 전달하고, 복지, 연봉, 지역까지 진짜 필요한 정보만 담았습니다.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/jobback.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- 본문 -->
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -79,6 +96,13 @@
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
     <i class="bi bi-arrow-up-short"></i>
 </a>
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
 
 </body>
 </html>

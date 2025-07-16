@@ -101,12 +101,16 @@ td a:hover {
     font-weight: 600;
 }
 
-/* 테이블 헤더 위쪽 여백 */
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 32px;
-    font-weight: 720;
-    color: black;
+.search-box {
+    margin-top: 20px;
 }
+
+/* 테이블 헤더 위쪽 여백 */
+/*h2 {*/
+/*    text-align: center;*/
+/*    margin-bottom: 30px;*/
+/*    font-size: 32px;*/
+/*    font-weight: 720;*/
+/*    color: black;*/
+/*}*/
 

@@ -21,9 +21,6 @@
     <link href="/css/main.css" rel="stylesheet">
 
     <style>
-        body {
-            padding-top: 150px;
-        }
         .scroll-box {
             max-height: 550px;
             overflow-y: auto;
@@ -34,6 +31,23 @@
 
 <!-- 헤더 -->
 <div th:replace="fragments/header :: header"></div>
+
+<section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                <h2><span>당신의 선택을 바탕으로,</span><span class="accent"><br>딱 맞는 추천을 준비했어요.</span></h2>
+                <p>내가 찜한 일자리와 주거지를 기반으로<br>
+                    지역, 연봉, 월세, 생활비까지 분석해<br>
+                    진짜 나에게 어울리는 곳을 알려드립니다.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/recommndback.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
 
 <div class="container py-5">
     <h1 class="text-3xl fw-bold mb-5 text-center">맞춤 추천 결과</h1>
@@ -96,6 +110,14 @@
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
     <i class="bi bi-arrow-up-short"></i>
 </a>
+
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
 
 <script>
     const modalWrapper = document.getElementById('modal-wrapper');
