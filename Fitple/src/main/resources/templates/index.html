@@ -134,7 +134,7 @@
             </p>
             <ul class="list-group">
               <li th:each="notice : ${notices}" class="list-group-item d-flex justify-content-between align-items-center ps-0">
-                <a th:href="@{/notice/{id}/read(id=${notice.id})}" th:text="${notice.title}">공지사항 제목</a>
+                <a th:href="@{/notice/{id}/read(id=${notice.id})}" th:text="${notice.title}" class="text-dark fw-semibold">공지사항 제목</a>
                 <span th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd')}" class="text-muted small">날짜</span>
               </li>
             </ul>
