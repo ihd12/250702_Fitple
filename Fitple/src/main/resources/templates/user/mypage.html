@@ -103,7 +103,7 @@
              th:attr="data-house-info=${housingJsonList[stat.index]}">
           <form th:action="@{/mypage/housing-scrap/delete}" method="post"
                 style="position: absolute; top: 10px; right: 10px;">
-            <input type="hidden" name="housingInfoId" th:value="${house.housingInfoId}" />
+            <input type="hidden" name="propertyId" th:value="${house.propertyId}" />
             <button type="submit" class="btn-close" aria-label="Close"
                     onclick="return confirm('스크랩을 취소할까요?')"></button>
           </form>

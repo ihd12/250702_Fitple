@@ -89,9 +89,10 @@ public class MyPageController {
     }
 
     @PostMapping("/housing-scrap/delete")
-    public String deleteHousingScrap(@RequestParam Long housingInfoId,
+    public String deleteHousingScrap(@RequestParam Long propertyId,
                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
-        housingScrapService.cancelScrap(housingInfoId, userDetails.getUser());
+        Long userId = userDetails.getUser().getId();
+        housingScrapService.removeScrap(userId, propertyId);  // ✅ 새 방식
         return "redirect:/mypage";
     }
 }

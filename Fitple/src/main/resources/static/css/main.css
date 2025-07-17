@@ -529,14 +529,21 @@ h6 {
     justify-content: flex-start;
 }
 
-.notice-title {
-    font-size: 2rem;         /* 글자 더 큼 */
-    font-weight: 700;
-    text-align: center;
-    margin-top: 15px;
-    margin-bottom: 85px;
+.notice-box .list-group-item {
 
 }
+
+.notice-title {
+    font-size: 3rem;
+    font-family: 'Poppins', sans-serif;         /* 글자 더 큼 */
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 170px;
+
+
+}
+
+
 
 .notice-more-btn {
     font-size: 1rem;
@@ -571,11 +578,30 @@ h6 {
 .recommand_comment h2{
 
     font-weight: 700;
+    font-family: 'Poppins', sans-serif; /* 더 모던하고 두껍게 */
+    padding-left: 14px;
+    margin-bottom: 20px;
+    font-size: 3rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
 }
 
 .recommand_comment p {
-
+    color: #FFFFFF;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    background: #52ABFE;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(30,144,255,0.3);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    margin-top: 0;
+    letter-spacing: 0.5px;
 }
+
+
 
 /*--------------------------------------------------------------
 # Global Footer

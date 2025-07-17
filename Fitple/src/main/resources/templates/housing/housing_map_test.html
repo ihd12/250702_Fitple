@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
     <title>주거지</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
 
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
@@ -16,6 +16,7 @@
     <link href="/vendor/aos/aos.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/housing.css}">
+<!--    <link href="/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">-->
 </head>
 
 <body class="index-page"
@@ -23,119 +24,120 @@
       th:data-user-id="${#authentication.principal != 'anonymousUser' ? #authentication.principal.username : 'null'}">
 
 <div th:replace="fragments/header :: header"></div>
+<main class="main">
 
-<section id="hero" class="hero section accent-background">
+    <section id="hero" class="hero section accent-background">
 
-    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
-        <div class="row gy-5 justify-content-between">
-            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-                <h2><span>당신의 새로운 시작,</span><span class="accent"><br>편안한 주거지에서 시작하세요.</span></h2>
-                <p>혼자 살아가는 게 처음이어도 걱정하지 마세요.<br>
-                    청년을 위한 안전하고 실속 있는 주거 정보를 모아,
-                    당신에게 꼭 맞는 공간을 소개해드립니다.</p>
+        <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-5 justify-content-between">
+                <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                    <h2><span>당신의 새로운 시작,</span><span class="accent"><br>편안한 주거지에서 시작하세요.</span></h2>
+                    <p>혼자 살아가는 게 처음이어도 걱정하지 마세요.<br>
+                        청년을 위한 안전하고 실속 있는 주거 정보를 모아,
+                        당신에게 꼭 맞는 공간을 소개해드립니다.</p>
+                </div>
+                <div class="col-lg-5 order-1 order-lg-2">
+                    <img src="/img/mainimg-Photoroom.png" class="img-fluid" alt="">
+                </div>
             </div>
-            <div class="col-lg-5 order-1 order-lg-2">
-                <img src="/img/housingback.png" class="img-fluid" alt="">
+        </div>
+    </section>
+
+    <section id="about" class="about section">
+    <div id="housing-page-wrapper">
+        <div id="left-panel">
+            <div id="search-panel">
+                <strong>지역 검색:</strong>
+                <select id="sido-select"></select>
+                <select id="sigungu-select"></select>
+                <strong>호출 개수:</strong>
+                <select id="num-of-rows-select">
+                    <option value="5">5개</option>
+                    <option value="10" selected>10개</option>
+                    <option value="25">25개</option>
+                </select>
+                <button id="search-btn">검색</button>
+                <button id="toggle-advanced-search-btn">상세 검색</button>
             </div>
+            <div id="advanced-filter-panel">
+                <div class="filter-group">
+                    <label>보증금(만원)</label>
+                    <input type="number" id="min-deposit" placeholder="최소"><span>~</span><input type="number" id="max-deposit" placeholder="최대">
+                </div>
+                <div class="filter-group">
+                    <label>월세(만원)</label>
+                    <input type="number" id="min-rent" placeholder="최소"><span>~</span><input type="number" id="max-rent" placeholder="최대">
+                </div>
+                <div class="filter-group">
+                    <label>전용면적(㎡)</label>
+                    <input type="number" id="min-area" placeholder="최소"><span>~</span><input type="number" id="max-area" placeholder="최대">
+                </div>
+                <div class="filter-group preset-buttons">
+                    <label></label>
+                    <button class="area-preset-btn" data-min="" data-max="33">~33㎡</button>
+                    <button class="area-preset-btn" data-min="33" data-max="66">33~66㎡</button>
+                    <button class="area-preset-btn" data-min="66" data-max="99">66~99㎡</button>
+                    <button class="area-preset-btn" data-min="99" data-max="132">99~132㎡</button>
+                </div>
+                <div class="filter-group">
+                    <label>주택유형</label>
+                    <div class="preset-buttons">
+                        <button class="type-filter-btn active" data-type="">전체</button>
+                        <button class="type-filter-btn" data-type="다가구주택">다가구</button>
+                        <button class="type-filter-btn" data-type="다세대주택">다세대</button>
+                        <button class="type-filter-btn" data-type="아파트">아파트</button>
+                        <button class="type-filter-btn" data-type="오피스텔">오피스텔</button>
+                        <button class="type-filter-btn" data-type="etc">기타</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label></label>
+                    <button id="apply-filter-btn">필터 적용</button>
+                    <button id="reset-filter-btn">초기화</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="map-and-list-container">
+            <div id="map"></div>
+            <div id="list-panel">
+                <h3>매물 리스트 <button id="close-list-panel-btn">✖</button></h3>
+                <div id="loading-animation" style="display:none; text-align:center; padding:20px;">
+                    <div class="loader"></div>
+                    <p>검색 중입니다...</p>
+                </div>
+                <div id="list-content">
+                    <ul id="property-list"></ul>
+                </div>
+            </div>
+            <div id="info-panel-bottom">
+                <span id="info-addr"></span>
+                <span id="info-coords"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-wrapper">
+        <div id="modal-content">
+            <div id="modal-header">
+                <h2>매물 상세 정보</h2>
+                <button id="close-modal-btn">✖</button>
+            </div>
+            <div id="modal-body"></div>
         </div>
     </div>
 </section>
-
-<h2>임대 주택 정보</h2>
-
-<div id="search-panel">
-    <strong>지역 검색:</strong>
-    <select id="sido-select"></select>
-    <select id="sigungu-select"></select>
-    <button id="search-btn">검색</button>
-    <button id="toggle-advanced-search-btn">상세 검색</button>
-</div>
-
-<div id="advanced-filter-panel">
-    <div class="filter-group">
-        <label>보증금(만원)</label>
-        <input type="number" id="min-deposit" placeholder="최소">
-        <span>~</span>
-        <input type="number" id="max-deposit" placeholder="최대">
-    </div>
-    <div class="filter-group">
-        <label>월세(만원)</label>
-        <input type="number" id="min-rent" placeholder="최소">
-        <span>~</span>
-        <input type="number" id="max-rent" placeholder="최대">
-    </div>
-    <div class="filter-group">
-        <label>전용면적(㎡)</label>
-        <input type="number" id="min-area" placeholder="최소">
-        <span>~</span>
-        <input type="number" id="max-area" placeholder="최대">
-    </div>
-    <div class="filter-group preset-buttons">
-        <label></label>
-        <button class="area-preset-btn" data-min="" data-max="33">~33㎡</button>
-        <button class="area-preset-btn" data-min="33" data-max="66">33~66㎡</button>
-        <button class="area-preset-btn" data-min="66" data-max="99">66~99㎡</button>
-        <button class="area-preset-btn" data-min="99" data-max="132">99~132㎡</button>
-    </div>
-    <div class="filter-group">
-        <label>주택유형</label>
-        <div class="preset-buttons">
-            <button class="type-filter-btn active" data-type="">전체</button>
-            <button class="type-filter-btn" data-type="다가구주택">다가구</button>
-            <button class="type-filter-btn" data-type="다세대주택">다세대</button>
-            <button class="type-filter-btn" data-type="아파트">아파트</button>
-            <button class="type-filter-btn" data-type="오피스텔">오피스텔</button>
-            <button class="type-filter-btn" data-type="etc">기타</button>
-        </div>
-    </div>
-    <div class="filter-group">
-        <label></label>
-        <button id="apply-filter-btn">필터 적용</button>
-        <button id="reset-filter-btn">초기화</button>
-    </div>
-</div>
-
-<div id="info-panel">
-    <strong>현재 위치 정보:</strong>
-    <span>위도: <span id="info-lat"></span></span>
-    <span>경도: <span id="info-lng"></span></span>
-    <span>주소: <span id="info-addr"></span></span>
-    <span><strong>법정동 코드:</strong> <span id="info-code"></span></span>
-</div>
-
-<div id="main-container">
-    <div id="map"></div>
-    <div id="list-panel">
-        <h3>매물 리스트</h3>
-        <div id="loading-animation" style="display:none; text-align:center; padding:20px;">
-            <div class="loader"></div>
-            <p>검색 중입니다...</p>
-        </div>
-        <div id="list-content">
-            <ul id="property-list"></ul>
-        </div>
-    </div>
-</div>
-
-<div id="modal-wrapper">
-    <div id="modal-content">
-        <div id="modal-header">
-            <h2>매물 상세 정보</h2>
-            <button id="close-modal-btn">✖</button>
-        </div>
-        <div id="modal-body"></div>
-    </div>
-</div>
-
+</main>
 <div th:replace="fragments/footer :: footer"></div>
-
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-<div id="preloader"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/vendor/aos/aos.js"></script>
-<script src="/js/main.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a0e30d98f6dfa0bc355f0bdba19e03da&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d&libraries=services"></script>
 <script th:src="@{/js/housing.js}"></script>
+<script src="/vendor/aos/aos.js"></script>
+<!--<script src="/js/glightbox.js"></script>-->
+
 
 </body>
 </html>

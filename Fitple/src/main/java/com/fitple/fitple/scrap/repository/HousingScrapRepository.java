@@ -2,30 +2,24 @@ package com.fitple.fitple.scrap.repository;
 
 import com.fitple.fitple.base.user.domain.User;
 import com.fitple.fitple.scrap.domain.HousingScrap;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.util.List;
+import java.util.Optional;
 
 public interface HousingScrapRepository extends JpaRepository<HousingScrap, Long> {
 
-    // 사용자와 스크랩된 주택 정보를 조회할 때 housing_info_id를 기반으로 가져오기
-    List<HousingScrap> findByUserIdAndIsScrappedTrue(Long userId);
+    Optional<HousingScrap> findByUserAndPropertyId(User user, Long propertyId);
 
-    // 사용자 ID와 housing_info_id를 통해 특정 스크랩 정보를 조회
-    HousingScrap findByUserIdAndHousingInfoId(Long userId, Long housingInfoId);  // 수정된 부분
+    Optional<HousingScrap> findByUserIdAndPropertyId(Long userId, Long propertyId);
 
-    // 추천 페이지용
+    List<HousingScrap> findByUserAndIsScrappedTrue(User user);
+
+    void deleteByUserIdAndPropertyId(Long userId, Long propertyId);
+
     List<HousingScrap> findByUserId(Long userId);
 
-    @Modifying
-    @Transactional
-    void deleteByUserIdAndHousingInfoId(Long userId, Long housingInfoId);
-
-    @Modifying
-    @Transactional
-    void deleteByIdAndUserId(Long id, Long userId);
-
-    HousingScrap findByUserIdAndHsmpSnAndSuplyPrvuseAr(Long userId, Long hsmpSn, Double area);
+    @Query("SELECT hs.propertyId FROM HousingScrap hs WHERE hs.user.id = :userId AND hs.isScrapped = true")
+    List<Long> findPropertyIdsByUserIdAndIsScrappedTrue(@Param("userId") Long userId);
 }
