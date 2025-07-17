@@ -32,5 +32,18 @@ document.querySelector("#pwBtn").addEventListener("click",(e)=>{
     formObj.submit();
     alert('비밀번호가 변경되었습니다.');
 })
+document.getElementById('regiBtn').addEventListener('click', function(event) {
+    const password = document.querySelector('input[name="password"]').value;
+    const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+    const passwordError = document.getElementById('passwordError');
+    if (password !== confirmPassword) {
+        passwordError.textContent = '비밀번호가 일치하지 않습니다.';
+        event.preventDefault();
+    } else {
+        passwordError.textContent = '';
+    }
+});
+
+
 //     http://localhost:8080/user/modify
 

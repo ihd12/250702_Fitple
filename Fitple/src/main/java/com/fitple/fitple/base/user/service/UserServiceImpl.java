@@ -25,6 +25,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO register(UserDTO dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + dto.getEmail());
+        }
+
         User user = User.builder()
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
@@ -67,6 +71,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()->new IllegalArgumentException("not found : "+email));
         return UserDTO.toDTO(user);
     }
+
+
 
 
     @Override
