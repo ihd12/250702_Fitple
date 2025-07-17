@@ -2,7 +2,9 @@ package com.fitple.fitple.scrap.repository;
 
 import com.fitple.fitple.base.user.domain.User;
 import com.fitple.fitple.scrap.domain.HousingScrap;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 
@@ -16,5 +18,9 @@ public interface HousingScrapRepository extends JpaRepository<HousingScrap, Long
 
     // 추천 페이지용
     List<HousingScrap> findByUserId(Long userId);
+
+    @Modifying
+    @Transactional
+    void deleteByUserIdAndHousingInfoId(Long userId, Long housingInfoId);
 
 }

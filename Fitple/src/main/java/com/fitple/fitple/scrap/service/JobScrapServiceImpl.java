@@ -94,7 +94,6 @@ public class JobScrapServiceImpl implements JobScrapService {
     @Override
     @Transactional
     public void cancelScrap(Long jobId, User user) {
-        JobPost jobPost = JobPost.builder().id(jobId).build(); // ID만 사용
-        jobScrapRepository.deleteByUserAndJobPost(user, jobPost);
+        jobScrapRepository.deleteByUserAndJobPostId(user, jobId);
     }
 }

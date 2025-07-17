@@ -70,6 +70,9 @@ public class JobController {
                               @AuthenticationPrincipal CustomUserDetails userDetails,
                               Model model) {
 
+        // 채용 리스트 페이지에서는 무조건 12개씩 보여줌
+        pageRequestDTO.setSize(12);
+
         PageResponseDTO<JobListDTO> response = jobService.advancedSearch(pageRequestDTO);
         model.addAttribute("pageResponse", response);
 
