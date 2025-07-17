@@ -20,6 +20,27 @@ import java.util.Map;
 @RestController
 public class HousingApiController {
 
+    static {
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+                (hostname, session) -> true
+        );
+
+        try {
+            javax.net.ssl.SSLContext ctx = javax.net.ssl.SSLContext.getInstance("TLS");
+            ctx.init(null, new javax.net.ssl.TrustManager[]{
+                    new javax.net.ssl.X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+                    }
+            }, new java.security.SecureRandom());
+            javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Autowired
     private ObjectMapper objectMapper;
 
