@@ -45,6 +45,7 @@ public class JobScrapServiceImpl implements JobScrapService {
     }
 
     @Override
+    @Transactional
     public void unscrap(Long userId, Long jobPostId) {
         JobPost jobPost = JobPost.builder().id(jobPostId).build();
         User user = User.builder().id(userId).build();

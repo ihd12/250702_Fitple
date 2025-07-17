@@ -92,7 +92,7 @@ public class MyPageController {
     public String deleteHousingScrap(@RequestParam Long propertyId,
                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUser().getId();
-        housingScrapService.removeScrap(userId, propertyId);  // ✅ 새 방식
+        housingScrapService.removeScrap(userId, propertyId);  // 새 방식
         return "redirect:/mypage";
     }
 }

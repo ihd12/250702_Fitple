@@ -74,12 +74,12 @@
             <div class="action-buttons">
               <div>
                 <div th:if="${#authentication.principal != 'anonymousUser'}">
-                  <form th:if="${isScrapped == false}" th:action="@{/policy/scrap/web}" method="post" class="d-inline">
+                  <form th:if="${isScrapped == false}" th:action="@{/policy/scrap/{id}(id=${policy.plcyNo})}" method="post" class="d-inline">
                     <input type="hidden" name="plcyNos" th:value="${policy.plcyNo}" />
-                    <input type="hidden" name="plcyNms" th:value="${policy.plcyNm}" />
+                    <input type="hidden" name="plcyNm" th:value="${policy.plcyNm}" />
                     <button type="submit" class="btn btn-outline-primary">찜하기</button>
                   </form>
-                  <form th:if="${isScrapped == true}" th:action="@{/policy/scrap/web/{plcyNo}/cancel(plcyNo=${policy.plcyNo})}" method="post" class="d-inline">
+                  <form th:if="${isScrapped == true}" th:action="@{/policy/scrap/{id}/cancel(id=${policy.plcyNo})}" method="post" class="d-inline">
                     <button type="submit" class="btn btn-outline-danger">찜취소</button>
                   </form>
                 </div>

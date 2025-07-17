@@ -39,11 +39,11 @@
         <input type="hidden" name="email" th:value="${user.email}" />
 
         <div class="form-group inline-group">
-            <label >닉네임</label>
-                <div class="input-wrapper">
-                    <input type="text" name="nickname" th:value="${user.nickname}" />
-                    <button type="button" id="nickBtn" class="btn btn-sm btn-outline-primary">수정</button>
-                </div>
+            <label>닉네임</label>
+            <div class="input-wrapper">
+                <input type="text" name="nickname" th:value="${user.nickname}" />
+                <button type="button" id="nickBtn" class="btn btn-sm btn-outline-primary">수정</button>
+            </div>
         </div>
 
         <div class="form-group">
@@ -67,12 +67,12 @@
         <div class="bottom-actions form-group">
             <button type="button" id="removeBtn" class="danger">회원탈퇴</button>
         </div>
-    </form>
-    <div class="submit-wrapper">
-        <form action="/mypage" method="get">
+
+        <div class="submit-wrapper">
             <button type="submit">수정완료</button>
-        </form>
-    </div>
+        </div>
+    </form>
+
 </div>
 
 <!-- 푸터 -->
@@ -90,5 +90,7 @@
 
 <!-- Main JS File -->
 <script src="/js/main.js"></script>
+<script src="/js/user.js"></script>
+
 </body>
 </html>

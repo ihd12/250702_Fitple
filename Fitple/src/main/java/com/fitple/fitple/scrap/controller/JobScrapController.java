@@ -25,7 +25,7 @@ public class JobScrapController {
 
         User user = userDetails.getUser();
         jobScrapService.scrap(user.getId(), jobPostId);
-        return "redirect:/job/test/" + jobPostId;
+        return "redirect:/job/" + jobPostId;
     }
 
     @PostMapping("/{jobPostId}/cancel")
@@ -38,6 +38,6 @@ public class JobScrapController {
 
         User user = userDetails.getUser();
         jobScrapService.unscrap(user.getId(), jobPostId);
-        return "redirect:/job/test/" + jobPostId;
+        return "redirect:/job/" + jobPostId;
     }
 }
