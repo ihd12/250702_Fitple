@@ -4,6 +4,7 @@ import com.fitple.fitple.base.user.dto.UserDTO;
 import com.fitple.fitple.base.user.security.CustomUserDetails;
 import com.fitple.fitple.base.user.security.CustomUserDetailsService;
 import com.fitple.fitple.base.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -102,11 +103,21 @@ public class UserController {
         return "redirect:/user/modify";
     }
     @PostMapping("/remove")
-    public String deleteUser(UserDTO userDTO, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException{
-        if(!userDetails.getUsername().equals(userDTO.getEmail())){
+    public String deleteUser(UserDTO userDTO,
+                             @AuthenticationPrincipal UserDetails userDetails,
+                             HttpServletRequest request) throws AccessDeniedException {
+        if (!userDetails.getUsername().equals(userDTO.getEmail())) {
             throw new AccessDeniedException("권한이 없습니다.");
         }
+
+        // 1. 회원 삭제
         userService.delete(userDetails.getUsername());
-        return "redirect:/user/login";
+        // 2. 시큐리티 인증정보 + 세션 무효화
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
+
+        return "redirect:/user/login";  // 또는 "redirect:/"도 가능
     }
+
+
 }

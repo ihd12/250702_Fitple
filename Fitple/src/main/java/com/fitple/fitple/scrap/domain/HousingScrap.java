@@ -3,6 +3,8 @@ package com.fitple.fitple.scrap.domain;
 import com.fitple.fitple.base.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(
@@ -27,6 +29,7 @@ public class HousingScrap {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE) // ← 이 부분 추가
     private User user;
 
     @Column(name = "housing_info_id", nullable = false)

@@ -5,6 +5,8 @@ import com.fitple.fitple.job.domain.JobDetail;
 import com.fitple.fitple.job.domain.JobPost;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -22,13 +24,14 @@ public class JobScrap {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE) // ← 이 부분 추가
     private User user;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "job_id", nullable = false)
-    private JobDetail job;  // Job → JobDetail 로 변경
+    private JobDetail job;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "job_post_id", nullable = false)

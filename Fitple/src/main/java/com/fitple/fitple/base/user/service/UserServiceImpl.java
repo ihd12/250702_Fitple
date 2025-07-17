@@ -89,8 +89,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(String email) {
-        userRepository.deleteByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다: " + email));
+        userRepository.delete(user);
     }
+
 
     private User dtoToEntity(UserDTO dto) {
         return User.builder()
