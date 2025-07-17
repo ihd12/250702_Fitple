@@ -22,6 +22,7 @@ public class HousingScrapService {
     }
 
     // 스크랩 추가
+    @Transactional
     public HousingScrap addScrap(Long userId, Long housingInfoId, Long hsmpSn, String brtcCode, String signguCode, String brtcNm, String signguNm,
                                  String insttNm, String hsmpNm, String rnAdres, String competDe, Integer hshldCo, String suplyTyNm, String styleNm,
                                  Double suplyPrvuseAr, Double suplyCmnuseAr, String houseTyNm, String heatMthdDetailNm, String buldStleNm,
@@ -67,13 +68,13 @@ public class HousingScrapService {
     }
 
     // 스크랩 해제
-    public HousingScrap removeScrap(Long userId, Long housingInfoId) {
+    @Transactional
+    public void removeScrap(Long userId, Long housingInfoId) {
         HousingScrap existing = housingScrapRepository.findByUserIdAndHousingInfoId(userId, housingInfoId);
         if (existing != null) {
             existing.setIsScrapped(false);
-            return housingScrapRepository.save(existing);
+            housingScrapRepository.save(existing);
         }
-        return null;
     }
 
     // 로그인한 사용자의 찜한 주택 목록
@@ -83,6 +84,7 @@ public class HousingScrapService {
         // HousingScrapDTO로 변환
         return scraps.stream()
                 .map(scrap -> new HousingScrapDTO(
+                        scrap.getId(),                    // scrapID
                         scrap.getHsmpNm(),                // 단지명
                         scrap.getRnAdres(),               // 도로명 주소
                         scrap.getHouseTyNm(),             // 주택 유형명
@@ -107,6 +109,28 @@ public class HousingScrapService {
     @Transactional
     public void cancelScrap(Long housingInfoId, User user) {
         housingScrapRepository.deleteByUserIdAndHousingInfoId(user.getId(), housingInfoId);
+    }
+
+    // 추가
+    @Transactional
+    public void cancelScrapById(Long scrapId, User user) {
+        HousingScrap scrap = housingScrapRepository.findById(scrapId)
+                .orElseThrow(() -> new RuntimeException("스크랩 정보를 찾을 수 없습니다."));
+
+        if (!scrap.getUserId().equals(user.getId())) {
+            throw new RuntimeException("삭제 권한이 없습니다.");
+        }
+
+        housingScrapRepository.deleteById(scrapId);
+    }
+
+    @Transactional
+    public void deleteByHsmpSnAndArea(Long userId, Long hsmpSn, Double area) {
+        HousingScrap scrap = housingScrapRepository
+                .findByUserIdAndHsmpSnAndSuplyPrvuseAr(userId, hsmpSn, area);
+        if (scrap != null) {
+            housingScrapRepository.delete(scrap);
+        }
     }
 
 }

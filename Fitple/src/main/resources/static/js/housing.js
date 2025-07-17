@@ -17,47 +17,43 @@ async function checkLoginStatus() {
     try {
         const res = await fetch('/scrap/list');
         const scrappedData = await res.json();
-        const scrappedIds = scrappedData.map(item => String(item.housingInfoId));
 
-        buttons.forEach(button => {
+        scrappedData.forEach(item => {
+            const hsmpSn = item.hsmpSn;
+            const area = item.suplyPrvuseAr;
+            const btnId = `favorite-btn-${hsmpSn}-${area}`;
+
+            const button = document.getElementById(btnId);
+            if (!button) return;
+
             const listItem = button.closest('li.property-item');
-            const propertyId = String(listItem.getAttribute('data-pnu'));
+            if (!listItem) return;
 
-            button.disabled = false;
+            button.innerText = '찜 완료';
+            button.classList.add('scrapped');
 
-            // 기존 뱃지가 있다면 제거 (중복 방지)
             const existingBadge = listItem.querySelector('.scrap-badge');
-            if (existingBadge) {
-                existingBadge.remove();
-            }
-
-            if (scrappedIds.includes(propertyId)) {
-                button.innerText = '찜 완료';
-                button.classList.add('scrapped');
-                button.disabled = true;
-
-                // "★ 저장" 뱃지 동적으로 추가
+            if (!existingBadge) {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-warning text-dark scrap-badge';
+                badge.innerText = '★ 저장';
                 const infoBox = listItem.querySelector('.property-info');
-                if (infoBox) {
-                    const badge = document.createElement('span');
-                    badge.className = 'badge bg-warning text-dark scrap-badge';
-                    badge.innerText = '★ 저장';
-                    infoBox.appendChild(badge);
-                }
-            } else {
-                button.innerText = '찜하기';
-                button.classList.remove('scrapped');
+                if (infoBox) infoBox.appendChild(badge);
             }
         });
+
     } catch (err) {
         console.error('스크랩 목록 불러오기 실패:', err);
     }
 }
 
+
+
+
 // 찜하기 버튼 클릭 이벤트 처리
 function addToFavorites(propertyId, event) {
-    event.stopPropagation();  // 클릭 이벤트 전파 방지
-    const button = document.getElementById(`favorite-btn-${propertyId}`);
+    event.stopPropagation();
+    const button = event.currentTarget;
 
     if (!isLoggedIn) {
         alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
@@ -65,45 +61,36 @@ function addToFavorites(propertyId, event) {
         return;
     }
 
-    if (button.disabled) return;
-
-    button.disabled = true;
-    button.innerText = '처리중...';
-
     const listItem = button.closest('li.property-item');
 
-    // dataset에서 추가 데이터 가져오기
     const hsmpSn = listItem.dataset.hsmpSn;
     const brtcCode = listItem.dataset.brtcCode;
     const signguCode = listItem.dataset.signguCode;
     const brtcNm = listItem.dataset.brtcNm;
     const signguNm = listItem.dataset.signguNm;
-    const insttNm = listItem.dataset.insttNm; // 기관명
-    const hsmpNm = listItem.dataset.hsmpNm; // 단지명
-    const rnAdres = listItem.dataset.rnAdres; // 도로명 주소
-    const competDe = listItem.dataset.competDe; // 준공 일자
-    const hshldCo = listItem.dataset.hshldCo; // 세대수
-    const suplyTyNm = listItem.dataset.suplyTyNm; // 공급 유형 명
-    const styleNm = listItem.dataset.styleNm; // 형 명
-    const suplyPrvuseAr = listItem.dataset.suplyPrvuseAr; // 공급 전용 면적
-    const suplyCmnuseAr = listItem.dataset.suplyCmnuseAr; // 공급 공용 면적
-    const houseTyNm = listItem.dataset.houseTyNm; // 주택 유형 명
-    const heatMthdDetailNm = listItem.dataset.heatMthdDetailNm; // 난방 방식
-    const buldStleNm = listItem.dataset.buldStleNm; // 건물 형태
-    const elvtrInstlAtNm = listItem.dataset.elvtrInstlAtNm; // 승강기 설치여부
-    const parkngCo = listItem.dataset.parkngCo; // 주차수
-    const bassRentGtn = listItem.dataset.bassRentGtn; // 기본 임대보증금
-    const bassMtRntchrg = listItem.dataset.bassMtRntchrg; // 기본 월임대료
-    const bassCnvrsGtnLmt = listItem.dataset.bassCnvrsGtnLmt; // 기본 전환보증금
-    const msg = listItem.dataset.msg; // 메시지
+    const insttNm = listItem.dataset.insttNm;
+    const hsmpNm = listItem.dataset.hsmpNm;
+    const rnAdres = listItem.dataset.rnAdres;
+    const competDe = listItem.dataset.competDe;
+    const hshldCo = listItem.dataset.hshldCo;
+    const suplyTyNm = listItem.dataset.suplyTyNm;
+    const styleNm = listItem.dataset.styleNm;
+    const suplyPrvuseAr = listItem.dataset.suplyPrvuseAr;
+    const suplyCmnuseAr = listItem.dataset.suplyCmnuseAr;
+    const houseTyNm = listItem.dataset.houseTyNm;
+    const heatMthdDetailNm = listItem.dataset.heatMthdDetailNm;
+    const buldStleNm = listItem.dataset.buldStleNm;
+    const elvtrInstlAtNm = listItem.dataset.elvtrInstlAtNm;
+    const parkngCo = listItem.dataset.parkngCo;
+    const bassRentGtn = listItem.dataset.bassRentGtn;
+    const bassMtRntchrg = listItem.dataset.bassMtRntchrg;
+    const bassCnvrsGtnLmt = listItem.dataset.bassCnvrsGtnLmt;
+    const msg = listItem.dataset.msg;
 
-    // 로그인한 사용자 ID
     const userId = getUserId();
 
-    fetch(`/scrap/add/${propertyId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+    if (!button.classList.contains('scrapped')) {
+        const scrapData = {
             hsmpSn,
             brtcCode,
             signguCode,
@@ -128,30 +115,47 @@ function addToFavorites(propertyId, event) {
             bassCnvrsGtnLmt,
             msg,
             housingInfoId: propertyId,
-            userId,
-            isScrapped: true,
-        })
-    })
-        .then(response => {
-            if (!response.ok) throw new Error('Server error');
-            return response.json();
-        })
-        .then(data => {
-            alert("찜하기 완료!");
-            button.innerText = '찜 완료';
-            button.classList.add('scrapped');
-            button.disabled = true;
+            isScrapped: true
+        };
 
-            // 찜 상태 다시 갱신
-            checkLoginStatus();
+        button.innerText = '처리중...';
+
+        fetch('/scrap/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(scrapData)
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("오류가 발생했습니다.");
-            button.disabled = false;
-            button.innerText = '찜하기';
-        });
+            .then(res => res.ok ? res.json() : Promise.reject("추가 실패"))
+            .then(() => {
+                button.innerText = "찜 완료";
+                button.classList.add("scrapped");
+                checkLoginStatus();
+            })
+            .catch(err => {
+                console.error("찜 추가 오류:", err);
+                button.innerText = "찜하기";
+            });
+    } else {
+        // 찜취소 요청
+        fetch(`/scrap/delete?hsmpSn=${hsmpSn}&area=${area}`, {
+            method: 'DELETE'
+        })
+            .then(res => res.ok ? res.text() : Promise.reject("삭제 실패"))
+            .then(() => {
+                button.innerText = "찜하기";
+                button.classList.remove("scrapped");
+
+                const badge = button.closest('li.property-item')?.querySelector('.scrap-badge');
+                if (badge) badge.remove();
+
+                checkLoginStatus();
+            })
+            .catch(err => {
+                console.error("찜 취소 오류:", err);
+            });
+    }
 }
+
 
 
 // 전역 변수
@@ -412,7 +416,7 @@ function clearMarkers() {
 // 기존의 displayHousingOnMap 함수 내부 중 찜하기 버튼 관련 부분 (수정 포함)
 async function displayHousingOnMap(housingList) {
     const propertyList = document.getElementById('property-list');
-    propertyList.innerHTML = '';  // 기존 내용 삭제
+    propertyList.innerHTML = ''; // 기존 목록 초기화
 
     if (!housingList || housingList.length === 0) {
         propertyList.innerHTML = '<li>검색 결과가 없습니다.</li>';
@@ -423,7 +427,10 @@ async function displayHousingOnMap(housingList) {
         const geocodeResult = await new Promise((resolve) => {
             geocoder.addressSearch(item.rnAdres, (result, status) => {
                 if (status === kakao.maps.services.Status.OK) {
-                    resolve({ ...item, coords: new kakao.maps.LatLng(result[0].y, result[0].x) });
+                    resolve({
+                        ...item,
+                        coords: new kakao.maps.LatLng(result[0].y, result[0].x)
+                    });
                 } else {
                     resolve(null);
                 }
@@ -432,9 +439,19 @@ async function displayHousingOnMap(housingList) {
 
         if (geocodeResult) {
             const { coords, ...itemData } = geocodeResult;
-            const marker = new kakao.maps.Marker({ map: map, position: coords, title: itemData.hsmpNm });
+
+            const marker = new kakao.maps.Marker({
+                map: map,
+                position: coords,
+                title: itemData.hsmpNm
+            });
+
             const iwContent = `<div style="padding:5px;width:260px;"><strong>${itemData.hsmpNm}</strong><br><small>${itemData.rnAdres}</small></div>`;
-            const infowindow = new kakao.maps.InfoWindow({ content: iwContent, removable: true });
+            const infowindow = new kakao.maps.InfoWindow({
+                content: iwContent,
+                removable: true
+            });
+
             markers.push(marker);
 
             const listItem = document.createElement('li');
@@ -442,50 +459,64 @@ async function displayHousingOnMap(housingList) {
             listItem.id = `property-${itemData.hsmpSn}`;
             listItem.dataset.pnu = itemData.hsmpSn;
 
-            // 여기서 추가 데이터를 dataset으로 저장
+            // 데이터 속성 추가
             listItem.dataset.hsmpSn = itemData.hsmpSn;
             listItem.dataset.brtcCode = itemData.brtcCode;
             listItem.dataset.signguCode = itemData.signguCode;
             listItem.dataset.brtcNm = itemData.brtcNm;
             listItem.dataset.signguNm = itemData.signguNm;
-            listItem.dataset.insttNm = itemData.insttNm;  // 기관명 추가
-            listItem.dataset.hsmpNm = itemData.hsmpNm;    // 단지명 추가
-            listItem.dataset.rnAdres = itemData.rnAdres;  // 도로명 주소 추가
-            listItem.dataset.competDe = itemData.competDe; // 준공일자 추가
-            listItem.dataset.hshldCo = itemData.hshldCo;    // 세대수 추가
-            listItem.dataset.suplyTyNm = itemData.suplyTyNm; // 공급유형명 추가
-            listItem.dataset.styleNm = itemData.styleNm;    // 형명 추가
-            listItem.dataset.suplyPrvuseAr = itemData.suplyPrvuseAr; // 공급전용면적 추가
-            listItem.dataset.suplyCmnuseAr = itemData.suplyCmnuseAr; // 공급공용면적 추가
-            listItem.dataset.houseTyNm = itemData.houseTyNm; // 주택유형명 추가
-            listItem.dataset.heatMthdDetailNm = itemData.heatMthdDetailNm; // 난방방식 추가
-            listItem.dataset.buldStleNm = itemData.buldStleNm; // 건물형태 추가
-            listItem.dataset.elvtrInstlAtNm = itemData.elvtrInstlAtNm; // 승강기 설치여부 추가
-            listItem.dataset.parkngCo = itemData.parkngCo;    // 주차수 추가
-            listItem.dataset.bassRentGtn = itemData.bassRentGtn; // 기본임대보증금 추가
-            listItem.dataset.bassMtRntchrg = itemData.bassMtRntchrg; // 기본월임대료 추가
-            listItem.dataset.msg = itemData.msg;  // 메시지 추가
+            listItem.dataset.insttNm = itemData.insttNm;
+            listItem.dataset.hsmpNm = itemData.hsmpNm;
+            listItem.dataset.rnAdres = itemData.rnAdres;
+            listItem.dataset.competDe = itemData.competDe;
+            listItem.dataset.hshldCo = itemData.hshldCo;
+            listItem.dataset.suplyTyNm = itemData.suplyTyNm;
+            listItem.dataset.styleNm = itemData.styleNm;
+            listItem.dataset.suplyPrvuseAr = itemData.suplyPrvuseAr;
+            listItem.dataset.suplyCmnuseAr = itemData.suplyCmnuseAr;
+            listItem.dataset.houseTyNm = itemData.houseTyNm;
+            listItem.dataset.heatMthdDetailNm = itemData.heatMthdDetailNm;
+            listItem.dataset.buldStleNm = itemData.buldStleNm;
+            listItem.dataset.elvtrInstlAtNm = itemData.elvtrInstlAtNm;
+            listItem.dataset.parkngCo = itemData.parkngCo;
+            listItem.dataset.bassRentGtn = itemData.bassRentGtn;
+            listItem.dataset.bassMtRntchrg = itemData.bassMtRntchrg;
+            listItem.dataset.msg = itemData.msg;
 
             const formattedDeposit = Number(itemData.bassRentGtn).toLocaleString('ko-KR');
             const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
 
+            // innerHTML로 정보 영역만 구성
             listItem.innerHTML = `
-                  <div class="property-info">
-                    <strong>${itemData.hsmpNm}</strong>
-                    <p>단지식별자: ${itemData.hsmpSn}</p>
-                    <p>주소: ${itemData.rnAdres}</p>
-                    <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
-                    <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
-                    <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
-                    <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
-                  </div>
-                  <button id="favorite-btn-${itemData.hsmpSn}" onclick="addToFavorites(${itemData.hsmpSn}, event)" disabled>찜하기</button>
-                `;
+        <div class="property-info">
+          <strong>${itemData.hsmpNm}</strong>
+          <p>단지식별자: ${itemData.hsmpSn}</p>
+          <p>주소: ${itemData.rnAdres}</p>
+          <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
+          <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
+          <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
+          <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
+        </div>
+      `;
 
+            // 찜 버튼 직접 생성 (이벤트 전파 방지 위해)
+            const button = document.createElement('button');
+            button.id = `favorite-btn-${itemData.hsmpSn}-${itemData.suplyPrvuseAr}`;
+            button.dataset.hsmpSn = itemData.hsmpSn;
+            button.dataset.area = itemData.suplyPrvuseAr;
+            button.textContent = '찜하기';
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // 상위 클릭 이벤트 방지
+                addToFavorites(itemData.hsmpSn, itemData.suplyPrvuseAr, e);
+            });
+
+            listItem.appendChild(button);
             propertyList.appendChild(listItem);
 
+            // 마커 + 리스트 아이템 클릭 시 모달/포커싱
             const openInfoWindow = () => {
-                if (activeInfoWindow) { activeInfoWindow.close(); }
+                if (activeInfoWindow) activeInfoWindow.close();
                 infowindow.open(map, marker);
                 activeInfoWindow = infowindow;
             };
@@ -506,14 +537,17 @@ async function displayHousingOnMap(housingList) {
                 populateAndShowModal(itemData.pnu);
             });
         }
+
+        // 너무 빠르게 렌더링되지 않도록 약간 지연
         await new Promise(resolve => setTimeout(resolve, 50));
     }
 
     console.log("매물 정보 표시 완료.");
 
-    // 매물 다 그린 후 찜 상태 반영
+    // 모든 항목 렌더링 후 찜 상태 체크
     checkLoginStatus();
 }
+
 
 
 

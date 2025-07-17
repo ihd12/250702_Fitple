@@ -101,4 +101,25 @@ public class HousingScrapController {
         User user = userDetails.getUser();
         return housingScrapService.getScrapList(user);  // housingScrapService에서 housing_info_id를 사용
     }
+
+    @DeleteMapping("/delete/{scrapId}")
+    public void deleteScrap(@PathVariable Long scrapId,
+                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null || userDetails.getUser() == null) {
+            throw new RuntimeException("로그인된 사용자가 없습니다.");
+        }
+
+        User user = userDetails.getUser();
+        housingScrapService.cancelScrapById(scrapId, user);
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteScrapByHsmpSn(@RequestParam Long hsmpSn,
+                                    @RequestParam Double area,
+                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getUser().getId();
+        housingScrapService.deleteByHsmpSnAndArea(userId, hsmpSn, area);
+    }
+
+
 }

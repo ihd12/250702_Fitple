@@ -7,6 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class HousingScrapDTO {
 
+    private Long scrapId; // DTO에 추가할 필드
+
     private String hsmpNm;          // 단지명
     private String rnAdres;         // 도로명 주소
     private String houseTyNm;       // 주택 유형명

@@ -23,4 +23,9 @@ public interface HousingScrapRepository extends JpaRepository<HousingScrap, Long
     @Transactional
     void deleteByUserIdAndHousingInfoId(Long userId, Long housingInfoId);
 
+    @Modifying
+    @Transactional
+    void deleteByIdAndUserId(Long id, Long userId);
+
+    HousingScrap findByUserIdAndHsmpSnAndSuplyPrvuseAr(Long userId, Long hsmpSn, Double area);
 }
