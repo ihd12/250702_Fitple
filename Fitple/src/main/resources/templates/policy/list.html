@@ -77,28 +77,9 @@
       </div>
     </fieldset>
 
-    <!-- 키워드 필터 -->
-    <fieldset class="border rounded p-3 mb-3">
-      <legend class="float-none w-auto px-2 text-primary">키워드 필터</legend>
-      <div class="row g-2">
-        <div class="col-12 d-flex flex-wrap gap-3">
-          <th:block th:each="keyword : ${keywordList}">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="keywords"
-                     th:value="${keyword}"
-                     th:checked="${keywords != null and #lists.contains(keywords, keyword)}"
-                     th:id="'kw__' + ${keyword}" />
-              <label class="form-check-label"
-                     th:for="'kw__' + ${keyword}"
-                     th:text="${keyword}">키워드</label>
-            </div>
-          </th:block>
-        </div>
-      </div>
-    </fieldset>
-
     <!-- 검색 버튼 -->
     <div class="col-auto mt-2">
+      <input type="hidden" name="size" th:value="${param.size != null ? param.size : 10}" />
       <input type="hidden" name="page" value="1" />
       <button type="submit" class="btn btn-success">검색</button>
     </div>
@@ -113,7 +94,7 @@
           <h5 class="card-title">
             <a th:href="@{'/policy/detail?plcyNo=' + ${policy.plcyNo}
                           + '&page=' + ${responseDTO.page}
-                          + ${zipCdsParam} + ${keywordsParam}}"
+                          + ${zipCdsParam}}"
                th:text="${policy.plcyNm}"
                class="text-decoration-none text-dark">정책명</a>
           </h5>
@@ -135,24 +116,34 @@
   <div class="mt-4 text-center">
     <nav>
       <ul class="pagination justify-content-center">
+
+        <!-- 이전 버튼 -->
         <li class="page-item" th:if="${responseDTO.prev}">
           <a class="page-link"
              th:href="@{'/policy/list?page=' + ${responseDTO.start - 1}
-                       + ${zipCdsParam} + ${keywordsParam}}">&laquo; 이전</a>
+                     + '&size=' + ${responseDTO.size}
+                     + ${zipCdsParam}}">&laquo; 이전</a>
         </li>
+
+        <!-- 번호 버튼 -->
         <li class="page-item"
             th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}"
             th:classappend="${responseDTO.page == i} ? 'active'">
           <a class="page-link"
              th:text="${i}"
              th:href="@{'/policy/list?page=' + ${i}
-                       + ${zipCdsParam} + ${keywordsParam}}">1</a>
+                     + '&size=' + ${responseDTO.size}
+                     + ${zipCdsParam}}">1</a>
         </li>
+
+        <!-- 다음 버튼 -->
         <li class="page-item" th:if="${responseDTO.next}">
           <a class="page-link"
              th:href="@{'/policy/list?page=' + ${responseDTO.end + 1}
-                       + ${zipCdsParam} + ${keywordsParam}}">다음 &raquo;</a>
+                     + '&size=' + ${responseDTO.size}
+                     + ${zipCdsParam}}">다음 &raquo;</a>
         </li>
+
       </ul>
     </nav>
   </div>

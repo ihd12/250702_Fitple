@@ -1,17 +1,9 @@
-// housing.js 파일 상단
+const isLoggedIn = document.body.dataset.isAuthenticated === 'true';
+const userId = document.body.dataset.userId;
 
-// 1. HTML의 data-* 속성에서 값을 가져옵니다.
-const bodyEl = document.body;
-const isLoggedIn = bodyEl.dataset.isAuthenticated === 'true';
-let userId = bodyEl.dataset.userId;
-
-// 2. userId가 문자열 'null'이면 실제 null 값으로 변경합니다.
-if (userId === 'null') {
-    userId = null;
+function getUserId() {
+    return userId === 'null' || userId === null ? null : userId;
 }
-
-console.log('로그인 상태:', isLoggedIn);
-console.log('유저 ID:', userId);
 
 // 찜하기 버튼 상태 갱신 함수
 async function checkLoginStatus() {
@@ -24,18 +16,34 @@ async function checkLoginStatus() {
 
     try {
         const res = await fetch('/scrap/list');
-        const scrappedIds = await res.json();
+        const scrappedData = await res.json();
+        const scrappedIds = scrappedData.map(item => String(item.housingInfoId));
 
         buttons.forEach(button => {
-            // pnu는 propertyId로 사용될 고유 식별자입니다.
-            const propertyId = button.closest('li.property-item').getAttribute('data-pnu');
+            const listItem = button.closest('li.property-item');
+            const propertyId = String(listItem.getAttribute('data-pnu'));
 
-            button.disabled = false; // 기본적으로 활성화
+            button.disabled = false;
+
+            // 기존 뱃지가 있다면 제거 (중복 방지)
+            const existingBadge = listItem.querySelector('.scrap-badge');
+            if (existingBadge) {
+                existingBadge.remove();
+            }
 
             if (scrappedIds.includes(propertyId)) {
                 button.innerText = '찜 완료';
                 button.classList.add('scrapped');
-                button.disabled = true; // 이미 찜한 주거지 버튼은 비활성화
+                button.disabled = true;
+
+                // "★ 저장" 뱃지 동적으로 추가
+                const infoBox = listItem.querySelector('.property-info');
+                if (infoBox) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-warning text-dark scrap-badge';
+                    badge.innerText = '★ 저장';
+                    infoBox.appendChild(badge);
+                }
             } else {
                 button.innerText = '찜하기';
                 button.classList.remove('scrapped');
@@ -89,7 +97,9 @@ function addToFavorites(propertyId, event) {
     const bassCnvrsGtnLmt = listItem.dataset.bassCnvrsGtnLmt; // 기본 전환보증금
     const msg = listItem.dataset.msg; // 메시지
 
-    // 로그인한 사용자 ID (전역 변수 userId 사용)
+    // 로그인한 사용자 ID
+    const userId = getUserId();
+
     fetch(`/scrap/add/${propertyId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -118,7 +128,7 @@ function addToFavorites(propertyId, event) {
             bassCnvrsGtnLmt,
             msg,
             housingInfoId: propertyId,
-            userId, // 전역 변수 userId 사용
+            userId,
             isScrapped: true,
         })
     })
@@ -154,19 +164,12 @@ let activeInfoWindow = null;
 let currentHousingList = [];
 let selectedHouseType = '';
 
-// 전역 요소 (DOM 요소들을 여기에 미리 선언)
+// 전역 요소
 const sidoSelect = document.getElementById('sido-select');
 const sigunguSelect = document.getElementById('sigungu-select');
 const modalWrapper = document.getElementById('modal-wrapper');
 const modalBody = document.getElementById('modal-body');
 const closeModalBtn = document.getElementById('close-modal-btn');
-const listPanel = document.getElementById('list-panel'); // 매물 리스트 패널
-const advancedFilterPanel = document.getElementById('advanced-filter-panel'); // 상세 검색 패널
-const infoAddrEl = document.getElementById('info-addr'); // 지도 아래에 새로 추가된 info-addr 요소
-const infoCoordsEl = document.getElementById('info-coords'); // 지도 아래에 새로 추가된 info-coords 요소
-const closeListPanelBtn = document.getElementById('close-list-panel-btn'); // 새로 추가된 닫기 버튼 요소
-
-
 const regionData = { "11": { name: "서울특별시", sigungu: { "110": "종로구", "140": "중구", "170": "용산구", "200": "성동구", "215": "광진구", "230": "동대문구", "260": "중랑구", "290": "성북구", "305": "강북구", "320": "도봉구", "350": "노원구", "380": "은평구", "410": "서대문구", "440": "마포구", "470": "양천구", "500": "강서구", "530": "구로구", "545": "금천구", "560": "영등포구", "590": "동작구", "620": "관악구", "650": "서초구", "680": "강남구", "710": "송파구", "740": "강동구" } }, "26": { name: "부산광역시", sigungu: { "110": "중구", "140": "서구", "170": "동구", "200": "영도구", "230": "부산진구", "260": "동래구", "290": "남구", "320": "북구", "350": "해운대구", "380": "사하구", "410": "금정구", "440": "강서구", "470": "연제구", "500": "수영구", "530": "사상구", "710": "기장군" } }, "27": { name: "대구광역시", sigungu: { "110": "중구", "140": "동구", "170": "서구", "200": "남구", "230": "북구", "260": "수성구", "290": "달서구", "710": "달성군" } }, "28": { name: "인천광역시", sigungu: { "110": "중구", "140": "동구", "177": "미추홀구", "185": "연수구", "200": "남동구", "237": "부평구", "245": "계양구", "260": "서구", "710": "강화군", "720": "옹진군" } }, "29": { name: "광주광역시", sigungu: { "110": "동구", "140": "서구", "155": "남구", "170": "북구", "200": "광산구" } }, "30": { name: "대전광역시", sigungu: { "110": "동구", "140": "중구", "170": "서구", "200": "유성구", "230": "대덕구" } }, "31": { name: "울산광역시", sigungu: { "110": "중구", "140": "남구", "170": "동구", "200": "북구", "710": "울주군" } }, "36": { name: "세종특별자치시", sigungu: { "110": "세종특별자치시" } }, "41": { name: "경기", sigungu: { "111": "수원시 장안구", "113": "수원시 권선구", "115": "수원시 팔달구", "117": "수원시 영통구", "131": "성남시 수정구", "133": "성남시 중원구", "135": "성남시 분당구", "150": "의정부시", "171": "안양시 만안구", "173": "안양시 동안구", "190": "부천시", "210": "광명시", "220": "평택시", "250": "동두천시", "271": "안산시 상록구", "273": "안산시 단원구", "281": "고양시 덕양구", "285": "고양시 일산동구", "287": "고양시 일산서구", "290": "과천시", "310": "구리시", "360": "남양주시", "370": "오산시", "390": "시흥시", "410": "군포시", "430": "의왕시", "450": "하남시", "461": "용인시 처인구", "463": "용인시 기흥구", "465": "용인시 수지구", "480": "파주시", "500": "이천시", "550": "안성시", "570": "김포시", "590": "화성시", "610": "광주시", "630": "양주시", "650": "포천시", "670": "여주시", "800": "연천군", "820": "가평군", "830": "양평군" } }, "51": { name: "강원특별자치도", sigungu: { "110": "춘천시", "130": "원주시", "150": "강릉시", "170": "동해시", "190": "태백시", "210": "속초시", "230": "삼척시", "720": "홍천군", "730": "횡성군", "750": "영월군", "760": "평창군", "770": "정선군", "780": "철원군", "790": "화천군", "800": "양구군", "810": "인제군", "820": "고성군", "830": "양양군" } }, "43": { name: "충북", sigungu: { "111": "청주시 상당구", "112": "청주시 서원구", "113": "청주시 흥덕구", "114": "청주시 청원구", "130": "충주시", "150": "제천시", "720": "보은군", "730": "옥천군", "740": "영동군", "745": "증평군", "750": "진천군", "760": "괴산군", "770": "음성군", "800": "단양군" } }, "44": { name: "충남", sigungu: { "131": "천안시 동남구", "133": "천안시 서북구", "150": "공주시", "180": "보령시", "200": "아산시", "210": "서산시", "230": "논산시", "250": "계룡시", "270": "당진시", "710": "금산군", "760": "부여군", "770": "서천군", "790": "청양군", "800": "홍성군", "810": "예산군", "825": "태안군" } }, "52": { name: "전북특별자치도", sigungu: { "111": "전주시 완산구", "113": "전주시 덕진구", "130": "군산시", "140": "익산시", "180": "정읍시", "190": "남원시", "210": "김제시", "710": "완주군", "720": "진안군", "730": "무주군", "740": "장수군", "750": "임실군", "770": "순창군", "790": "고창군", "800": "부안군" } }, "46": { name: "전남", sigungu: { "110": "목포시", "130": "여수시", "150": "순천시", "170": "나주시", "230": "광양시", "710": "담양군", "720": "곡성군", "730": "구례군", "770": "고흥군", "780": "보성군", "800": "화순군", "810": "장흥군", "820": "강진군", "830": "해남군", "840": "영암군", "860": "무안군", "870": "함평군", "880": "영광군", "890": "장성군", "900": "완도군", "910": "진도군" } }, "47": { name: "경북", sigungu: { "111": "포항시 남구", "113": "포항시 북구", "130": "경주시", "150": "김천시", "170": "안동시", "190": "구미시", "210": "영주시", "230": "영천시", "250": "상주시", "280": "문경시", "290": "경산시", "720": "군위군", "730": "의성군", "750": "청송군", "760": "영양군", "770": "영덕군", "820": "청도군", "830": "고령군", "840": "성주군", "850": "칠곡군", "900": "예천군", "920": "봉화군", "930": "울진군", "940": "울릉군" } }, "48": { name: "경남", sigungu: { "121": "창원시 의창구", "123": "창원시 성산구", "125": "창원시 마산합포구", "127": "창원시 마산회원구", "129": "창원시 진해구", "170": "진주시", "220": "통영시", "240": "사천시", "250": "김해시", "270": "밀양시", "310": "거제시", "330": "양산시", "720": "의령군", "730": "함안군", "740": "창녕군", "820": "고성군", "840": "남해군", "850": "하동군", "860": "산청군", "870": "함양군", "880": "거창군", "890": "합천군" } }, "50": { name: "제주특별자치도", sigungu: { "110": "제주시", "130": "서귀포시" } } };
 const lhPhoneNumbers = { "서울": "02-3416-3600", "경기남부": "031-250-8380", "부산울산": "051-460-5401", "대구경북": "053-603-2640", "광주전남": "062-360-3114", "대전충남": "042-470-0117", "강원": "033-258-4400", "경남": "055-210-8680", "전북": "063-230-6100", "제주": "064-720-1000", "충북": "1600-1004 (통합 콜센터)" };
 
@@ -175,37 +178,18 @@ function closeModal() {
     modalWrapper.style.display = 'none';
 }
 
-// closeListPanel 함수 정의 (매물 리스트 패널 닫기)
-function closeListPanel() {
-    listPanel.style.display = 'none';
-    // 매물 리스트가 닫힐 때 지도 크기 조절 (선택 사항)
-    if (map) { // 맵 객체가 초기화되었는지 확인
-        map.relayout();
-    }
-}
-
-
 window.onload = function() {
+    // 변수 선언을 window.onload 내로 이동
+    const closeModalBtn = document.getElementById('close-modal-btn');  // 여기로 이동
     setupRegionSearch();
     initializeMapAndLocation();
 
-    closeModalBtn.addEventListener('click', closeModal);
+    closeModalBtn.addEventListener('click', closeModal);  // 이제 사용 가능
     modalWrapper.addEventListener('click', (e) => {
         if (e.target === modalWrapper) {
             closeModal();
         }
     });
-
-    // 새로 추가된 매물 리스트 닫기 버튼 이벤트 리스너
-    if (closeListPanelBtn) { // 버튼이 HTML에 존재하는지 확인
-        closeListPanelBtn.addEventListener('click', closeListPanel);
-    }
-
-
-    // 페이지 로드 시 매물 리스트 패널 숨기기 (기존대로 유지)
-    listPanel.style.display = 'none';
-    // 상세 검색 패널도 초기에는 숨김 (기존대로 유지)
-    advancedFilterPanel.style.display = 'none';
 };
 
 
@@ -249,39 +233,42 @@ function drawMap() {
 }
 
 function displayLocationInfo(lat, lng) {
-    // Correctly reference the new elements for address and coordinates
-    const infoAddrEl = document.getElementById('info-addr');
-    const infoCoordsEl = document.getElementById('info-coords');
-
-    infoAddrEl.innerText = "확인 중...";
-    infoCoordsEl.innerText = "확인 중...";
-
+    document.getElementById('info-lat').innerText = lat.toFixed(6);
+    document.getElementById('info-lng').innerText = lng.toFixed(6);
+    document.getElementById('info-addr').innerText = "확인 중...";
+    document.getElementById('info-code').innerText = "확인 중...";
     geocoder.coord2RegionCode(lng, lat, (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
             const bjdInfo = result.find(r => r.region_type === 'B');
             if (bjdInfo) {
-                infoAddrEl.innerText = bjdInfo.address_name;
-                infoCoordsEl.innerText = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                document.getElementById('info-addr').innerText = bjdInfo.address_name;
                 const sidoCode = bjdInfo.code.substring(0, 2);
                 const sigunguCode = bjdInfo.code.substring(2, 5);
                 sidoSelect.value = sidoCode;
                 updateSigunguSelect(sidoCode);
                 sigunguSelect.value = sigunguCode;
+                updateBjdCode();
             } else {
-                infoAddrEl.innerText = "법정동 정보 없음";
-                infoCoordsEl.innerText = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                document.getElementById('info-addr').innerText = "법정동 정보 없음";
+                document.getElementById('info-code').innerText = "확인 불가";
             }
         } else {
-            infoAddrEl.innerText = "위치 정보 확인 실패";
-            infoCoordsEl.innerText = "위치 정보 확인 실패";
+            document.getElementById('info-addr').innerText = "위치 정보 확인 실패";
+            document.getElementById('info-code').innerText = "확인 불가";
         }
     });
 }
 
+function updateBjdCode() {
+    const sidoCode = sidoSelect.value;
+    const sigunguCode = sigunguSelect.value;
+    document.getElementById('info-code').innerText = sidoCode && sigunguCode ? `${sidoCode}${sigunguCode}` : "코드 없음";
+}
 
 function setupRegionSearch() {
     const searchBtn = document.getElementById('search-btn');
     const toggleAdvancedBtn = document.getElementById('toggle-advanced-search-btn');
+    const advancedFilterPanel = document.getElementById('advanced-filter-panel');
     const applyFilterBtn = document.getElementById('apply-filter-btn');
     const resetFilterBtn = document.getElementById('reset-filter-btn');
     const loadingAnimation = document.getElementById('loading-animation');
@@ -297,8 +284,8 @@ function setupRegionSearch() {
         option.innerText = regionData[code].name;
         sidoSelect.appendChild(option);
     }
-    sidoSelect.addEventListener('change', () => { updateSigunguSelect(sidoSelect.value); });
-    sigunguSelect.addEventListener('change', () => {});
+    sidoSelect.addEventListener('change', () => { updateSigunguSelect(sidoSelect.value); updateBjdCode(); });
+    sigunguSelect.addEventListener('change', updateBjdCode);
 
     toggleAdvancedBtn.addEventListener('click', () => {
         const isVisible = advancedFilterPanel.style.display === 'flex';
@@ -306,25 +293,21 @@ function setupRegionSearch() {
     });
 
     searchBtn.addEventListener('click', () => {
+        updateBjdCode();
         loadingAnimation.style.display = 'block';
         listContent.style.display = 'none';
-        listPanel.style.display = 'flex'; // Display the list panel
-
-        const numOfRows = document.getElementById('num-of-rows-select').value;
-        const sidoCode = sidoSelect.value;
-        const signguCode = sigunguSelect.value;
-
-        fetch(`/api/housing?brtcCode=${sidoCode}&signguCode=${signguCode}&numOfRows=${numOfRows}`).then(response => response.json()).then(data => {
-            currentHousingList = data.hsmpList || [];
-            clearMarkers();
-            displayHousingOnMap(currentHousingList);
-        }).catch(error => console.error('API 호출 중 오류:', error)).finally(() => {
-            loadingAnimation.style.display = 'none';
-            listContent.style.display = 'block';
-            if (map) { // Recalculate map size after list panel appears
-                map.relayout();
-            }
-        });
+        fetch(`/api/housing?brtcCode=${sidoSelect.value}&signguCode=${sigunguSelect.value}&numOfRows=50`)
+            .then(response => response.json())
+            .then(data => {
+                currentHousingList = data.hsmpList || [];
+                clearMarkers();
+                displayHousingOnMap(currentHousingList);
+            })
+            .catch(error => console.error('API 호출 중 오류:', error))
+            .finally(() => {
+                loadingAnimation.style.display = 'none';
+                listContent.style.display = 'block';
+            });
     });
 
     areaPresetButtons.forEach(button => {
@@ -412,10 +395,6 @@ function updateSigunguSelect(sidoCode) {
         option.innerText = sigunguList[code];
         sigunguSelect.appendChild(option);
     }
-    // 시/군/구 선택 시 자동으로 첫 번째 옵션 선택 (선택지가 없으면 기본 상태 유지)
-    if (sigunguSelect.options.length > 0) {
-        sigunguSelect.value = sigunguSelect.options[0].value;
-    }
 }
 
 function clearMarkers() {
@@ -430,155 +409,139 @@ function clearMarkers() {
 }
 
 // 매물 리스트 + 지도 + 찜버튼 추가 렌더링
+// 기존의 displayHousingOnMap 함수 내부 중 찜하기 버튼 관련 부분 (수정 포함)
 async function displayHousingOnMap(housingList) {
     const propertyList = document.getElementById('property-list');
     propertyList.innerHTML = '';  // 기존 내용 삭제
 
     if (!housingList || housingList.length === 0) {
-        propertyList.innerHTML = '<li style="text-align: center; padding: 20px; color: #555;">검색 결과가 없습니다.</li>';
+        propertyList.innerHTML = '<li>검색 결과가 없습니다.</li>';
         return;
     }
 
-    // 주소 검색을 위한 Promises 배열 생성
-    const geocodePromises = housingList.map(item => {
-        return new Promise((resolve) => {
-            // item.rnAdres가 없을 경우 처리 (필요시 item.rnAdres로 변경)
-            if (!item.rnAdres) {
-                console.warn("rnAdres 값이 없어 지오코딩을 건너뜁니다:", item);
-                resolve(null); // 주소 없으면 null 반환
-                return;
-            }
+    for (const item of housingList) {
+        const geocodeResult = await new Promise((resolve) => {
             geocoder.addressSearch(item.rnAdres, (result, status) => {
-                if (status === kakao.maps.services.Status.OK && result.length > 0) {
-                    // Use `result[0].address.address_name` as pnu for consistent ID
-                    resolve({ ...item, coords: new kakao.maps.LatLng(result[0].y, result[0].x), pnu: result[0].address.address_name });
+                if (status === kakao.maps.services.Status.OK) {
+                    resolve({ ...item, coords: new kakao.maps.LatLng(result[0].y, result[0].x) });
                 } else {
-                    console.warn(`주소 검색 실패: ${item.rnAdres}, 상태: ${status}`);
-                    resolve(null); // 검색 실패시 null 반환
+                    resolve(null);
                 }
             });
         });
-    });
 
-    // 모든 주소 검색이 완료될 때까지 기다림
-    const geocodedResults = await Promise.all(geocodePromises);
-
-    for (const geocodeResult of geocodedResults) {
         if (geocodeResult) {
             const { coords, ...itemData } = geocodeResult;
-            let marker = null;
-            let infowindow = null;
-
-            if (coords) { // Only create marker if coordinates are available
-                marker = new kakao.maps.Marker({ map: map, position: coords, title: itemData.hsmpNm });
-                const iwContent = `<div style="padding:5px;width:260px;"><strong>${itemData.hsmpNm}</strong><br><small>${itemData.rnAdres}</small></div>`;
-                infowindow = new kakao.maps.InfoWindow({ content: iwContent, removable: true });
-                markers.push(marker);
-            }
+            const marker = new kakao.maps.Marker({ map: map, position: coords, title: itemData.hsmpNm });
+            const iwContent = `<div style="padding:5px;width:260px;"><strong>${itemData.hsmpNm}</strong><br><small>${itemData.rnAdres}</small></div>`;
+            const infowindow = new kakao.maps.InfoWindow({ content: iwContent, removable: true });
+            markers.push(marker);
 
             const listItem = document.createElement('li');
             listItem.className = 'property-item';
-            // Use itemData.pnu as ID and data-pnu. Ensure itemData.pnu is robust.
-            listItem.id = `property-${itemData.pnu}`;
-            listItem.dataset.pnu = itemData.pnu;
+            listItem.id = `property-${itemData.hsmpSn}`;
+            listItem.dataset.pnu = itemData.hsmpSn;
 
-
-            // dataset for extra data (unchanged)
+            // 여기서 추가 데이터를 dataset으로 저장
             listItem.dataset.hsmpSn = itemData.hsmpSn;
             listItem.dataset.brtcCode = itemData.brtcCode;
             listItem.dataset.signguCode = itemData.signguCode;
             listItem.dataset.brtcNm = itemData.brtcNm;
             listItem.dataset.signguNm = itemData.signguNm;
-            listItem.dataset.insttNm = itemData.insttNm;
-            listItem.dataset.hsmpNm = itemData.hsmpNm;
-            listItem.dataset.rnAdres = itemData.rnAdres;
-            listItem.dataset.competDe = itemData.competDe;
-            listItem.dataset.hshldCo = itemData.hshldCo;
-            listItem.dataset.suplyTyNm = itemData.suplyTyNm;
-            listItem.dataset.styleNm = itemData.styleNm;
-            listItem.dataset.suplyPrvuseAr = itemData.suplyPrvuseAr;
-            listItem.dataset.suplyCmnuseAr = itemData.suplyCmnuseAr;
-            listItem.dataset.houseTyNm = itemData.houseTyNm;
-            listItem.dataset.heatMthdDetailNm = itemData.heatMthdDetailNm;
-            listItem.dataset.buldStleNm = itemData.buldStleNm;
-            listItem.dataset.elvtrInstlAtNm = itemData.elvtrInstlAtNm;
-            listItem.dataset.parkngCo = itemData.parkngCo;
-            listItem.dataset.bassRentGtn = itemData.bassRentGtn;
-            listItem.dataset.bassMtRntchrg = itemData.bassMtRntchrg;
-            listItem.dataset.bassCnvrsGtnLmt = itemData.bassCnvrsGtnLmt;
-            listItem.dataset.msg = itemData.msg;
+            listItem.dataset.insttNm = itemData.insttNm;  // 기관명 추가
+            listItem.dataset.hsmpNm = itemData.hsmpNm;    // 단지명 추가
+            listItem.dataset.rnAdres = itemData.rnAdres;  // 도로명 주소 추가
+            listItem.dataset.competDe = itemData.competDe; // 준공일자 추가
+            listItem.dataset.hshldCo = itemData.hshldCo;    // 세대수 추가
+            listItem.dataset.suplyTyNm = itemData.suplyTyNm; // 공급유형명 추가
+            listItem.dataset.styleNm = itemData.styleNm;    // 형명 추가
+            listItem.dataset.suplyPrvuseAr = itemData.suplyPrvuseAr; // 공급전용면적 추가
+            listItem.dataset.suplyCmnuseAr = itemData.suplyCmnuseAr; // 공급공용면적 추가
+            listItem.dataset.houseTyNm = itemData.houseTyNm; // 주택유형명 추가
+            listItem.dataset.heatMthdDetailNm = itemData.heatMthdDetailNm; // 난방방식 추가
+            listItem.dataset.buldStleNm = itemData.buldStleNm; // 건물형태 추가
+            listItem.dataset.elvtrInstlAtNm = itemData.elvtrInstlAtNm; // 승강기 설치여부 추가
+            listItem.dataset.parkngCo = itemData.parkngCo;    // 주차수 추가
+            listItem.dataset.bassRentGtn = itemData.bassRentGtn; // 기본임대보증금 추가
+            listItem.dataset.bassMtRntchrg = itemData.bassMtRntchrg; // 기본월임대료 추가
+            listItem.dataset.msg = itemData.msg;  // 메시지 추가
 
             const formattedDeposit = Number(itemData.bassRentGtn).toLocaleString('ko-KR');
             const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
 
             listItem.innerHTML = `
-                <strong>${itemData.hsmpNm}</strong>
-                <p>단지식별자: ${itemData.hsmpSn}</p>
-                <p>주소: ${itemData.rnAdres}</p>
-                <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
-                <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
-                <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
-                <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
-                <button id="favorite-btn-${itemData.pnu}" onclick="addToFavorites('${itemData.pnu}', event)" disabled>찜하기</button>
-            `;
+                  <div class="property-info">
+                    <strong>${itemData.hsmpNm}</strong>
+                    <p>단지식별자: ${itemData.hsmpSn}</p>
+                    <p>주소: ${itemData.rnAdres}</p>
+                    <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
+                    <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
+                    <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
+                    <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
+                  </div>
+                  <button id="favorite-btn-${itemData.hsmpSn}" onclick="addToFavorites(${itemData.hsmpSn}, event)" disabled>찜하기</button>
+                `;
 
             propertyList.appendChild(listItem);
 
-            // Event listeners
-            if (coords && marker && infowindow) { // Attach map-related events only if marker exists
-                const openInfoWindow = () => {
-                    if (activeInfoWindow) { activeInfoWindow.close(); }
-                    infowindow.open(map, marker);
-                    activeInfoWindow = infowindow;
-                };
+            const openInfoWindow = () => {
+                if (activeInfoWindow) { activeInfoWindow.close(); }
+                infowindow.open(map, marker);
+                activeInfoWindow = infowindow;
+            };
 
-                listItem.addEventListener('click', () => {
-                    openInfoWindow();
-                    map.panTo(coords);
-                    document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
-                    listItem.classList.add('active-item');
-                    // Pass itemData directly
-                    populateAndShowModal(itemData); // 여기를 itemData로 수정했음
-                });
+            listItem.addEventListener('click', () => {
+                openInfoWindow();
+                map.panTo(coords);
+                document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
+                listItem.classList.add('active-item');
+                populateAndShowModal(itemData.pnu);
+            });
 
-                kakao.maps.event.addListener(marker, 'click', () => {
-                    openInfoWindow();
-                    listItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
-                    listItem.classList.add('active-item');
-                    // Pass itemData directly
-                    populateAndShowModal(itemData); // 여기를 itemData로 수정했음
-                });
-            } else {
-                // If no marker (geocoding failed), still allow modal to open from list item click
-                listItem.addEventListener('click', () => {
-                    document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
-                    listItem.classList.add('active-item');
-                    // Pass itemData directly
-                    populateAndShowModal(itemData); // 여기를 itemData로 수정했음
-                });
-            }
+            kakao.maps.event.addListener(marker, 'click', () => {
+                openInfoWindow();
+                listItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.querySelectorAll('.property-item').forEach(li => li.classList.remove('active-item'));
+                listItem.classList.add('active-item');
+                populateAndShowModal(itemData.pnu);
+            });
         }
-        // Small delay if needed for large number of items (consider if it slows down too much)
-        // await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise(resolve => setTimeout(resolve, 50));
     }
 
     console.log("매물 정보 표시 완료.");
+
+    // 매물 다 그린 후 찜 상태 반영
     checkLoginStatus();
 }
 
-// populateAndShowModal function now directly uses the 'data' object passed to it.
-function populateAndShowModal(data) { // Parameter name is 'data' (represents the itemData passed)
-    // Removed the currentHousingList.find() call and the associated 'alert' and 'return'
-    // as 'data' is now directly the itemData object.
+
+
+
+closeModalBtn.addEventListener('click', () => {
+    modalWrapper.style.display = 'none';
+});
+modalWrapper.addEventListener('click', (e) => {
+    if (e.target === modalWrapper) {
+        modalWrapper.style.display = 'none';
+    }
+});
+
+function populateAndShowModal(pnu) {
+    const data = currentHousingList.find(item => item.pnu === pnu);
+    data.hsmpNm = undefined;
+    if (!data) {
+        alert("상세 정보를 찾는 데 실패했습니다.");
+        return;
+    }
 
     const checkValue = (value) => {
-        if (value === undefined || value === null || (typeof value === 'object' && Object.keys(value).length === 0) || value === '') return '정보없음';
+        if (!value || typeof value === 'object') return '정보없음';
         return value;
     };
     const formatNumber = (value) => {
         const num = Number(value);
-        if (isNaN(num)) return '정보없음';
+        if (!num) return '정보없음';
         return num.toLocaleString('ko-KR');
     };
     const findPhoneNumber = (insttNm) => {
@@ -595,9 +558,9 @@ function populateAndShowModal(data) { // Parameter name is 'data' (represents th
 
     modalBody.innerHTML = `
                 <table>
-                    <tr><th>단지식별자</th><td>${checkValue(data.hsmpSn)}</td></tr>
-                    <tr><th>단지명</th><td>${checkValue(data.hsmpNm)}</td></tr>
-                    <tr><th>주소</th><td>${checkValue(data.rnAdres)}</td></tr>
+                    <tr><th>단지식별자</th><td>${data.hsmpSn}</td></tr>
+                    <tr><th>단지명</th><td>${data.hsmpNm}</td></tr>
+                    <tr><th>주소</th><td>${data.rnAdres}</td></tr>
                     <tr><th>준공일자</th><td>${checkValue(data.competDe)}</td></tr>
                     <tr><th>세대수</th><td>${checkValue(data.hshldCo)}</td></tr>
                     <tr><th>공급유형</th><td>${checkValue(data.suplyTyNm)}</td></tr>

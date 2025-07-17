@@ -88,7 +88,9 @@ public class PolicyScrapServiceImpl implements PolicyScrapService {
     }
 
     @Override
+    @Transactional
     public void cancelScrap(String policyId, User user) {
-        policyScrapRepository.deleteByUserAndPolicyId(user, String.valueOf(policyId));
+        policyScrapRepository.deleteByUserAndPolicyId(user, policyId);
     }
+
 }

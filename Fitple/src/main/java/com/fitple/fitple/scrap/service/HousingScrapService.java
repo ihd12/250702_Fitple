@@ -4,6 +4,7 @@ import com.fitple.fitple.scrap.domain.HousingScrap;
 import com.fitple.fitple.scrap.dto.HousingScrapDTO;
 import com.fitple.fitple.scrap.repository.HousingScrapRepository;
 import com.fitple.fitple.base.user.domain.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,11 +104,9 @@ public class HousingScrapService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void cancelScrap(Long housingInfoId, User user) {
-        HousingScrap existing = housingScrapRepository.findByUserIdAndHousingInfoId(user.getId(), housingInfoId);
-        if (existing != null) {
-            existing.setIsScrapped(false);              // 스크랩 취소 (비활성화)
-            housingScrapRepository.save(existing);      // DB에 반영
-        }
+        housingScrapRepository.deleteByUserIdAndHousingInfoId(user.getId(), housingInfoId);
     }
+
 }
