@@ -33,16 +33,47 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String registerForm() {
+    public String registerForm(){
+
         return "user/register";
     }
+//
+//    @PostMapping("/register")
+//    public String register(UserDTO dto) {
+//        userService.register(dto);
+//        return "redirect:/user/login";  // 경로 일치
+//    }
 
     @PostMapping("/register")
-    public String register(UserDTO dto) {
-        userService.register(dto);
-        return "redirect:/user/login";  // 경로 일치
+    public String register(@ModelAttribute UserDTO dto, RedirectAttributes redirectAttributes) {
+
+        if (dto.getEmail() == null || dto.getEmail().isBlank() ||
+                dto.getNickname() == null || dto.getNickname().isBlank() ||
+                dto.getPassword() == null || dto.getPassword().isBlank() ||
+                dto.getConfirmPassword() == null || dto.getConfirmPassword().isBlank()) {
+
+            redirectAttributes.addFlashAttribute("error", "모든 필수 항목을 입력해주세요.");
+            return "redirect:/user/register";
+        }
+
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/user/register";
+        }
+
+        try {
+            userService.register(dto);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/user/register";
+        }
+        redirectAttributes.addAttribute("success", true);
+        return "redirect:/user/login";
     }
-//    @GetMapping("/{id}")
+
+
+
+    //    @GetMapping("/{id}")
 //    public String getUser(@PathVariable Long id, Model model, PageRequestDTO pageRequestDTO) {
 //        model.addAttribute("user", userService.getUser(id));
 //        return "user/mypage";
