@@ -16,17 +16,34 @@ async function checkLoginStatus() {
 
     try {
         const res = await fetch('/scrap/list');
-        const scrappedIds = await res.json();
+        const scrappedData = await res.json();
+        const scrappedIds = scrappedData.map(item => String(item.housingInfoId));
 
         buttons.forEach(button => {
-            const propertyId = button.closest('li.property-item').getAttribute('data-pnu');
+            const listItem = button.closest('li.property-item');
+            const propertyId = String(listItem.getAttribute('data-pnu'));
 
             button.disabled = false;
+
+            // 기존 뱃지가 있다면 제거 (중복 방지)
+            const existingBadge = listItem.querySelector('.scrap-badge');
+            if (existingBadge) {
+                existingBadge.remove();
+            }
 
             if (scrappedIds.includes(propertyId)) {
                 button.innerText = '찜 완료';
                 button.classList.add('scrapped');
-                button.disabled = true; // 이미 찜한 주거지 버튼은 비활성화
+                button.disabled = true;
+
+                // "★ 저장" 뱃지 동적으로 추가
+                const infoBox = listItem.querySelector('.property-info');
+                if (infoBox) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-warning text-dark scrap-badge';
+                    badge.innerText = '★ 저장';
+                    infoBox.appendChild(badge);
+                }
             } else {
                 button.innerText = '찜하기';
                 button.classList.remove('scrapped');
@@ -423,7 +440,7 @@ async function displayHousingOnMap(housingList) {
             const listItem = document.createElement('li');
             listItem.className = 'property-item';
             listItem.id = `property-${itemData.hsmpSn}`;
-            listItem.dataset.pnu = itemData.pnu;
+            listItem.dataset.pnu = itemData.hsmpSn;
 
             // 여기서 추가 데이터를 dataset으로 저장
             listItem.dataset.hsmpSn = itemData.hsmpSn;
@@ -453,15 +470,17 @@ async function displayHousingOnMap(housingList) {
             const formattedRent = Number(itemData.bassMtRntchrg).toLocaleString('ko-KR');
 
             listItem.innerHTML = `
-                <strong>${itemData.hsmpNm}</strong>
-                <p>단지식별자: ${itemData.hsmpSn}</p>
-                <p>주소: ${itemData.rnAdres}</p>
-                <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
-                <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
-                <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
-                <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
-                <button id="favorite-btn-${itemData.hsmpSn}" onclick="addToFavorites(${itemData.hsmpSn}, event)" disabled>찜하기</button>
-            `;
+                  <div class="property-info">
+                    <strong>${itemData.hsmpNm}</strong>
+                    <p>단지식별자: ${itemData.hsmpSn}</p>
+                    <p>주소: ${itemData.rnAdres}</p>
+                    <p>유형: ${itemData.suplyTyNm || '정보없음'} / ${typeof itemData.houseTyNm === 'object' ? '정보없음' : itemData.houseTyNm}</p>
+                    <p>전용면적: ${itemData.suplyPrvuseAr} ㎡</p>
+                    <p class="price">보증금: ${formattedDeposit}원 / 월세: ${formattedRent}원</p>
+                    <p>기관: <span class="instt-button">${itemData.insttNm}</span></p>
+                  </div>
+                  <button id="favorite-btn-${itemData.hsmpSn}" onclick="addToFavorites(${itemData.hsmpSn}, event)" disabled>찜하기</button>
+                `;
 
             propertyList.appendChild(listItem);
 
