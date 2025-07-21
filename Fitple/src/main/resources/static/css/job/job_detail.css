@@ -1,0 +1,38 @@
+body {
+    /*padding-top: 80px; !* header 높이에 맞춰 조정. 70~90px 사이가 일반적 *!*/
+}
+
+.section-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #0d6efd;
+    margin-top: 1.5rem;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 0.5rem;
+}
+
+.info-row {
+    display: flex;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.info-label {
+    width: 30%;
+    font-weight: 500;
+    color: #333;
+}
+
+.info-value {
+    width: 70%;
+}
+
+.info-value p {
+    margin: 0;
+}
+
+.action-buttons {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+}

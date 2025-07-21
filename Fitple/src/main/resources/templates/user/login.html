@@ -2,25 +2,74 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
+    <!-- Vendor CSS Files -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/user/login.css" rel="stylesheet">
     <title>로그인</title>
 </head>
+
 <body>
+<div th:replace="fragments/header :: header"></div>
+
+<section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                <h2><span class="accent">핏플에 오신 것을 환영합니다.</span></h2>
+                <p>간단한 가입으로<br>
+                    맞춤형 일자리와 주거 정보를 추천받을 수 있어요.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/mypageback.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="login-container" >
 <h2>로그인</h2>
-<form th:action="@{/user/login}" method="post">
-    <div>
-        <label>이메일:</label>
-        <input type="text" name="email" required />
+    <form th:action="@{/user/login}" method="post">
+        <div class="mb-3">
+            <label class="form-label">이메일</label>
+            <input type="text" name="email" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">비밀번호</label>
+            <input type="password" name="password" class="form-control" required />
+        </div>
+        <div>
+            <button type="submit" class="btn btn-login" id="loginBtn">로그인</button>
+        </div>
+        <div th:if="${param.error}">
+            <p style="color:red;">이메일 또는 비밀번호가 잘못되었습니다.</p>
+        </div>
+    </form>
+    <div class="login-footer">
+        <a href="/user/register">회원가입</a>
     </div>
-    <div>
-        <label>비밀번호:</label>
-        <input type="password" name="password" required />
-    </div>
-    <div>
-        <button type="submit">로그인</button>
-    </div>
-    <div th:if="${param.error}">
-        <p style="color:red;">이메일 또는 비밀번호가 잘못되었습니다.</p>
-    </div>
-</form>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
+
 </body>
 </html>

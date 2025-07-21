@@ -3,122 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <title>청년정책 목록</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap / Vendor CSS -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link href="/css/main.css" rel="stylesheet">
+
   <style>
-    .pagination ul {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      gap: 5px;
-      margin-top: 20px;
+    .policy-card {
+      border: 2px solid #007bff !important;
+      border-radius: 10px;
+      transition: box-shadow 0.2s ease;
     }
-    .pagination li a {
-      display: block;
-      padding: 6px 12px;
-      border: 1px solid #ddd;
-      text-decoration: none;
-      color: #333;
-    }
-    .pagination li a.active {
-      background-color: #007bff;
-      color: white;
-      border-color: #007bff;
+
+    .policy-card:hover {
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
     }
   </style>
 </head>
 <body>
 
-<h1>청년정책 목록 (총 [[${totalCount}]] 건)</h1>
+<!-- 헤더 -->
+<div th:replace="fragments/header :: header"></div>
 
-<!-- 지역 필터링 -->
-<form th:action="@{/policy/list}" method="get">
-  <label><input type="checkbox" name="zipCds" value="11000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '11000')}"> 서울특별시</label><br>
-  <label><input type="checkbox" name="zipCds" value="26000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '26000')}"> 부산광역시</label><br>
-  <label><input type="checkbox" name="zipCds" value="27000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '27000')}"> 대구광역시</label><br>
-  <label><input type="checkbox" name="zipCds" value="28000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '28000')}"> 인천광역시</label><br>
-  <label><input type="checkbox" name="zipCds" value="29000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '29000')}"> 광주광역시</label><br>
-  <label><input type="checkbox" name="zipCds" value="30000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '30000')}"> 대전광역시</label><br>
-  <label><input type="checkbox" name="zipCds" value="31000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '31000')}"> 울산광역시</label><br>
-  <label><input type="checkbox" name="zipCds" value="36000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '36000')}"> 세종특별자치시</label><br>
-  <label><input type="checkbox" name="zipCds" value="41000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '41000')}"> 경기도</label><br>
-  <label><input type="checkbox" name="zipCds" value="42000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '42000')}"> 강원특별자치도</label><br>
-  <label><input type="checkbox" name="zipCds" value="43000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '43000')}"> 충청북도</label><br>
-  <label><input type="checkbox" name="zipCds" value="44000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '44000')}"> 충청남도</label><br>
-  <label><input type="checkbox" name="zipCds" value="45000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '45000')}"> 전라북도</label><br>
-  <label><input type="checkbox" name="zipCds" value="46000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '46000')}"> 전라남도</label><br>
-  <label><input type="checkbox" name="zipCds" value="47000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '47000')}"> 경상북도</label><br>
-  <label><input type="checkbox" name="zipCds" value="48000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '48000')}"> 경상남도</label><br>
-  <label><input type="checkbox" name="zipCds" value="50000"
-                th:checked="${zipCds != null and #arrays.contains(zipCds, '50000')}"> 제주특별자치도</label><br>
+<section id="hero" class="hero section accent-background">
+  <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-5 justify-content-between">
+      <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+        <h2><span>몰라서 못 받는 지원,</span><span class="accent"><br>이젠 없도록.</span></h2>
+        <p>청년을 위한 다양한 공공지원 제도를 한곳에 모았습니다.<br>
+          복지, 주거, 취업, 교육까지 분야별로 쉽게 확인하고,<br>
+          당신에게 꼭 맞는 혜택을 놓치지 마세요.</p>
+      </div>
+      <div class="col-lg-5 order-1 order-lg-2">
+        <img src="/img/policyback.png" class="img-fluid" alt="">
+      </div>
+    </div>
+  </div>
+</section>
 
-  <input type="hidden" name="page" value="1" />
-  <button type="submit">검색</button>
-</form>
+<!-- 본문 -->
+<div class="container mt-5">
 
-<br>
+  <h1 class="mb-4 fw-bold text-success">청년정책 리스트</h1>
 
-<table border="1" cellpadding="10" cellspacing="0">
-  <thead>
-  <tr>
-    <th>정책번호</th>
-    <th>정책명</th>
-    <th>키워드</th>
-    <th>설명</th>
-    <th>지원내용</th>
-    <th>기관명</th>
-    <th>신청기간</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="policy : ${policies}">
-    <td th:text="${policy.plcyNo}">정책번호</td>
-    <td>
-      <a th:href="@{/policy/detail(plcyNo=${policy.plcyNo}, page=${responseDTO.page}, keyword=${keyword}, zipCds=${zipCds})}"
-         th:text="${policy.plcyNm}">정책명</a>
-    </td>
-    <td th:text="${policy.plcyKywdNm}">키워드</td>
-    <td th:text="${policy.plcyExplnCn}">설명</td>
-    <td th:text="${policy.plcySprtCn}">지원내용</td>
-    <td th:text="${policy.sprvsnInstCdNm}">기관명</td>
-    <td th:text="${policy.aplyYmd}">신청기간</td>
-  </tr>
-  </tbody>
-</table>
+  <!-- 필터 폼 -->
+  <form th:action="@{/policy/list}" method="get" class="mb-4">
 
-<!-- ✅ 페이지네이션 -->
-<div class="pagination">
-  <ul>
-    <li th:if="${responseDTO.prev}">
-      <a th:href="@{'/policy/list?page=' + ${responseDTO.start - 1} + ${zipCdsParam}}">&laquo;</a>
-    </li>
-    <li th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-      <a th:href="@{'/policy/list?page=' + ${i} + ${zipCdsParam}}"
-         th:text="${i}"
-         th:classappend="${responseDTO.page == i} ? 'active' : ''">1</a>
-    </li>
-    <li th:if="${responseDTO.next}">
-      <a th:href="@{'/policy/list?page=' + ${responseDTO.end + 1} + ${zipCdsParam}}">&raquo;</a>
-    </li>
-  </ul>
+    <!-- 지역 필터 -->
+    <fieldset class="border rounded p-3 mb-3">
+      <legend class="float-none w-auto px-2 text-success">지역 필터</legend>
+      <div class="row g-2">
+        <div class="col-12 d-flex flex-wrap gap-3">
+          <th:block th:each="entry : ${zipCodeMap}">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="zipCds"
+                     th:value="${entry.key}"
+                     th:checked="${zipCds != null and #arrays.contains(zipCds, entry.key)}"
+                     th:id="'chk__' + ${entry.key}" />
+              <label class="form-check-label"
+                     th:for="'chk__' + ${entry.key}"
+                     th:text="${entry.value}">지역</label>
+            </div>
+          </th:block>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- 검색 버튼 -->
+    <div class="col-auto mt-2">
+      <input type="hidden" name="size" th:value="${param.size != null ? param.size : 10}" />
+      <input type="hidden" name="page" value="1" />
+      <button type="submit" class="btn btn-success">검색</button>
+    </div>
+
+  </form>
+
+  <!-- 카드형 정책 리스트 -->
+  <div class="row g-4">
+    <div class="col-md-4" th:each="policy : ${policies}">
+      <div class="card policy-card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a th:href="@{'/policy/detail?plcyNo=' + ${policy.plcyNo}
+                          + '&page=' + ${responseDTO.page}
+                          + ${zipCdsParam}}"
+               th:text="${policy.plcyNm}"
+               class="text-decoration-none text-dark">정책명</a>
+          </h5>
+          <div class="mt-2" th:if="${scrappedSet.contains(policy.plcyNo)}">
+            <span class="text-primary fw-bold">✔ 저장</span>
+          </div>
+          <p class="mb-1"><strong>키워드:</strong> <span th:text="${policy.plcyKywdNm}">키워드</span></p>
+          <p class="mb-1"><strong>설명:</strong> <span th:text="${policy.plcyExplnCn}">설명</span></p>
+          <p class="mb-1"><strong>기관:</strong> <span th:text="${policy.sprvsnInstCdNm}">기관</span></p>
+        </div>
+        <div class="card-footer bg-white border-0">
+          <small class="text-muted" th:text="'신청기간: ' + ${policy.aplyYmd}">신청기간</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 페이지네이션 -->
+  <div class="mt-4 text-center">
+    <nav>
+      <ul class="pagination justify-content-center">
+
+        <!-- 이전 버튼 -->
+        <li class="page-item" th:if="${responseDTO.prev}">
+          <a class="page-link"
+             th:href="@{'/policy/list?page=' + ${responseDTO.start - 1}
+                     + '&size=' + ${responseDTO.size}
+                     + ${zipCdsParam}}">&laquo; 이전</a>
+        </li>
+
+        <!-- 번호 버튼 -->
+        <li class="page-item"
+            th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}"
+            th:classappend="${responseDTO.page == i} ? 'active'">
+          <a class="page-link"
+             th:text="${i}"
+             th:href="@{'/policy/list?page=' + ${i}
+                     + '&size=' + ${responseDTO.size}
+                     + ${zipCdsParam}}">1</a>
+        </li>
+
+        <!-- 다음 버튼 -->
+        <li class="page-item" th:if="${responseDTO.next}">
+          <a class="page-link"
+             th:href="@{'/policy/list?page=' + ${responseDTO.end + 1}
+                     + '&size=' + ${responseDTO.size}
+                     + ${zipCdsParam}}">다음 &raquo;</a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+
 </div>
 
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
 
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
 
+<!-- Vendor JS -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+<script src="/js/main.js"></script>
 
 </body>
 </html>

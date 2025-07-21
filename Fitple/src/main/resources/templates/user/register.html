@@ -1,28 +1,99 @@
-<!-- src/main/resources/templates/register.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>회원가입</title>
+
+    <!-- Vendor CSS -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/user/register.css" rel="stylesheet">
 </head>
 <body>
-<h2>회원가입</h2>
-<form th:action="@{/user/register}" method="post">
-    <div>
-        <label>이메일:</label>
-        <input type="email" name="email" required />
+
+<div th:replace="fragments/header :: header"></div>
+
+<section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                <h2><span class="accent">핏플에 오신 것을 환영합니다.</span></h2>
+                <p>간단한 가입으로<br>
+                    맞춤형 일자리와 주거 정보를 추천받을 수 있어요.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/mypageback.png" class="img-fluid" alt="">
+            </div>
+        </div>
     </div>
-    <div>
-        <label>비밀번호:</label>
-        <input type="password" name="password" required />
+</section>
+
+<section style="min-height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #f9f9f9;">
+    <div class="register-container">
+        <h2>회원가입</h2>
+        <form th:action="@{/user/register}" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">이메일 <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="email" class="form-control" name="email" placeholder="example@email.Domain" required />
+                </div>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">닉네임</label>
+                <input type="text" class="form-control" name="nickname" placeholder="Nickname"/>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" name="password" required />
+            </div>
+
+            <div class="mb-3" >
+                <label class="form-label">비밀번호 확인</label>
+                <input type="password" class="form-control" name="confirmPassword" placeholder="입력하신 비밀번호와 동일하게 입력해주세요"/>
+                <div id="passwordError" class="error-message" style="color: red;"></div>
+            </div>
+
+            <button type="submit" class="btn btn-register" id="regiBtn">회원가입</button>
+            <div th:if="${param.success}" class="alert alert-success mt-3" role="alert">
+                회원가입이 완료되었습니다.
+            </div>
+            <div th:if="${error}" class="alert alert-danger mt-3" role="alert">
+                <span th:text="${error}">에러 메시지</span>
+            </div>
+
+
+        </form>
+
+        <div class="register-footer">
+            이미 계정이 있으신가요? <a href="/user/login" class="text-primary">로그인</a>
+        </div>
     </div>
-    <div>
-        <label>닉네임:</label>
-        <input type="text" name="nickname" required />
-    </div>
-    <div>
-        <button type="submit">가입하기</button>
-    </div>
-</form>
+</section>
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
+<script src="/js/user.js"></script>
+
 </body>
 </html>
+

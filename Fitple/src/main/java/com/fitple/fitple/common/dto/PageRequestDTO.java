@@ -8,6 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.List;
+
+
 @Data
 @Builder
 public class PageRequestDTO {
@@ -30,6 +33,9 @@ public class PageRequestDTO {
     // 지역 필터링용 법정시군구코드
     private String[] zipCds;
 
+    private List<String> keywords;
+
+
     public String getLink() {
         StringBuilder sb = new StringBuilder();
 
@@ -45,6 +51,8 @@ public class PageRequestDTO {
 
         return sb.toString();
     }
+
+
     public Pageable getPageable(String sortType) {
         return PageRequest.of(getPage()-1, getSize(), Sort.by(sortType).descending());
     }
@@ -60,4 +68,8 @@ public class PageRequestDTO {
     public int getSkip() {
         return (getPage() - 1) * getSize();
     }
+
+
+
+
 }

@@ -23,23 +23,22 @@ import java.util.List;
 public class JobController {
 
     private final JobService jobService;
-    private final JobScrapService jobScrapService; // ✅ 찜 서비스 추가
+    private final JobScrapService jobScrapService;
 
-    // 숫자 파라미터 바인딩 처리 (빈 값 허용)
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
     }
 
-    // 채용 전체 목록 조회 (JSON 응답)
+    // 채용 전체 목록 조회 (JSON 응답용)
     @GetMapping("/list")
     public List<JobListDTO> getJobList() {
         return jobService.getList();
     }
 
-    // 단건 상세 조회 (JSON 응답용)
-    @GetMapping("/{id}")
-    public JobDetailDTO getJobDetail(@PathVariable Long id) {
+    // 채용 상세 조회 (JSON 응답용)
+    @GetMapping("/detail/{id}")
+    public JobDetailDTO getJobDetail(@PathVariable("id") Long id) {
         return jobService.getDetail(id);
     }
 
@@ -59,23 +58,36 @@ public class JobController {
         return jobService.searchByKeyword(keyword);
     }
 
-    // 혼합 검색 + 페이징 (PageRequestDTO 활용)
+    // 혼합 검색 + 페이징
     @GetMapping("/search/advanced")
     public PageResponseDTO<JobListDTO> advancedSearch(PageRequestDTO requestDTO) {
         return jobService.advancedSearch(requestDTO);
     }
 
-    // 테스트용 리스트 페이지 (페이징 포함)
-    @GetMapping("/test")
-    public String jobTestPage(PageRequestDTO pageRequestDTO, Model model) {
+    // [변경] 채용 리스트 페이지: /job
+    @GetMapping
+    public String jobListPage(PageRequestDTO pageRequestDTO,
+                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                              Model model) {
+
+        // 채용 리스트 페이지에서는 무조건 12개씩 보여줌
+        pageRequestDTO.setSize(12);
+
         PageResponseDTO<JobListDTO> response = jobService.advancedSearch(pageRequestDTO);
         model.addAttribute("pageResponse", response);
-        return "job/job_test";
+
+        if (userDetails != null) {
+            List<Long> scrappedJobIds = jobScrapService.getScrappedJobIdsByUser(userDetails.getUser());
+            model.addAttribute("scrappedJobIds", scrappedJobIds);
+        }
+
+        return "job/job_list";
     }
 
-    // 상세 페이지 (job_test에서 진입) + 찜 여부 확인
-    @GetMapping("/test/{id}")
-    public String jobDetailTest(@PathVariable Long id,
+
+    // [변경] 채용 상세 페이지: /job/{id}
+    @GetMapping("/{id}")
+    public String jobDetailPage(@PathVariable Long id,
                                 @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
                                 @AuthenticationPrincipal CustomUserDetails userDetails,
                                 Model model) {
@@ -90,26 +102,6 @@ public class JobController {
         }
         model.addAttribute("isScrapped", isScrapped);
 
-        return "job/job_detail_test";
-    }
-
-    // 상세 페이지 (일반 상세 뷰) + 찜 여부 확인
-    @GetMapping("/detail/{id}")
-    public String jobDetail(@PathVariable("id") Long id,
-                            @ModelAttribute("requestDTO") PageRequestDTO pageRequestDTO,
-                            @AuthenticationPrincipal CustomUserDetails userDetails,
-                            Model model) {
-
-        JobDetailDTO dto = jobService.getDetail(id);
-        model.addAttribute("job", dto);
-        model.addAttribute("requestDTO", pageRequestDTO);
-
-        boolean isScrapped = false;
-        if (userDetails != null) {
-            isScrapped = jobScrapService.isScrapped(userDetails.getUser(), id);
-        }
-        model.addAttribute("isScrapped", isScrapped);
-
-        return "job/job_detail_test";
+        return "job/job_detail";
     }
 }

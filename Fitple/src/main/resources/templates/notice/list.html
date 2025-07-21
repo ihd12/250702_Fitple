@@ -3,69 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <title>공지사항</title>
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border-bottom: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #f0f0f0;
-    }
-    a {
-      text-decoration: none;
-      color: #007bff;
-    }
-    .search-box {
-      width: 300px;
-      margin: 0 auto 30px;
-      position: relative;
-    }
-    .search-box input[type="text"] {
-      width: 100%;
-      padding: 10px 40px 10px 15px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-    }
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-    .search-box .searchBtn {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #888;
-      font-size: 16px;
-      border: none;
-      background-color: white;
-    }
-  </style>
+  <!-- Vendor CSS Files -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="/css/main.css" rel="stylesheet">
+  <link href="/css/notice/list.css" rel="stylesheet">
+
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 
-<h2>📢 공지사항</h2>
-<!--로그인, 로그아웃, 회원가입, 글쓰기 권한 및 실행 확인용 임시 코드-->
-<a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/notice/register}">글쓰기</a>
-<a sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-<a sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
-<!--  -->
-<div class="search-box">
-  <form th:action="@{/notice/}" method="get" style="margin-bottom: 20px;">
-    <input type="text" name="keyword" placeholder="제목 및 내용으로 검색"
-           th:value="${param.keyword}" />
-    <button type="submit" class="searchBtn">🔍</button>
-  </form>
+<section id="hero" class="hero section accent-background">
+
+  <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-5 justify-content-between">
+      <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+        <h2><span class="accent">공지사항</span></h2>
+        <p>핏플의 소식과 안내를 전해드립니다.<br>
+          중요한 공지사항을 이곳에서 확인해주세요.</p>
+      </div>
+      <div class="col-lg-5 order-1 order-lg-2">
+        <img src="/img/noticeback.png" class="img-fluid" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--<h2>공지사항</h2>-->
+<!-- 상단 영역: 로그인/글쓰기 (왼쪽) + 검색창 (오른쪽) -->
+<div class="d-flex justify-content-between align-items-center mb-3" style="width: 90%; margin: 0 auto;">
+  <!-- 로그인/로그아웃/글쓰기 링크 -->
+  <div class="auth-links">
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/notice/register}" class="btn btn-sm btn-outline-primary me-2">글쓰기</a>
+<!--    <a sec:authorize="isAnonymous()" th:href="@{/user/login}" class="btn btn-sm btn-outline-secondary me-2">로그인</a>-->
+<!--    <a sec:authorize="isAuthenticated()" th:href="@{/user/logout}" class="btn btn-sm btn-outline-danger">로그아웃</a>-->
+  </div>
+
+  <!-- 검색창 -->
+  <div class="search-box">
+    <form th:action="@{/notice/}" method="get">
+      <input type="text" name="keyword" placeholder="제목 및 내용으로 검색"
+             th:value="${param.keyword}" />
+      <button type="submit" class="searchBtn">🔍</button>
+    </form>
+  </div>
 </div>
+
 <table>
   <thead>
   <tr>
     <th>No</th>
     <th>제목</th>
-    <th>작성자</th>
     <th>등록일</th>
     <th>조회수</th>
   </tr>
@@ -102,5 +98,18 @@
     </li>
   </ul>
 </div>
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
 </body>
 </html>

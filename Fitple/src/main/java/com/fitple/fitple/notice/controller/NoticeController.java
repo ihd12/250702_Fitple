@@ -35,4 +35,20 @@ public class NoticeController {
         return "notice/view";
     }
 
+    // 글쓰기 폼
+    @GetMapping("/write")
+    public String writeForm(Model model) {
+        model.addAttribute("notice", new NoticeDTO());
+        return "notice/register";
+    }
+
+    // 글 등록 처리
+    @PostMapping("/write")
+    public String writeNotice(NoticeDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
+        String writer = userDetails.getUsername(); // 로그인한 사용자 이메일
+        noticeService.saveNotice(dto, writer);
+        return "redirect:/notice";
+    }
+
+
 }

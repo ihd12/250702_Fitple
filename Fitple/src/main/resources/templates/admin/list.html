@@ -3,101 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 리스트</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            padding: 40px;
-            background-color: #fff;
-        }
 
-        h2 {
-            text-align: center;
-            font-size: 28px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -10px;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 8px;
-            background: repeating-linear-gradient(
-                    -45deg,
-                    #ccc,
-                    #ccc 5px,
-                    transparent 5px,
-                    transparent 10px
-            );
-        }
-
-        .search-box {
-            width: 300px;
-            margin: 0 auto 30px;
-            position: relative;
-        }
-        .search-box input[type="text"] {
-            width: 100%;
-            padding: 10px 40px 10px 15px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-        }
-
-        .search-box .searchBtn {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-            font-size: 16px;
-            border: none;
-            background-color: white;
-        }
-
-        table {
-            width: 80%;
-            margin: 0 auto;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f9f9f9;
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .delete-btn {
-            background-color: #555;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .delete-btn:hover {
-            background-color: #c00;
-        }
-    </style>
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet"> <!-- Impact 메인 스타일 -->
+    <link href="/css/admin/list.css" rel="stylesheet">
 </head>
 <body>
-
+<div th:replace="fragments/header :: header"></div>
 <h2>회원 리스트</h2>
 
 <div class="search-box">
@@ -149,31 +62,7 @@
         </li>
     </ul>
 </div>
-<script>
-    // http://localhost:8080/admin/member
-    function deleteMember(data){
-        let email = data.getAttribute("data-email");
-        if(!confirm(`${email}회원을 삭제하시겠습니까?`)){
-            return;
-        }
-        fetch(`/admin/member`, {
-            method:'DELETE',
-            headers:{'Content-Type' : 'application/json'},
-            body: JSON.stringify({email:email})
-        }).then((response)=>{
-            if(response.ok){
-                let deleteRow = data.getAttribute("data-id");
-                let row = document.getElementById(`row-${deleteRow}`);
-                if(row){row.remove();}
-                alert('회원을 삭제했습니다.');
-            }else{
-                alert('회원 삭제에 실패했습니다. 서버 오류');
-            }
-        }).catch(error=>{
-            console.error("회원 삭제 에러",error);
-            alert("회원 삭제에 실패했습니다. 통신 오류")
-        })
-    }
-</script>
+<div th:replace="fragments/footer :: footer"></div>
+<script src="/js/admin.js"></script>
 </body>
 </html>

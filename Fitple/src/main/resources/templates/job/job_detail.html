@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>채용 상세정보</title>
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/job/job_detail.css" rel="stylesheet"> <!-- 별도 CSS 추가 -->
+</head>
+<body>
+
+<!-- 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+<section id="hero" class="hero section accent-background">
+
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+            <h2><span>당신의 커리어 여정,</span><span class="accent"><br>지금부터 함께합니다.</span></h2>
+            <p>스펙보다 중요한 건 ‘나에게 맞는 일자리’입니다.
+                청년을 위한 맞춤 채용 정보를 쉽고<br>
+                정확하게 전달하고, 복지, 연봉, 지역까지 진짜 필요한 정보만 담았습니다.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/jobback.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 본문 -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-sm border border-primary">
+                <div class="card-body">
+
+                    <h2 class="text-center fw-bold mb-4">채용 상세 정보</h2>
+
+                    <!-- 기본정보 -->
+                    <div class="section-title">기본 정보</div>
+                    <div class="info-row"><div class="info-label">제목</div><div class="info-value" th:text="${job.title}"></div></div>
+                    <div class="info-row"><div class="info-label">기관명</div><div class="info-value" th:text="${job.orgName}"></div></div>
+                    <div class="info-row"><div class="info-label">근무지</div><div class="info-value" th:text="${job.location}"></div></div>
+                    <div class="info-row"><div class="info-label">근무 분야</div><div class="info-value" th:text="${job.jobType}"></div></div>
+                    <div class="info-row"><div class="info-label">연봉</div><div class="info-value" th:text="${job.salary + '만원'}"></div></div>
+                    <div class="info-row"><div class="info-label">시작일</div><div class="info-value" th:text="${job.startDate}"></div></div>
+                    <div class="info-row"><div class="info-label">마감일</div><div class="info-value" th:text="${job.endDate}"></div></div>
+                    <div class="info-row"><div class="info-label">상세 URL</div><div class="info-value"><a th:href="${job.detailUrl}" target="_blank">공고 바로가기</a></div></div>
+
+                    <!-- 조건 -->
+                    <div class="section-title">응시 조건 및 정보</div>
+                    <div class="info-row"><div class="info-label">학력 정보</div><div class="info-value" th:text="${job.education}"></div></div>
+                    <div class="info-row align-items-start"><div class="info-label">응시 자격</div><div class="info-value"><p th:utext="${#strings.replace(job.requirement, '\n', '<br/>')}"></p></div></div>
+                    <div class="info-row align-items-start"><div class="info-label">우대 조건</div><div class="info-value"><p th:utext="${#strings.replace(job.preferred, '\n', '<br/>')}"></p></div></div>
+                    <div class="info-row align-items-start"><div class="info-label">우대 내용</div><div class="info-value"><p th:utext="${#strings.replace(job.advantageDetail, '\n', '<br/>')}"></p></div></div>
+                    <div class="info-row align-items-start"><div class="info-label">전형 절차</div><div class="info-value"><p th:utext="${#strings.replace(job.procedureDetail, '\n', '<br/>')}"></p></div></div>
+
+                    <!-- 버튼 영역 -->
+                    <div class="action-buttons">
+                        <div>
+                            <div th:if="${#authentication.principal != 'anonymousUser'}">
+                                <form th:if="${isScrapped == false}" th:action="@{/job/scrap/{id}(id=${job.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-primary">찜하기</button>
+                                </form>
+                                <form th:if="${isScrapped == true}" th:action="@{/job/scrap/{id}/cancel(id=${job.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger">찜취소</button>
+                                </form>
+                            </div>
+                            <div th:if="${#authentication.principal == 'anonymousUser'}">
+                                <p class="text-muted">※ <a th:href="@{/user/login}">로그인 후</a> 찜하기 기능을 이용할 수 있어요.</p>
+                            </div>
+                        </div>
+                        <a class="btn btn-secondary"
+                           th:href="@{/job(page=${requestDTO.page},
+                                        size=${requestDTO.size},
+                                        keyword=${requestDTO.keyword},
+                                        salary=${requestDTO.salary},
+                                        location=${requestDTO.location},
+                                        ncs=${requestDTO.ncs},
+                                        types=${requestDTO.types}
+                                    )}">← 목록으로 돌아가기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
+
+</body>
+</html>

@@ -23,6 +23,8 @@ public class NoticeDTO {
     private int viewCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String adminName; // 선택사항: 목록/상세에서 관리자의 이름 출력용
+
     public static NoticeDTO toDTO(Notice notice){
         return NoticeDTO.builder()
                 .id(notice.getId())
@@ -31,6 +33,7 @@ public class NoticeDTO {
                 .viewCount(notice.getViewCount())
                 .createdAt(notice.getCreatedAt())
                 .updatedAt(notice.getUpdatedAt())
+                .adminName(notice.getAdmin() != null ? notice.getAdmin().getNickname() : null) // admin 출력용
                 .build();
     }
     public Notice toEntity(){

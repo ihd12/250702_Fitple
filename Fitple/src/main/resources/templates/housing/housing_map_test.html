@@ -2,213 +2,147 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>지도와 매물 리스트</title>
-    <style>
-        #map {
-            width: 100%;
-            height: 500px;
-            border: 1px solid #ccc;
-        }
-        #info-panel, #search-panel {
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            background-color: #f8f9fa;
-            font-family: sans-serif;
-            font-size: 14px;
-        }
-        #info-panel span, #search-panel select, #search-panel button { margin-right: 15px; }
-    </style>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>주거지</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/housing.css}">
+<!--    <link href="/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">-->
 </head>
-<body>
-<h2>임대 주택 정보</h2>
 
-<div id="search-panel">
-    <strong>지역 검색:</strong>
-    <select id="sido-select"></select>
-    <select id="sigungu-select"></select>
-    <button id="search-btn">검색</button>
-</div>
+<body class="index-page"
+      th:data-is-authenticated="${#authorization.expression('isAuthenticated()')}"
+      th:data-user-id="${#authentication.principal != 'anonymousUser' ? #authentication.principal.username : 'null'}">
 
-<div id="info-panel">
-    <strong>현재 위치 정보:</strong>
-    <span>위도: <span id="info-lat"></span></span>
-    <span>경도: <span id="info-lng"></span></span>
-    <span>주소: <span id="info-addr"></span></span>
-    <span><strong>법정동 코드:</strong> <span id="info-code"></span></span>
-</div>
+<div th:replace="fragments/header :: header"></div>
+<main class="main">
 
-<div id="map"></div>
+    <section id="hero" class="hero section accent-background">
 
+        <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-5 justify-content-between">
+                <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                    <h2><span>당신의 새로운 시작,</span><span class="accent"><br>편안한 주거지에서 시작하세요.</span></h2>
+                    <p>혼자 살아가는 게 처음이어도 걱정하지 마세요.<br>
+                        청년을 위한 안전하고 실속 있는 주거 정보를 모아,
+                        당신에게 꼭 맞는 공간을 소개해드립니다.</p>
+                </div>
+                <div class="col-lg-5 order-1 order-lg-2">
+                    <img src="/img/housingback.png" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about section">
+    <div id="housing-page-wrapper">
+        <div id="left-panel">
+            <div id="search-panel">
+                <strong>지역 검색:</strong>
+                <select id="sido-select"></select>
+                <select id="sigungu-select"></select>
+                <strong>호출 개수:</strong>
+                <select id="num-of-rows-select">
+                    <option value="5">5개</option>
+                    <option value="10" selected>10개</option>
+                    <option value="25">25개</option>
+                </select>
+                <button id="search-btn">검색</button>
+                <button id="toggle-advanced-search-btn">상세 검색</button>
+            </div>
+            <div id="advanced-filter-panel">
+                <div class="filter-group">
+                    <label>보증금(만원)</label>
+                    <input type="number" id="min-deposit" placeholder="최소"><span>~</span><input type="number" id="max-deposit" placeholder="최대">
+                </div>
+                <div class="filter-group">
+                    <label>월세(만원)</label>
+                    <input type="number" id="min-rent" placeholder="최소"><span>~</span><input type="number" id="max-rent" placeholder="최대">
+                </div>
+                <div class="filter-group">
+                    <label>전용면적(㎡)</label>
+                    <input type="number" id="min-area" placeholder="최소"><span>~</span><input type="number" id="max-area" placeholder="최대">
+                </div>
+                <div class="filter-group preset-buttons">
+                    <label></label>
+                    <button class="area-preset-btn" data-min="" data-max="33">~33㎡</button>
+                    <button class="area-preset-btn" data-min="33" data-max="66">33~66㎡</button>
+                    <button class="area-preset-btn" data-min="66" data-max="99">66~99㎡</button>
+                    <button class="area-preset-btn" data-min="99" data-max="132">99~132㎡</button>
+                </div>
+                <div class="filter-group">
+                    <label>주택유형</label>
+                    <div class="preset-buttons">
+                        <button class="type-filter-btn active" data-type="">전체</button>
+                        <button class="type-filter-btn" data-type="다가구주택">다가구</button>
+                        <button class="type-filter-btn" data-type="다세대주택">다세대</button>
+                        <button class="type-filter-btn" data-type="아파트">아파트</button>
+                        <button class="type-filter-btn" data-type="오피스텔">오피스텔</button>
+                        <button class="type-filter-btn" data-type="etc">기타</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label></label>
+                    <button id="apply-filter-btn">필터 적용</button>
+                    <button id="reset-filter-btn">초기화</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="map-and-list-container">
+            <div id="map"></div>
+            <div id="list-panel">
+                <h3>매물 리스트 <button id="close-list-panel-btn">✖</button></h3>
+                <div id="loading-animation" style="display:none; text-align:center; padding:20px;">
+                    <div class="loader"></div>
+                    <p>검색 중입니다...</p>
+                </div>
+                <div id="list-content">
+                    <ul id="property-list"></ul>
+                </div>
+            </div>
+            <div id="info-panel-bottom">
+                <span id="info-addr"></span>
+                <span id="info-coords"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-wrapper">
+        <div id="modal-content">
+            <div id="modal-header">
+                <h2>매물 상세 정보</h2>
+                <button id="close-modal-btn">✖</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+</section>
+</main>
+<div th:replace="fragments/footer :: footer"></div>
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a0e30d98f6dfa0bc355f0bdba19e03da&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b8731ae4d4303ec9f32c926ed947ae8d&libraries=services"></script>
+<script th:src="@{/js/housing.js}"></script>
+<script src="/vendor/aos/aos.js"></script>
 <script>
-    var latitude = 37.566826;
-    var longitude = 126.9786567;
-    var geocoder = new kakao.maps.services.Geocoder();
-    var map;
-
-    // 전역에서 드롭다운 요소 가져오기
-    const sidoSelect = document.getElementById('sido-select');
-    const sigunguSelect = document.getElementById('sigungu-select');
-
-    const regionData = {
-        "11": { name: "서울특별시", sigungu: { "110": "종로구", "140": "중구", "170": "용산구", "200": "성동구", "215": "광진구", "230": "동대문구", "260": "중랑구", "290": "성북구", "305": "강북구", "320": "도봉구", "350": "노원구", "380": "은평구", "410": "서대문구", "440": "마포구", "470": "양천구", "500": "강서구", "530": "구로구", "545": "금천구", "560": "영등포구", "590": "동작구", "620": "관악구", "650": "서초구", "680": "강남구", "710": "송파구", "740": "강동구" } },
-        "26": { name: "부산광역시", sigungu: { "110": "중구", "140": "서구", "170": "동구", "200": "영도구", "230": "부산진구", "260": "동래구", "290": "남구", "320": "북구", "350": "해운대구", "380": "사하구", "410": "금정구", "440": "강서구", "470": "연제구", "500": "수영구", "530": "사상구", "710": "기장군" } },
-        "27": { name: "대구광역시", sigungu: { "110": "중구", "140": "동구", "170": "서구", "200": "남구", "230": "북구", "260": "수성구", "290": "달서구", "710": "달성군" } },
-        "28": { name: "인천광역시", sigungu: { "110": "중구", "140": "동구", "177": "미추홀구", "185": "연수구", "200": "남동구", "237": "부평구", "245": "계양구", "260": "서구", "710": "강화군", "720": "옹진군" } },
-        "29": { name: "광주광역시", sigungu: { "110": "동구", "140": "서구", "155": "남구", "170": "북구", "200": "광산구" } },
-        "30": { name: "대전광역시", sigungu: { "110": "동구", "140": "중구", "170": "서구", "200": "유성구", "230": "대덕구" } },
-        "31": { name: "울산광역시", sigungu: { "110": "중구", "140": "남구", "170": "동구", "200": "북구", "710": "울주군" } },
-        "36": { name: "세종특별자치시", sigungu: { "110": "세종특별자치시" } },
-        "41": { name: "경기", sigungu: { "111": "수원시 장안구", "113": "수원시 권선구", "115": "수원시 팔달구", "117": "수원시 영통구", "131": "성남시 수정구", "133": "성남시 중원구", "135": "성남시 분당구", "150": "의정부시", "171": "안양시 만안구", "173": "안양시 동안구", "190": "부천시", "210": "광명시", "220": "평택시", "250": "동두천시", "271": "안산시 상록구", "273": "안산시 단원구", "281": "고양시 덕양구", "285": "고양시 일산동구", "287": "고양시 일산서구", "290": "과천시", "310": "구리시", "360": "남양주시", "370": "오산시", "390": "시흥시", "410": "군포시", "430": "의왕시", "450": "하남시", "461": "용인시 처인구", "463": "용인시 기흥구", "465": "용인시 수지구", "480": "파주시", "500": "이천시", "550": "안성시", "570": "김포시", "590": "화성시", "610": "광주시", "630": "양주시", "650": "포천시", "670": "여주시", "800": "연천군", "820": "가평군", "830": "양평군" } },
-        "42": { name: "강원특별자치도", sigungu: { "110": "춘천시", "130": "원주시", "150": "강릉시", "170": "동해시", "190": "태백시", "210": "속초시", "230": "삼척시", "720": "홍천군", "730": "횡성군", "750": "영월군", "760": "평창군", "770": "정선군", "780": "철원군", "790": "화천군", "800": "양구군", "810": "인제군", "820": "고성군", "830": "양양군" } },
-        "43": { name: "충북", sigungu: { "111": "청주시 상당구", "112": "청주시 서원구", "113": "청주시 흥덕구", "114": "청주시 청원구", "130": "충주시", "150": "제천시", "720": "보은군", "730": "옥천군", "740": "영동군", "745": "증평군", "750": "진천군", "760": "괴산군", "770": "음성군", "800": "단양군" } },
-        "44": { name: "충남", sigungu: { "131": "천안시 동남구", "133": "천안시 서북구", "150": "공주시", "180": "보령시", "200": "아산시", "210": "서산시", "230": "논산시", "250": "계룡시", "270": "당진시", "710": "금산군", "760": "부여군", "770": "서천군", "790": "청양군", "800": "홍성군", "810": "예산군", "825": "태안군" } },
-        "45": { name: "전북특별자치도", sigungu: { "111": "전주시 완산구", "113": "전주시 덕진구", "130": "군산시", "140": "익산시", "180": "정읍시", "190": "남원시", "210": "김제시", "710": "완주군", "720": "진안군", "730": "무주군", "740": "장수군", "750": "임실군", "770": "순창군", "790": "고창군", "800": "부안군" } },
-        "46": { name: "전남", sigungu: { "110": "목포시", "130": "여수시", "150": "순천시", "170": "나주시", "230": "광양시", "710": "담양군", "720": "곡성군", "730": "구례군", "770": "고흥군", "780": "보성군", "800": "화순군", "810": "장흥군", "820": "강진군", "830": "해남군", "840": "영암군", "860": "무안군", "870": "함평군", "880": "영광군", "890": "장성군", "900": "완도군", "910": "진도군" } },
-        "47": { name: "경북", sigungu: { "111": "포항시 남구", "113": "포항시 북구", "130": "경주시", "150": "김천시", "170": "안동시", "190": "구미시", "210": "영주시", "230": "영천시", "250": "상주시", "280": "문경시", "290": "경산시", "720": "군위군", "730": "의성군", "750": "청송군", "760": "영양군", "770": "영덕군", "820": "청도군", "830": "고령군", "840": "성주군", "850": "칠곡군", "900": "예천군", "920": "봉화군", "930": "울진군", "940": "울릉군" } },
-        "48": { name: "경남", sigungu: { "121": "창원시 의창구", "123": "창원시 성산구", "125": "창원시 마산합포구", "127": "창원시 마산회원구", "129": "창원시 진해구", "170": "진주시", "220": "통영시", "240": "사천시", "250": "김해시", "270": "밀양시", "310": "거제시", "330": "양산시", "720": "의령군", "730": "함안군", "740": "창녕군", "820": "고성군", "840": "남해군", "850": "하동군", "860": "산청군", "870": "함양군", "880": "거창군", "890": "합천군" } },
-        "50": { name: "제주특별자치도", sigungu: { "110": "제주시", "130": "서귀포시" } }
-    };
-
-    function drawMap() {
-        var mapContainer = document.getElementById('map');
-        var mapOption = {
-            center: new kakao.maps.LatLng(latitude, longitude),
-            level: 8
-        };
-        map = new kakao.maps.Map(mapContainer, mapOption);
-
-        kakao.maps.event.addListener(map, 'idle', function() {
-            var newCenter = map.getCenter();
-            latitude = newCenter.getLat();
-            longitude = newCenter.getLng();
-            displayLocationInfo(latitude, longitude);
-        });
-    }
-
-    function displayLocationInfo(lat, lng) {
-        document.getElementById('info-lat').innerText = lat.toFixed(6);
-        document.getElementById('info-lng').innerText = lng.toFixed(6);
-
-        geocoder.coord2Address(lng, lat, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                const addr = !!result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
-                document.getElementById('info-addr').innerText = addr;
-
-                // ✅ 주소 변환 후 드롭다운 및 코드 업데이트
-                updateSelectorsByAddress(addr);
-            } else {
-                document.getElementById('info-addr').innerText = "주소 변환 실패";
-                document.getElementById('info-code').innerText = "N/A";
-            }
-        });
-    }
-
-    // ✅ 주소 문자열을 기반으로 드롭다운과 법정동 코드를 업데이트하는 함수
-    function updateSelectorsByAddress(address) {
-        const addrParts = address.split(' ');
-        const sidoName = addrParts[0];
-        const sigunguName = addrParts[1];
-
-        for (const sidoCode in regionData) {
-            if (regionData[sidoCode].name === sidoName) {
-                sidoSelect.value = sidoCode; // 시/도 드롭다운 업데이트
-                updateSigunguSelect(sidoCode); // 시/군/구 목록 업데이트
-
-                for (const sigunguCode in regionData[sidoCode].sigungu) {
-                    if (regionData[sidoCode].sigungu[sigunguCode] === sigunguName) {
-                        sigunguSelect.value = sigunguCode; // 시/군/구 드롭다운 업데이트
-                        updateBjdCode(); // 법정동 코드 표시 업데이트
-                        return; // 일치하는 항목을 찾으면 종료
-                    }
-                }
-            }
-        }
-    }
-
-    // ✅ 법정동 코드 표시를 업데이트하는 함수
-    function updateBjdCode() {
-        const sidoCode = sidoSelect.value;
-        const sigunguCode = sigunguSelect.value;
-        document.getElementById('info-code').innerText = `${sidoCode}${sigunguCode}`;
-    }
-
-    function setupRegionSearch() {
-        const searchBtn = document.getElementById('search-btn');
-
-        for (const code in regionData) {
-            const option = document.createElement('option');
-            option.value = code;
-            option.innerText = regionData[code].name;
-            sidoSelect.appendChild(option);
-        }
-
-        sidoSelect.addEventListener('change', function() {
-            updateSigunguSelect(this.value);
-            updateBjdCode(); // 시/도 변경 시에도 코드 업데이트
-        });
-
-        // ✅ 시/군/구 변경 시에도 코드 업데이트
-        sigunguSelect.addEventListener('change', function() {
-            updateBjdCode();
-        });
-
-        searchBtn.addEventListener('click', function() {
-            const sidoName = sidoSelect.options[sidoSelect.selectedIndex].text;
-            const sigunguName = sigunguSelect.options[sigunguSelect.selectedIndex].text;
-            const searchAddress = `${sidoName} ${sigunguName}`;
-
-            updateBjdCode();
-
-            geocoder.addressSearch(searchAddress, function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                    map.setCenter(coords);
-                } else {
-                    alert('해당 지역의 좌표를 찾을 수 없습니다.');
-                }
-            });
-        });
-
-        updateSigunguSelect(sidoSelect.value);
-        updateBjdCode(); // 초기 로딩 시 코드 표시
-    }
-
-    // 시/군/구 드롭다운 업데이트 함수 (전역으로 이동)
-    function updateSigunguSelect(sidoCode) {
-        sigunguSelect.innerHTML = '';
-        const sigunguList = regionData[sidoCode]?.sigungu || {};
-        for (const code in sigunguList) {
-            const option = document.createElement('option');
-            option.value = code;
-            option.innerText = sigunguList[code];
-            sigunguSelect.appendChild(option);
-        }
-    }
-
-    window.onload = function() {
-        setupRegionSearch();
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(pos) {
-                    latitude = pos.coords.latitude;
-                    longitude = pos.coords.longitude;
-                    drawMap();
-                    displayLocationInfo(latitude, longitude);
-                },
-                function(error) {
-                    console.error("Geolocation 에러:", error.message);
-                    drawMap();
-                    displayLocationInfo(latitude, longitude);
-                }
-            );
-        } else {
-            drawMap();
-            displayLocationInfo(latitude, longitude);
-        }
-    };
+    AOS.init();
 </script>
+<!-- ↑필수 -->
+
+<!--<script src="/js/glightbox.js"></script>-->
+
+
 </body>
 </html>

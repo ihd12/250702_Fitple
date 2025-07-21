@@ -1,0 +1,39 @@
+
+body {
+    /*padding-top: 120px; !* 헤더 높이만큼 밀어주기 *!*/
+}
+
+h2 { margin-top: 30px; }
+ul { padding-left: 20px; }
+li { margin: 6px 0; cursor: pointer; }
+.section { margin-bottom: 40px; }
+
+/* 모달 스타일 */
+#modal-wrapper {
+    display: none; position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); justify-content: center; align-items: center;
+    z-index: 1000;
+}
+#modal-content {
+    background: white; width: 90%; max-width: 600px; border-radius: 8px;
+    padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+#modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+}
+#modal-body {
+    max-height: 70vh; overflow-y: auto; margin-top: 10px;
+}
+#modal-body table {
+    width: 100%; border-collapse: collapse;
+}
+#modal-body th, #modal-body td {
+    border: 1px solid #ddd; padding: 8px; font-size: 0.9em;
+}
+#modal-body th {
+    background-color: #f8f9fa; width: 120px;
+}
+#close-modal-btn {
+    font-size: 1.5em; background: none; border: none; cursor: pointer;
+}

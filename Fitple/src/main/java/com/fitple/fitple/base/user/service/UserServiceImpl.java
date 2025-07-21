@@ -8,6 +8,8 @@ import com.fitple.fitple.common.dto.PageResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO register(UserDTO dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + dto.getEmail());
+        }
+
         User user = User.builder()
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
@@ -41,8 +47,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageResponseDTO<UserDTO> getUserList(PageRequestDTO pageRequestDTO) {
-        return userRepository.searchUser(pageRequestDTO);
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
+        Page<User> result = userRepository.searchUser(keyword, pageable);
+
+        List<UserDTO> dtoList = result.getContent()
+                .stream()
+                .map(UserDTO::toDTO)
+                .toList();
+
+        System.out.println("검색어: " + keyword);
+        System.out.println("전체 회원 수: " + result.getTotalElements());
+        System.out.println("가져온 회원 리스트: " + dtoList);
+
+        return new PageResponseDTO<>(pageRequestDTO, dtoList, (int) result.getTotalElements());
     }
+
 
     @Override
     public UserDTO getUser(String email) {
@@ -50,6 +71,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()->new IllegalArgumentException("not found : "+email));
         return UserDTO.toDTO(user);
     }
+
+
 
 
     @Override
@@ -66,6 +89,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(String email) {
-        userRepository.deleteByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다: " + email));
+        userRepository.delete(user);
     }
+
+
+    private User dtoToEntity(UserDTO dto) {
+        return User.builder()
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .nickname(dto.getNickname())
+                .auth("USER")
+                .build();
+    }
+
 }

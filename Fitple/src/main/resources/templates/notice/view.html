@@ -1,32 +1,79 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>공지사항</title>
+
+    <!-- Bootstrap / Impact 템플릿 리소스 -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet"> <!-- Impact 메인 스타일 -->
+    <link href="/css/notice/view.css" rel="stylesheet">
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 
-<h2 th:text="${notice.title}">공지 제목</h2>
+<section id="hero" class="hero section accent-background">
 
-<p>
-    <strong>작성일:</strong>
-    <span th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">2025-07-08</span>
-    |
-    <strong>조회수:</strong>
-    <span th:text="${notice.viewCount}">0</span>
-</p>
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                <h2><span class="accent">공지사항</span></h2>
+                <p>핏플의 소식과 안내를 전해드립니다.<br>
+                    중요한 공지사항을 이곳에서 확인해주세요.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/noticeback.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
 
-<hr>
+<div class="notice-detail-container">
+    <h2 class="notice-title" th:text="${notice.title}">공지 제목</h2>
 
-<div th:utext="${notice.content}">
-    <!-- HTML 태그도 보여주려면 th:utext (주의: XSS 필터링 필요) -->
-    공지 내용
+    <div class="notice-meta d-flex justify-content-between">
+        <div>
+            🗓 <span th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">2025-07-08 10:00</span>
+        </div>
+        <div>
+            👁 <span th:text="${notice.viewCount}">0</span> views
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="notice-content" th:utext="${notice.content}">
+        공지 내용
+    </div>
+
+    <hr>
+
+    <div class="notice-actions">
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/notice/{id}/edit(id=${notice.id})}"
+           class="btn btn-outline-primary btn-sm">
+            ✏ 수정하기
+        </a>
+        <a href="/notice" class="btn btn-outline-secondary btn-sm">← 목록으로</a>
+    </div>
 </div>
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
 
-<hr>
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
 
-<a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/notice/{id}/edit(id=${notice.id})}" >← 수정하기</a>
-<a href="/notice">← 목록으로</a>
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
+
 </body>
 </html>

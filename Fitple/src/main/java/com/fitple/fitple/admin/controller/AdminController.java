@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
-    public final UserService userService;
+    private final UserService userService;
     private final NoticeService noticeService;
 
     @GetMapping("/member")
@@ -24,6 +24,7 @@ public class AdminController {
         model.addAttribute("responseDTO",userService.getUserList(pageRequestDTO));
         return "admin/list";
     }
+
     @GetMapping("/notice/{id}/edit")
     public String editNotice(@PathVariable Long id, PageRequestDTO pageRequestDTO, @AuthenticationPrincipal UserDetails userDetails, Model model){
         model.addAttribute("notice",noticeService.getNotice(id));

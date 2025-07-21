@@ -28,6 +28,7 @@ public class PolicyController {
     @GetMapping("/policy/list")
     public String policyList(PageRequestDTO requestDTO,
                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                             @ModelAttribute("message") String message,
                              Model model) {
 
         int page = requestDTO.getPage();
@@ -58,13 +59,14 @@ public class PolicyController {
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("responseDTO", pageResponse);
         model.addAttribute("scrappedSet", scrappedSet);
-        model.addAttribute("zipCds", zipCds);
+        model.addAttribute("zipCds", zipCds != null ? zipCds : new String[0]);
         model.addAttribute("zipCdsParam", zipCds != null
                 ? java.util.Arrays.stream(zipCds)
                 .map(cd -> "&zipCds=" + cd)
                 .collect(Collectors.joining())
                 : "");
         model.addAttribute("keyword", requestDTO.getKeyword());
+        model.addAttribute("zipCodeMap", policyService.getZipCodeMap());
 
         return "/policy/list";
     }
@@ -78,8 +80,18 @@ public class PolicyController {
                                Model model) {
 
         var response = policyService.getPolicyDetail(plcyNo);
-        var policy = response.getResult().getYouthPolicyList().get(0);
 
+        // 방어 코드
+        if (response == null ||
+                response.getResult() == null ||
+                response.getResult().getYouthPolicyList() == null ||
+                response.getResult().getYouthPolicyList().isEmpty()) {
+
+            model.addAttribute("message", "해당 정책 정보를 불러올 수 없습니다.");
+            return "/policy/detail";  // detail.html에서 '정책 정보를 불러올 수 없습니다' 표시
+        }
+
+        var policy = response.getResult().getYouthPolicyList().get(0);
         model.addAttribute("policy", policy);
         model.addAttribute("page", page);
         model.addAttribute("keyword", keyword);
@@ -87,11 +99,11 @@ public class PolicyController {
 
         boolean isScrapped = false;
         if (userDetails != null) {
-            isScrapped = policyScrapService.isScrapped(
-                    userDetails.getUser(), plcyNo);
+            isScrapped = policyScrapService.isScrapped(userDetails.getUser(), plcyNo);
         }
         model.addAttribute("isScrapped", isScrapped);
 
         return "/policy/detail";
     }
+
 }

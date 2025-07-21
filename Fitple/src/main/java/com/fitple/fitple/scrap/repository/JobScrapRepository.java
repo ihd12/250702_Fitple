@@ -3,7 +3,9 @@ package com.fitple.fitple.scrap.repository;
 import com.fitple.fitple.base.user.domain.User;
 import com.fitple.fitple.job.domain.JobPost;
 import com.fitple.fitple.scrap.domain.JobScrap;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +20,12 @@ public interface JobScrapRepository extends JpaRepository<JobScrap, Long> {
 
     // 마이페이지용: 로그인 사용자의 찜 목록 조회
     List<JobScrap> findAllByUser(User user);
+
+    // 추천페이지용
+    List<JobScrap> findByUser(User user);
+
+    @Modifying
+    @Transactional
+    void deleteByUserAndJobPostId(User user, Long jobPostId);
+
 }

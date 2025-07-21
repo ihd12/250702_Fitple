@@ -1,55 +1,168 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>추천 결과</title>
+    <title>추천 결과</title>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap / Vendor CSS -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link href="/css/main.css" rel="stylesheet">
+
+    <style>
+        .scroll-box {
+            max-height: 550px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-light text-dark">
 
-<h2>희망 연봉: <span th:text="${userSalary} + '만원'"></span></h2>
-<table border="1">
-  <thead>
-  <tr>
-    <th>제목</th>
-    <th>지역</th>
-    <th>직무</th>
-    <th>연봉</th>
-    <th>추천 점수</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="dto : ${recommendList}">
-    <td th:text="${dto.title}">제목</td>
-    <td th:text="${dto.location}">지역</td>
-    <td th:text="${dto.ncs}">직무</td>
-    <td th:text="${dto.salary} + '만원'">연봉</td>
-    <td th:text="${dto.score}">점수</td>
-  </tr>
-  </tbody>
-</table>
+<!-- 헤더 -->
+<div th:replace="fragments/header :: header"></div>
 
-<hr/>
+<section id="hero" class="hero section accent-background">
 
-<h2>희망 월세: <span th:text="${wantedRent} + '만원'"></span></h2>
-<table border="1">
-  <thead>
-  <tr>
-    <th>단지명</th>
-    <th>주소</th>
-    <th>월세</th>
-    <th>보증금</th>
-    <th>추천 점수</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="house : ${housingList}">
-    <td th:text="${house.uid}">단지명</td>
-    <td th:text="${house.area}">주소</td>
-    <td th:text="${#numbers.formatInteger(house.rent, 3, 'COMMA') + '원'}">월세</td>
-    <td th:text="${#numbers.formatInteger(house.deposit, 3, 'COMMA') + '원'}">보증금</td>
-    <td th:text="${house.score}">점수</td>
-  </tr>
-  </tbody>
-</table>
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+                <h2><span>당신의 선택을 바탕으로,</span><span class="accent"><br>딱 맞는 추천을 준비했어요.</span></h2>
+                <p>내가 찜한 일자리와 주거지를 기반으로<br>
+                    지역, 연봉, 월세, 생활비까지 분석해<br>
+                    진짜 나에게 어울리는 곳을 알려드립니다.</p>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img src="/img/recommndback.png" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <h1 class="text-3xl fw-bold mb-5 text-center">맞춤 추천 결과</h1>
+
+    <div class="row">
+        <!-- 추천 채용공고 -->
+        <div class="col-md-6 mb-4">
+            <h2 class="h5 fw-bold text-primary mb-3">추천 채용공고</h2>
+            <div class="scroll-box pe-2">
+                <div class="bg-white p-3 mb-3 rounded shadow-sm" th:each="job : ${recommendedJobs}">
+                    <h5 class="mb-1">
+                        <a th:href="@{/job/{id}(id=${job.jobId})}"
+                           class="text-primary text-decoration-none"
+                           th:text="${job.title}">채용 제목</a>
+
+                    </h5>
+                    <div class="text-muted small" th:text="${job.orgName}">회사 이름</div>
+                    <div class="text-secondary small" th:text="'연봉: ' + ${job.salary} + '만원'"></div>
+                    <div class="text-success fw-bold small mt-2" th:text="'추천 점수: ' + ${job.score} + '점'"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 추천 주거지 -->
+        <div class="col-md-6 mb-4">
+            <h2 class="h5 fw-bold text-success mb-3">추천 주거지</h2>
+            <div class="scroll-box ps-2">
+                <div class="bg-white p-3 mb-3 rounded shadow-sm"
+                     th:each="house, stat : ${recommendedHousings}"
+                     th:attr="data-house-info=${housingJsonList[stat.index]}">
+                    <h5 class="mb-1 text-success" th:text="${house.hsmpNm}">단지명</h5>
+                    <div class="text-muted small" th:text="${house.rnAdres}">주소</div>
+                    <div class="text-secondary small" th:text="'보증금: ' + ${house.bassRentGtn} + '원'"></div>
+                    <div class="text-secondary small" th:text="'월세: ' + ${house.bassMtRntchrg} + '원'"></div>
+                    <div class="text-success fw-bold small mt-2" th:text="'추천 점수: ' + ${house.score} + '점'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 추천 주거지 상세 모달 -->
+    <div id="modal-wrapper" style="display: none; position: fixed; top: 0; left: 0;
+         width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center;
+         z-index: 1000;">
+        <div id="modal-content" style="background: white; width: 90%; max-width: 600px; border-radius: 8px;
+         padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <div id="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>상세 정보</h2>
+                <button id="close-modal-btn" style="font-size: 1.5em; background: none; border: none; cursor: pointer;">✖</button>
+            </div>
+            <div id="modal-body" style="max-height: 70vh; overflow-y: auto; margin-top: 10px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
+
+<script>
+    const modalWrapper = document.getElementById('modal-wrapper');
+    const modalBody = document.getElementById('modal-body');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    closeModalBtn.addEventListener('click', () => {
+        modalWrapper.style.display = 'none';
+    });
+
+    modalWrapper.addEventListener('click', (e) => {
+        if (e.target === modalWrapper) modalWrapper.style.display = 'none';
+    });
+
+    function showHousingDetail(houseData) {
+        const check = val => val ?? '정보 없음';
+        const format = val => Number(val || 0).toLocaleString('ko-KR') + ' 원';
+
+        modalBody.innerHTML = `
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><th style="width:120px; text-align:left;">단지명</th><td>${check(houseData.hsmpNm)}</td></tr>
+            <tr><th>주소</th><td>${check(houseData.rnAdres)}</td></tr>
+            <tr><th>유형</th><td>${check(houseData.houseTyNm)}</td></tr>
+            <tr><th>전용면적</th><td>${check(houseData.suplyPrvuseAr)} ㎡</td></tr>
+            <tr><th>보증금</th><td>${format(houseData.bassRentGtn)}</td></tr>
+            <tr><th>월세</th><td>${format(houseData.bassMtRntchrg)}</td></tr>
+            <tr><th>기관</th><td>${check(houseData.insttNm)}</td></tr>
+          </table>
+        `;
+        modalWrapper.style.display = 'flex';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-house-info]').forEach(card => {
+            const raw = card.getAttribute('data-house-info');
+            try {
+                const houseData = JSON.parse(raw.replace(/&quot;/g, '"'));
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => showHousingDetail(houseData));
+            } catch (e) {
+                console.error('추천 주거지 상세정보 파싱 실패:', e);
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

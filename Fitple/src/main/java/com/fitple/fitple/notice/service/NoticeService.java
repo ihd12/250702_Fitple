@@ -1,6 +1,8 @@
 package com.fitple.fitple.notice.service;
 
+import com.fitple.fitple.base.user.domain.User;
 import com.fitple.fitple.base.user.dto.UserDTO;
+import com.fitple.fitple.base.user.repository.UserRepository;
 import com.fitple.fitple.common.dto.PageRequestDTO;
 import com.fitple.fitple.common.dto.PageResponseDTO;
 import com.fitple.fitple.notice.domain.Notice;
@@ -10,10 +12,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
+
 
     public PageResponseDTO<NoticeDTO> getNoticeList(PageRequestDTO pageRequestDTO){
         return noticeRepository.searchList(pageRequestDTO);
@@ -51,4 +57,29 @@ public class NoticeService {
         noticeRepository.deleteById(id);
         return id;
     }
+
+    public void saveNotice(NoticeDTO dto, String writerEmail) {
+        User admin = userRepository.findByEmail(writerEmail)
+                .orElseThrow(() -> new RuntimeException("관리자 정보 없음"));
+
+        Notice notice = Notice.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent().replaceAll("(\r\n|\r|\n)", "<br/>"))
+                .admin(admin)
+                .viewCount(0)
+                .build();
+
+        noticeRepository.save(notice);
+    }
+
+    public List<NoticeDTO> getRecentNotices() {
+        List<Notice> all = noticeRepository.findAllByOrderByCreatedAtDesc();
+
+        return all.stream()
+                .limit(7)
+                .map(NoticeDTO::toDTO)
+                .toList();
+    }
+
+
 }

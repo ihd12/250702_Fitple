@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>채용공고</title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap / Vendor CSS -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link href="/css/main.css" rel="stylesheet">
+
+  <style>
+    .job-card {
+      border: 2px solid #007bff !important;
+      border-radius: 10px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .job-card:hover {
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
+    }
+  </style>
+
+</head>
+<body>
+
+<!-- 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+<section id="hero" class="hero section accent-background">
+
+  <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-5 justify-content-between">
+      <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+        <h2><span>당신의 커리어 여정,</span><span class="accent"><br>지금부터 함께합니다.</span></h2>
+        <p>스펙보다 중요한 건 ‘나에게 맞는 일자리’입니다.
+          청년을 위한 맞춤 채용 정보를 쉽고<br>
+          정확하게 전달하고, 복지, 연봉, 지역까지 진짜 필요한 정보만 담았습니다.</p>
+      </div>
+      <div class="col-lg-5 order-1 order-lg-2">
+        <img src="/img/jobback.png" class="img-fluid" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 본문 -->
+<div class="container mt-5">
+  <h1 class="mb-4 fw-bold text-primary">채용공고 리스트</h1>
+
+  <!-- 필터 검색 폼 -->
+  <form th:action="@{/job}" method="get" class="row gy-2 gx-3 align-items-center mb-4">
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="location" placeholder="지역" th:value="${param.location}" />
+    </div>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="ncs" placeholder="직무" th:value="${param.ncs}" />
+    </div>
+    <div class="col-sm-2">
+      <input type="number" class="form-control" name="salary" placeholder="연봉" th:value="${param.salary}" />
+    </div>
+    <div class="col-sm-3">
+      <input type="text" class="form-control" name="keyword" placeholder="키워드" th:value="${param.keyword}" />
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">검색</button>
+    </div>
+  </form>
+
+  <!-- 카드형 채용공고 리스트 -->
+  <div class="row g-4">
+    <div class="col-md-4" th:each="job : ${pageResponse.dtoList}">
+      <div class="card job-card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a th:href="@{/job/{id}(id=${job.id},
+                               page=${param.page != null and param.page != '' ? param.page : 1},
+                               size=${param.size != null and param.size != '' ? param.size : 10},
+                               keyword=${param.keyword},
+                               salary=${param.salary},
+                               location=${param.location},
+                               ncs=${param.ncs})}"
+               th:text="${job.title}"
+               class="text-decoration-none text-dark">제목</a>
+          </h5>
+          <!-- 스크랩 여부 표시 -->
+          <div th:if="${scrappedJobIds != null and scrappedJobIds.contains(job.id)}">
+            <span class="badge bg-warning text-dark">★ 저장</span>
+          </div>
+
+          <p class="mb-1"><strong>기관:</strong> <span th:text="${job.orgName}">기관명</span></p>
+          <p class="mb-1"><strong>지역:</strong> <span th:text="${job.location}">지역</span></p>
+          <p class="mb-1"><strong>직무:</strong> <span th:text="${job.ncs}">직무</span></p>
+          <p class="mb-1"><strong>연봉:</strong> <span th:text="${job.salary}">연봉</span>만원</p>
+        </div>
+        <div class="card-footer bg-white border-0">
+          <small class="text-muted" th:text="'공고기간: ' + ${job.startDate} + ' ~ ' + ${job.endDate}">공고기간</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 페이징 -->
+  <div class="mt-4 text-center">
+    <nav>
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:if="${pageResponse.prev}">
+          <a class="page-link" th:href="@{/job(
+              page=${pageResponse.start - 1},
+              size=${param.size != null and param.size != '' ? param.size : 10},
+              location=${param.location},
+              ncs=${param.ncs},
+              salary=${param.salary},
+              keyword=${param.keyword}
+            )}">&laquo; 이전</a>
+        </li>
+
+        <li class="page-item"
+            th:each="p : ${pageResponse.pageList}"
+            th:classappend="${p == pageResponse.page} ? 'active'">
+          <a class="page-link" th:text="${p}" th:href="@{/job(
+              page=${p},
+              size=${param.size != null and param.size != '' ? param.size : 10},
+              location=${param.location},
+              ncs=${param.ncs},
+              salary=${param.salary},
+              keyword=${param.keyword}
+            )}">1</a>
+        </li>
+
+        <li class="page-item" th:if="${pageResponse.next}">
+          <a class="page-link" th:href="@{/job(
+              page=${pageResponse.end + 1},
+              size=${param.size != null and param.size != '' ? param.size : 10},
+              location=${param.location},
+              ncs=${param.ncs},
+              salary=${param.salary},
+              keyword=${param.keyword}
+            )}">다음 &raquo;</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
+
+
+<!-- Vendor JS Files -->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/aos/aos.js"></script>
+
+<!-- Main JS File -->
+<script src="/js/main.js"></script>
+
+</body>
+</html>
