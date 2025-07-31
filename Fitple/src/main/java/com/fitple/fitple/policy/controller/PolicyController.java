@@ -68,7 +68,7 @@ public class PolicyController {
         model.addAttribute("keyword", requestDTO.getKeyword());
         model.addAttribute("zipCodeMap", policyService.getZipCodeMap());
 
-        return "/policy/list";
+        return "policy/list";
     }
 
     @GetMapping("/policy/detail")
@@ -88,7 +88,7 @@ public class PolicyController {
                 response.getResult().getYouthPolicyList().isEmpty()) {
 
             model.addAttribute("message", "해당 정책 정보를 불러올 수 없습니다.");
-            return "/policy/detail";  // detail.html에서 '정책 정보를 불러올 수 없습니다' 표시
+            return "policy/detail";  // detail.html에서 '정책 정보를 불러올 수 없습니다' 표시
         }
 
         var policy = response.getResult().getYouthPolicyList().get(0);
@@ -103,7 +103,7 @@ public class PolicyController {
         }
         model.addAttribute("isScrapped", isScrapped);
 
-        return "/policy/detail";
+        return "policy/detail";
     }
 
 }

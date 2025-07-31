@@ -29,6 +29,6 @@ public class MainController {
         List<NoticeDTO> recentNotices = noticeService.getRecentNotices();
         model.addAttribute("notices", recentNotices);
 
-        return "/index";
+        return "index";
     }
 }

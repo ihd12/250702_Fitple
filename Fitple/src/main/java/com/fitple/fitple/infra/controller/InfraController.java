@@ -9,7 +9,7 @@ public class InfraController {
 
     @GetMapping("/infra")
     public String test(){
-        return "/infra/infra";
+        return "infra/infra";
     }
 
 }
