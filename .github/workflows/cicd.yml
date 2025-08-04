@@ -15,9 +15,11 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+        working-directory: ./Fitple
 
       - name: build with Gradle
         run: ./gradlew clean build -x test
+        working-directory: ./Fitple
 
       - name: Get current time
         uses: josStorer/get-current-time@v2.0.2
@@ -28,6 +30,7 @@ jobs:
 
       - name: Set artifact
         run: echo "artifact=$(ls ./build/libs)" >> $GITHUB_ENV
+        working-directory: ./Fitple
 
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@v20
@@ -38,4 +41,4 @@ jobs:
           environment_name: springboot-developer-env
           version_label: github-action-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
-          deployment_package: ./build/libs/${{env.artifact}}
+          deployment_package: ./Fitple/build/libs/${{env.artifact}}
