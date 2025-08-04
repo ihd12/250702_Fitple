@@ -77,3 +77,6 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named('test') {
     useJUnitPlatform()
 }
+jar {
+    enabled = false
+}
